@@ -1,0 +1,33 @@
+# Node modules
+node_modules/
+
+# Environment variables
+.env
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Build directories
+dist/
+build/
+
+# IDE or editor directories
+.vscode/
+.idea/
+
+# Optional: Add coverage reports if you're using a testing framework
+coverage/
+
+# Ignore npm package lock files (optional)
+package-lock.json
+
+.qodo
+.gitignore

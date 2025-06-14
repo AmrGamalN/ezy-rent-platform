@@ -1,0 +1,16 @@
+{
+  "name": "ecommerce",
+  "version": "1.0.0",
+  "description": "ecommerce",
+  "main": "app.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node src/app.ts",
+    "start-dev": "nodemon --legacy-watch src/app.ts",
+    "build": "tsc",
+    "stop": "pkill -f node",
+    "restart": "npm run stop && npm run start"
+  },
+  "author": "Amr Gamal",
+  "license": "ISC"
+}
