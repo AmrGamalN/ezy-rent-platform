@@ -31,3 +31,5 @@ package-lock.json
 
 .qodo
 .gitignore
+
+mongo-keyfile

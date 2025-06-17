@@ -1,0 +1,123 @@
+version: "3.8"
+
+x-mongo-common: &mongo-common
+  image: mongo
+  command: ["bash", "-c", "chmod 600 /etc/mongo-keyfile && mongod --auth --replSet rs0 --keyFile /etc/mongo-keyfile --bind_ip_all"]
+  environment:
+    MONGO_INITDB_ROOT_USERNAME: root
+    MONGO_INITDB_ROOT_PASSWORD: example
+  networks:
+    - mongo-cluster
+  restart: always
+
+services:
+  mongo1:
+    <<: *mongo-common
+    container_name: mongo1
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo1-data:/data/db
+      - ./mongo-keyfile:/etc/mongo-keyfile
+      - ./init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
+
+  mongo2:
+    <<: *mongo-common
+    container_name: mongo2
+    ports:
+      - "27018:27017"
+    volumes:
+      - mongo2-data:/data/db
+      - ./mongo-keyfile:/etc/mongo-keyfile
+      - ./init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
+
+  mongo3:
+    <<: *mongo-common
+    container_name: mongo3
+    ports:
+      - "27019:27017"
+    volumes:
+      - mongo3-data:/data/db
+      - ./mongo-keyfile:/etc/mongo-keyfile
+      - ./init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
+
+  redis:
+    image: redis
+    container_name: redis
+    ports:
+      - "6379:6379"
+    networks:
+      - mongo-cluster
+    restart: always
+
+  auth-service:
+    container_name: auth-service
+    volumes:
+      - ./auth-service:/app
+    env_file:
+      - ./auth-service/.env
+    ports:
+      - "3000:3000"
+    depends_on:
+      - mongo1
+      - mongo2
+      - mongo3
+      - redis
+    networks:
+      - mongo-cluster
+
+  item-service:
+    container_name: item-service
+    volumes:
+      - ./item-service:/app
+    env_file:
+      - ./item-service/.env
+    ports:
+      - "4000:4000"
+    depends_on:
+      - mongo1
+      - mongo2
+      - mongo3
+      - redis
+    networks:
+      - mongo-cluster
+
+  nginx:
+    image: nginx:stable-alpine
+    container_name: nginx
+    volumes:
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+    ports:
+      - "80:80"
+    depends_on:
+      - auth-service
+      - item-service
+    networks:
+      - mongo-cluster
+
+  mongo-express:
+    image: mongo-express
+    container_name: mongo-express
+    restart: always
+    ports:
+      - "8081:8081"
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: root
+      ME_CONFIG_MONGODB_ADMINPASSWORD: example
+      ME_CONFIG_MONGODB_URL: mongodb://root:example@mongo1:27017,mongo2:27017,mongo3:27017/?replicaSet=rs0
+      ME_CONFIG_BASICAUTH: false
+    depends_on:
+      - mongo1
+      - mongo2
+      - mongo3
+    networks:
+      - mongo-cluster
+
+volumes:
+  mongo1-data:
+  mongo2-data:
+  mongo3-data:
+
+networks:
+  mongo-cluster:
+    driver: bridge

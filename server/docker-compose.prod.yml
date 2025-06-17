@@ -1,0 +1,16 @@
+services:
+  auth-service:
+    image: amrgamaleid/auth-service
+    build:
+      context: ./auth-service
+      args:
+        - NODE_ENV=production
+    command: sh -c "sleep 20 && npm run start"
+
+  item-service:
+    image: amrgamaleid/item-service
+    build:
+      context: ./item-service
+      args:
+        - NODE_ENV=production
+    command: sh -c "sleep 20 && npm run start"
