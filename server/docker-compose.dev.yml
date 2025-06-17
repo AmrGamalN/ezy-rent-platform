@@ -1,0 +1,15 @@
+version: "3.8"
+services:
+  auth-service:
+    build:
+      context: ./auth-service
+      args:
+        - NODE_ENV=development
+    command: sh -c "sleep 10 && npm run start-dev"
+
+  item-service:
+    build:
+      context: ./item-service
+      args:
+        - NODE_ENV=development
+    command: sh -c "sleep 10 && npm run start-dev"
