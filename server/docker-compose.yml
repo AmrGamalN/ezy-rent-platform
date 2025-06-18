@@ -66,12 +66,12 @@ services:
     networks:
       - mongo-cluster
 
-  item-service:
-    container_name: item-service
+  car-service:
+    container_name: car-service
     volumes:
-      - ./item-service:/app
+      - ./car-service:/app
     env_file:
-      - ./item-service/.env
+      - ./car-service/.env
     ports:
       - "4000:4000"
     depends_on:
@@ -91,7 +91,7 @@ services:
       - "80:80"
     depends_on:
       - auth-service
-      - item-service
+      - car-service
     networks:
       - mongo-cluster
 
@@ -113,10 +113,62 @@ services:
     networks:
       - mongo-cluster
 
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.13.4
+    container_name: elasticsearch
+    environment:
+      - discovery.type=single-node
+      - ES_JAVA_OPTS=-Xms512m -Xmx512m
+      - xpack.security.enabled=false
+      - xpack.security.transport.ssl.enabled=false
+    ports:
+      - "9200:9200"
+    volumes:
+      - esdata:/usr/share/elasticsearch/data
+    networks:
+      - mongo-cluster
+    depends_on:
+      - kafka
+      - zookeeper
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:8.13.4
+    container_name: kibana
+    ports:
+      - "5601:5601"
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+    depends_on:
+      - elasticsearch
+    networks:
+      - mongo-cluster
+
+  zookeeper:
+    image: confluentinc/cp-zookeeper
+    container_name: zookeeper
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+
+  kafka:
+    image: confluentinc/cp-kafka
+    container_name: kafka
+    depends_on:
+      - zookeeper
+    ports:
+      - "9092:9092"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+
+
+
 volumes:
   mongo1-data:
   mongo2-data:
   mongo3-data:
+  esdata:
 
 networks:
   mongo-cluster:
