@@ -9,6 +9,7 @@ import {
   UpdateCarDto,
   UpdateCarDtoType,
 } from "../../dtos/car/car.dto";
+import { sendCarEvent } from "../../kafka/producers/car.producer";
 import { HandleError } from "../../middlewares/handleError.middleware";
 const { warpError } = HandleError.getInstance();
 
@@ -30,7 +31,8 @@ export class CarService {
         userDto: AddCarDto,
       });
       if (!error.success) return error;
-      const createCar = await Car.create({ ...data, userId });
+      const createdCar = await Car.create({ ...data, userId });
+      await sendCarEvent("car.created", { ...createdCar, userId });
       return serviceResponse({
         statusText: "Created",
       });
@@ -61,6 +63,10 @@ export class CarService {
       });
       if (!result.success) return result;
       const updatedData = await Car.updateOne({ _id }, { $set: result.data });
+      await sendCarEvent("car.updated", {
+        _id,
+        ...updatedData,
+      });
       return serviceResponse({
         updatedCount: updatedData.modifiedCount,
       });
@@ -69,6 +75,9 @@ export class CarService {
 
   deleteCar = warpError(async (_id: string): Promise<ResponseOptions> => {
     const deletedData = await Car.deleteOne({ _id });
+    await sendCarEvent("car.deleted", {
+      _id,
+    });
     return serviceResponse({ deletedCount: deletedData.deletedCount });
   });
 }

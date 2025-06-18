@@ -66,12 +66,12 @@ services:
     networks:
       - mongo-cluster
 
-  item-service:
-    container_name: item-service
+  car-service:
+    container_name: car-service
     volumes:
-      - ./item-service:/app
+      - ./car-service:/app
     env_file:
-      - ./item-service/.env
+      - ./car-service/.env
     ports:
       - "4000:4000"
     depends_on:
@@ -91,7 +91,7 @@ services:
       - "80:80"
     depends_on:
       - auth-service
-      - item-service
+      - car-service
     networks:
       - mongo-cluster
 
