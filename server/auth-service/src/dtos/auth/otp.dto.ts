@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from "common";
 
 export const OtpEmailDto = z.object({
   token: z.string().min(70),

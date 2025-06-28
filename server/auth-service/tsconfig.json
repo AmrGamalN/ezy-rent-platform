@@ -3,10 +3,13 @@
     "target": "ES2020",
     "module": "CommonJS",
     "outDir": "./dist",
-    "rootDir": "../auth-service",
     "strict": true,
     "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true
+    "forceConsistentCasingInFileNames": true,
+    "paths": {
+      "common": [
+        "../common/src/index"
+      ]
+    }
   },
-  "include": ["app.ts", "src/**/*"]
 }

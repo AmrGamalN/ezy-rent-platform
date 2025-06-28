@@ -1,6 +1,9 @@
-import { serviceResponse } from "../../utils/response.util";
-import { safeParser } from "../../utils/safeParser.util";
-import { ResponseOptions } from "../../types/response.type";
+import {
+  HandleError,
+  serviceResponse,
+  safeParser,
+  ResponseOptions,
+} from "common";
 import { Car } from "../../models/mongodb/car/car.model";
 import {
   AddCarDto,
@@ -10,7 +13,6 @@ import {
   UpdateCarDtoType,
 } from "../../dtos/car/car.dto";
 import { sendCarEvent } from "../../kafka/producers/car.producer";
-import { HandleError } from "../../middlewares/handleError.middleware";
 const { warpError } = HandleError.getInstance();
 
 export class CarService {

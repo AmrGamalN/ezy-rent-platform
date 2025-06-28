@@ -1,4 +1,4 @@
-version: "3.8"
+# version: "3.8"
 
 x-mongo-common: &mongo-common
   image: mongo
@@ -76,9 +76,8 @@ services:
       - "4000:4000"
     depends_on:
       - mongo1
-      - mongo2
-      - mongo3
-      - redis
+      # - mongo2
+      # - mongo3
     networks:
       - mongo-cluster
 
@@ -161,8 +160,6 @@ services:
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-
-
 
 volumes:
   mongo1-data:
