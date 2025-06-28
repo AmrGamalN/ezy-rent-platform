@@ -1,6 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { CustomError } from "../utils/customError.util";
-import { HandleError } from "./handleError.middleware";
+import { CustomError, HandleError } from "common";
 import { auth } from "../configs/firebase.config";
 import dotenv from "dotenv";
 import jwt from "jsonwebtoken";

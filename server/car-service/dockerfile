@@ -13,6 +13,7 @@ RUN if ["${NODE_ENV}" = "production"]; \
     fi
     
 COPY . .
+COPY ./common /common
 
 #expose port
 EXPOSE 4000

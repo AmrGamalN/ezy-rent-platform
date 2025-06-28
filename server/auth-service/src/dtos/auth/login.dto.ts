@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from "common";
 export const LoginEmailDto = z.object({
   email: z.string().email(),
   password: z.string(),
