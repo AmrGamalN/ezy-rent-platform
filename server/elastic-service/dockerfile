@@ -9,4 +9,3 @@ RUN if ["${NODE_ENV}" = "production"]; \
 COPY . .
 COPY ./common /common
 EXPOSE 3000
-

@@ -1,5 +1,5 @@
 import { ObjectId } from "mongodb";
-import { z } from "zod";
+import { z } from "common";
 
 const imageSchema = z.object({
   url: z.string().url(),

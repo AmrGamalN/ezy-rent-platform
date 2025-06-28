@@ -4,7 +4,7 @@ import RegisterRoutes from "./register.route";
 import SecurityRoutes from "./security.route";
 import { LoginController } from "../../controllers/auth/login.controller";
 import { userAuthorization } from "../../utils/authorization.util";
-import { HandleError } from "../../middlewares/handleError.middleware";
+import { HandleError } from "common";
 const { handleError } = HandleError.getInstance();
 const controller = LoginController.getInstance();
 const router = express.Router();

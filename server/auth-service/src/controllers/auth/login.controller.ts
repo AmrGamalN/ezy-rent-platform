@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { LoginEmailService } from "../../services/auth/login.service";
 import { controllerResponse } from "../../utils/response.util";
 import { Security } from "../../models/mongodb/user/security.model";
-import { ResponseOptions } from "../../types/response.type";
+import { ResponseOptions } from "common";
 import { encrypt } from "../../utils/encrypt.util";
 import { auth } from "../../configs/firebase.config";
 

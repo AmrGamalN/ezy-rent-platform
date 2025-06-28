@@ -1,6 +1,5 @@
-import { ResponseOptions } from "../../types/response.type";
-import { serviceResponse } from "../../utils/response.util";
-import { elasticClient } from "../../configs/elasticSearch.config";
+import { HandleError, ResponseOptions, serviceResponse } from "common";
+import { elasticClient } from "../configs/elastic.config";
 import {
   ElasticCreateType,
   ElasticGetType,
@@ -8,8 +7,7 @@ import {
   ElasticUpdateType,
   ElasticDeleteType,
   ElasticMappingType,
-} from "../../types/elasticSearch.type";
-import { HandleError } from "../../middlewares/handleError.middleware";
+} from "../types/elastic.type";
 const { warpError } = HandleError.getInstance();
 
 export class ElasticService {
@@ -28,7 +26,7 @@ export class ElasticService {
     await elasticClient.indices.create({ index, body });
   };
 
-  elasticCreate = async ({ data, index, id, userId }: ElasticCreateType) => {
+  createCar = async ({ data, index, id, userId }: ElasticCreateType) => {
     await elasticClient.index({
       index,
       id,
@@ -36,7 +34,7 @@ export class ElasticService {
     });
   };
 
-  elasticGet = warpError(
+  getCar = warpError(
     async ({ id, index }: ElasticGetType): Promise<ResponseOptions> => {
       const { _index, _source } = await elasticClient.get({
         index,
@@ -46,7 +44,7 @@ export class ElasticService {
     }
   );
 
-  elasticSearch = warpError(
+  SearchCar = warpError(
     async ({
       index,
       query,
@@ -128,7 +126,7 @@ export class ElasticService {
     }
   );
 
-  elasticUpdate = async ({ data, index, id }: ElasticUpdateType) => {
+  updateCar = async ({ data, index, id }: ElasticUpdateType) => {
     await elasticClient.update({
       index,
       id,
@@ -136,7 +134,7 @@ export class ElasticService {
     });
   };
 
-  elasticDelete = async ({ index, id }: ElasticDeleteType) => {
+  deleteCar = async ({ index, id }: ElasticDeleteType) => {
     await elasticClient.delete({
       index,
       id,
