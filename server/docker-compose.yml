@@ -77,8 +77,8 @@ services:
       - mongo1
       - mongo2
       - mongo3
-      - redis
       - kafka
+      - zookeeper
     networks:
       - mongo-network
       - kafka-network
@@ -94,6 +94,7 @@ services:
     depends_on:
       - elasticsearch
       - kafka
+      - zookeeper
     networks:
       - mongo-network
       - kafka-network
@@ -142,11 +143,11 @@ services:
       - "9200:9200"
     volumes:
       - elasticsearch-data:/usr/share/elasticsearch/data
-    networks:
-      - mongo-network
     depends_on:
       - kafka
       - zookeeper
+    networks:
+      - mongo-network
 
   kibana:
     image: docker.elastic.co/kibana/kibana:8.13.4
@@ -198,8 +199,10 @@ services:
       KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:9092
     depends_on:
       - kafka
+      - zookeeper 
     networks:
-      - kafka-network
+      - kafka-network 
+      
 
 volumes:
   mongo1-data:
@@ -212,4 +215,3 @@ networks:
     driver: bridge
   kafka-network:
     driver: bridge
-
