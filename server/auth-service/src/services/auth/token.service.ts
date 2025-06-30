@@ -1,5 +1,18 @@
+<<<<<<< Updated upstream
 import { HandleError } from "../../middlewares/handleError.middleware";
 import { ResponseOptions } from "../../types/response.type";
+=======
+<<<<<<< Updated upstream
+import { HandleError, ResponseOptions } from "common";
+=======
+<<<<<<< Updated upstream
+import { HandleError } from "../../middlewares/handleError.middleware";
+import { ResponseOptions } from "../../types/response.type";
+=======
+import { HandleError, ResponseOptions } from "@amrogamal/shared-code";
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
 import { auth } from "../../configs/firebase.config";
 import jwt from "jsonwebtoken";
 const { warpError } = HandleError.getInstance();

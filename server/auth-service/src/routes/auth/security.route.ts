@@ -7,7 +7,19 @@ import {
   validateSendResetPasswordLink,
 } from "../../validations/auth/login.validator";
 import { userAuthorization } from "../../utils/authorization.util";
+<<<<<<< Updated upstream
 import { HandleError } from "../../middlewares/handleError.middleware";
+=======
+<<<<<<< Updated upstream
+import { HandleError } from "common";
+=======
+<<<<<<< Updated upstream
+import { HandleError } from "../../middlewares/handleError.middleware";
+=======
+import { HandleError } from "@amrogamal/shared-code";
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
 const { handleError } = HandleError.getInstance();
 const controller = SecurityController.getInstance();
 const router = express.Router();

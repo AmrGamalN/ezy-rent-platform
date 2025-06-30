@@ -15,7 +15,27 @@ import {
 import { ResponseOptions } from "../../types/response.type";
 import { CustomError } from "../../utils/customError.util";
 import { AuthRegisterService } from "./auth.register.service";
+<<<<<<< Updated upstream
 import { HandleError } from "../../middlewares/handleError.middleware";
+=======
+<<<<<<< Updated upstream
+=======
+<<<<<<< Updated upstream
+import { HandleError } from "../../middlewares/handleError.middleware";
+=======
+>>>>>>> Stashed changes
+import {
+  HandleError,
+  ResponseOptions,
+  serviceResponse,
+  safeParser,
+<<<<<<< Updated upstream
+} from "common";
+=======
+} from "@amrogamal/shared-code";
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
 const { warpError } = HandleError.getInstance();
 
 export class RegisterService {
@@ -157,7 +177,6 @@ export class RegisterService {
         message: `Awesome! Your ${provider} has been verified successfully. Let’s get started!`,
       });
     } catch (err: any) {
-      console.log(err);
       return serviceResponse({
         statusText: "InternalServerError",
         message: `An error occurred while verifying your ${provider}. Please try again later.`,

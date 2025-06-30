@@ -1,4 +1,16 @@
+<<<<<<< Updated upstream
 import { z } from "zod";
+=======
+<<<<<<< Updated upstream
+import { z } from "common";
+=======
+<<<<<<< Updated upstream
+import { z } from "zod";
+=======
+import { z } from "@amrogamal/shared-code";
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
 
 export const OtpEmailDto = z.object({
   token: z.string().min(70),

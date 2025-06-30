@@ -5,13 +5,40 @@ import { sendEmail } from "../../utils/sendEmail.util";
 import { sendVerifyEmail } from "../../utils/message.util";
 import { serviceResponse } from "../../utils/response.util";
 import { generateEmailOtp } from "../../utils/generateCode.util";
+<<<<<<< Updated upstream
 import { HandleError } from "../../middlewares/handleError.middleware";
+=======
+<<<<<<< Updated upstream
+=======
+<<<<<<< Updated upstream
+import { HandleError } from "../../middlewares/handleError.middleware";
+=======
+import {
+  HandleError,
+  ResponseOptions,
+  serviceResponse,
+} from "@amrogamal/shared-code";
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
 const { warpError } = HandleError.getInstance();
 import {
   RegisterEmailDtoType,
   RegisterPhoneDtoType,
 } from "../../dtos/auth/register.dto";
+<<<<<<< Updated upstream
 import { ResponseOptions } from "../../types/response.type";
+=======
+<<<<<<< Updated upstream
+import { HandleError, ResponseOptions, serviceResponse } from "common";
+=======
+<<<<<<< Updated upstream
+import { ResponseOptions } from "../../types/response.type";
+=======
+
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
 import { Profile } from "../../models/mongodb/user/profile.model";
 import { v4 as uuidv4 } from "uuid";
 

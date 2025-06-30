@@ -1,8 +1,19 @@
 import { Request, Response } from "express";
 import { LoginEmailService } from "../../services/auth/login.service";
-import { controllerResponse } from "../../utils/response.util";
+import { controllerResponse, ResponseOptions } from "@amrogamal/shared-code";
 import { Security } from "../../models/mongodb/user/security.model";
+<<<<<<< Updated upstream
 import { ResponseOptions } from "../../types/response.type";
+=======
+<<<<<<< Updated upstream
+import { ResponseOptions } from "common";
+=======
+<<<<<<< Updated upstream
+import { ResponseOptions } from "../../types/response.type";
+=======
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
 import { encrypt } from "../../utils/encrypt.util";
 import { auth } from "../../configs/firebase.config";
 

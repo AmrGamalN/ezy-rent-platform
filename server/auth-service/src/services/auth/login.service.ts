@@ -10,7 +10,27 @@ import { safeParser } from "../../utils/safeParser.util";
 import { TokenService } from "./token.service";
 import { AuthLoginService } from "./auth.login.service";
 import { Security } from "../../models/mongodb/user/security.model";
+<<<<<<< Updated upstream
 import { HandleError } from "../../middlewares/handleError.middleware";
+=======
+<<<<<<< Updated upstream
+=======
+<<<<<<< Updated upstream
+import { HandleError } from "../../middlewares/handleError.middleware";
+=======
+>>>>>>> Stashed changes
+import {
+  HandleError,
+  ResponseOptions,
+  serviceResponse,
+  safeParser,
+<<<<<<< Updated upstream
+} from "common";
+=======
+} from "@amrogamal/shared-code";
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
 const { warpError } = HandleError.getInstance();
 import speakeasy from "speakeasy";
 

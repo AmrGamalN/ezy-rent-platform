@@ -7,7 +7,19 @@ import {
   validateRegisterEmail,
   validateResendEmail,
 } from "../../validations/auth/register.validator";
+<<<<<<< Updated upstream
 import { HandleError } from "../../middlewares/handleError.middleware";
+=======
+<<<<<<< Updated upstream
+import { HandleError } from "common";
+=======
+<<<<<<< Updated upstream
+import { HandleError } from "../../middlewares/handleError.middleware";
+=======
+import { HandleError } from "@amrogamal/shared-code";
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
 const { handleError } = HandleError.getInstance();
 const authMiddleware = AuthMiddleware.getInstance();
 const controller = RegisterController.getInstance();

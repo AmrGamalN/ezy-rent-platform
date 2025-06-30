@@ -1,6 +1,19 @@
 import { NextFunction, Request, Response } from "express";
+<<<<<<< Updated upstream
 import { CustomError } from "../utils/customError.util";
 import { HandleError } from "./handleError.middleware";
+=======
+<<<<<<< Updated upstream
+import { CustomError, HandleError } from "common";
+=======
+<<<<<<< Updated upstream
+import { CustomError } from "../utils/customError.util";
+import { HandleError } from "./handleError.middleware";
+=======
+import { CustomError, HandleError } from "@amrogamal/shared-code";;
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
 import { auth } from "../configs/firebase.config";
 import dotenv from "dotenv";
 import jwt from "jsonwebtoken";

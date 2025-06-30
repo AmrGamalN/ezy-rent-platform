@@ -8,7 +8,23 @@ import { sendEmail } from "../../utils/sendEmail.util";
 import { TokenService } from "./token.service";
 import speakeasy from "speakeasy";
 import QRCode from "qrcode";
+<<<<<<< Updated upstream
 import { HandleError } from "../../middlewares/handleError.middleware";
+=======
+<<<<<<< Updated upstream
+import { HandleError, ResponseOptions, serviceResponse } from "common";
+=======
+<<<<<<< Updated upstream
+import { HandleError } from "../../middlewares/handleError.middleware";
+=======
+import {
+  HandleError,
+  ResponseOptions,
+  serviceResponse,
+} from "@amrogamal/shared-code";
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
 import { auth } from "../../configs/firebase.config";
 const { warpError } = HandleError.getInstance();
 

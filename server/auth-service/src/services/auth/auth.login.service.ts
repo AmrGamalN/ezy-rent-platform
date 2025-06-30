@@ -4,7 +4,23 @@ import { SecurityDtoType } from "../../dtos/user/security.dto";
 import { comparePassword } from "../../utils/encrypt.util";
 import { ResponseOptions } from "../../types/response.type";
 import { TokenService } from "./token.service";
+<<<<<<< Updated upstream
 import { HandleError } from "../../middlewares/handleError.middleware";
+=======
+<<<<<<< Updated upstream
+import { HandleError, ResponseOptions, serviceResponse } from "common";
+=======
+<<<<<<< Updated upstream
+import { HandleError } from "../../middlewares/handleError.middleware";
+=======
+import {
+  HandleError,
+  ResponseOptions,
+  serviceResponse,
+} from "@amrogamal/shared-code";
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
 const { warpError } = HandleError.getInstance();
 
 export class AuthLoginService {

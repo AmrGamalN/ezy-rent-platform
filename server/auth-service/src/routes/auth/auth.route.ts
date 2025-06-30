@@ -4,7 +4,19 @@ import RegisterRoutes from "./register.route";
 import SecurityRoutes from "./security.route";
 import { LoginController } from "../../controllers/auth/login.controller";
 import { userAuthorization } from "../../utils/authorization.util";
+<<<<<<< Updated upstream
 import { HandleError } from "../../middlewares/handleError.middleware";
+=======
+<<<<<<< Updated upstream
+import { HandleError } from "common";
+=======
+<<<<<<< Updated upstream
+import { HandleError } from "../../middlewares/handleError.middleware";
+=======
+import { HandleError } from "@amrogamal/shared-code";
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
 const { handleError } = HandleError.getInstance();
 const controller = LoginController.getInstance();
 const router = express.Router();
