@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from "common";
 export const ProfileDto = z.object({
   userId: z.string().min(1),
   username: z.string().min(1),

@@ -1,5 +1,4 @@
 import CarRoutes from "./routes/car/car.route";
-
 import { Request, Response } from "express";
 import express from "express";
 const router = express.Router();
@@ -10,4 +9,5 @@ router.get("/health-check", (req: Request, res: Response) => {
 });
 
 router.use("/car", CarRoutes);
+
 export default router;

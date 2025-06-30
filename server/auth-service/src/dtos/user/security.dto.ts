@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from "common";
 
 export const SecurityAdminDto = z.object({
   userId: z.string().min(1),

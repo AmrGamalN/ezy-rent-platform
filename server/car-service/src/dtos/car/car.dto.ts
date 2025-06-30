@@ -1,7 +1,6 @@
 import { ObjectId } from "mongodb";
 import { z } from "@amrogamal/shared-code";
 
-
 const imageSchema = z.object({
   url: z.string().url(),
   key: z.string(),

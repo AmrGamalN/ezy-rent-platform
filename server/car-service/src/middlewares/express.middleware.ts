@@ -1,5 +1,4 @@
 import { Request, Response, NextFunction } from "express";
-import { ValidationChain, validationResult } from "express-validator";
 import { HandleError } from "@amrogamal/shared-code";
 import { CustomError } from "../utils/customError.util";
 const { handleError } = HandleError.getInstance();

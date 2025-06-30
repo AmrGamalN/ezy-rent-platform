@@ -1,22 +1,9 @@
-<<<<<<< Updated upstream
-=======
-<<<<<<< Updated upstream
-import { serviceResponse } from "../../utils/response.util";
-import { safeParser } from "../../utils/safeParser.util";
-import { ResponseOptions } from "../../types/response.type";
-=======
->>>>>>> Stashed changes
 import {
   HandleError,
   serviceResponse,
   safeParser,
   ResponseOptions,
-<<<<<<< Updated upstream
-} from "common";
-=======
 } from "@amrogamal/shared-code";
->>>>>>> Stashed changes
->>>>>>> Stashed changes
 import { Car } from "../../models/mongodb/car/car.model";
 import {
   AddCarDto,
@@ -72,6 +59,7 @@ export class CarService {
       count: await Car.countDocuments(),
     });
   });
+
 
   updateCar = warpError(
     async (_id: string, data: UpdateCarDtoType): Promise<ResponseOptions> => {

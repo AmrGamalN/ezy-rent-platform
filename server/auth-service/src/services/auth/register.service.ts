@@ -5,17 +5,18 @@ import { OtpEmail } from "../../models/mongodb/auth/otp.model";
 import { Profile } from "../../models/mongodb/user/profile.model";
 import { Security } from "../../models/mongodb/user/security.model";
 import { hashPassword } from "../../utils/encrypt.util";
-import { safeParser } from "../../utils/safeParser.util";
-import { serviceResponse } from "../../utils/response.util";
 import {
   RegisterEmailDto,
   RegisterEmailDtoType,
   RegisterPhoneDtoType,
 } from "../../dtos/auth/register.dto";
-import { ResponseOptions } from "../../types/response.type";
-import { CustomError } from "../../utils/customError.util";
 import { AuthRegisterService } from "./auth.register.service";
-import { HandleError } from "../../middlewares/handleError.middleware";
+import {
+  HandleError,
+  ResponseOptions,
+  serviceResponse,
+  safeParser,
+} from "common";
 const { warpError } = HandleError.getInstance();
 
 export class RegisterService {
@@ -134,7 +135,7 @@ export class RegisterService {
               email: data?.email,
               prefixS3: uuidv4(),
               sign_up_provider: provider,
-              isEmailVerified:true,
+              isEmailVerified: true,
               terms: data.terms,
             },
           ],

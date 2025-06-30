@@ -1,0 +1,19 @@
+{
+  "name": "common",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Amr Gamal",
+  "license": "ISC",
+  "description": "Common folder for shared code",
+  "dependencies": {
+    "@types/express": "^5.0.3",
+    "dotenv": "^17.0.0",
+    "express": "^5.1.0",
+    "winston": "^3.17.0",
+    "zod": "^3.25.67"
+  }
+}

@@ -7,10 +7,10 @@ services:
         - NODE_ENV=production
     command: sh -c "sleep 20 && npm run start"
 
-  item-service:
-    image: amrgamaleid/item-service
+  car-service:
+    image: amrgamaleid/car-service
     build:
-      context: ./item-service
+      context: ./car-service
       args:
         - NODE_ENV=production
     command: sh -c "sleep 20 && npm run start"
