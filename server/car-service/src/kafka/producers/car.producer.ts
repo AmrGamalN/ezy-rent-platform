@@ -10,7 +10,7 @@ export const sendCarEvent = async (eventType: CarEventType, payload: any) => {
     topic: "car-events",
     messages: [
       {
-        key: _id.toString(),
+        key: rest.id.toString(),
         value: JSON.stringify({
           data: rest,
           type: eventType,

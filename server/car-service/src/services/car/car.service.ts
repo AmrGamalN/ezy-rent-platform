@@ -32,15 +32,24 @@ export class CarService {
         data,
         userDto: AddCarDto,
       });
+
       if (!error.success) return error;
       const createdCar = await Car.create({
         ...data,
         userId: Math.random().toString(36).substring(2, 15),
       });
+      if (!createdCar) {
+        return serviceResponse({
+          statusText: "InternalServerError",
+          message: "Failed to create car",
+        });
+      }
+
       await sendCarEvent("car.created", {
         ...createdCar.toObject(),
         id: createdCar._id,
       });
+
       return serviceResponse({
         statusText: "Created",
       });
@@ -68,21 +77,40 @@ export class CarService {
         actionType: "update",
       });
       if (!result.success) return result;
-      const updatedData = await Car.updateOne({ _id }, { $set: result.data });
+
+      const updatedData = await Car.findByIdAndUpdate(
+        { _id },
+        { $set: result.data },
+        { new: true }
+      ).lean();
+      if (!updatedData) {
+        return serviceResponse({
+          statusText: "NotFound",
+          message: "Car not found",
+        });
+      }
+
       await sendCarEvent("car.updated", {
-        _id,
+        id: _id,
         ...updatedData,
       });
+
       return serviceResponse({
-        updatedCount: updatedData.modifiedCount,
+        data: updatedData,
       });
     }
   );
 
   deleteCar = warpError(async (_id: string): Promise<ResponseOptions> => {
     const deletedData = await Car.deleteOne({ _id });
+    if (deletedData.deletedCount === 0) {
+      return serviceResponse({
+        statusText: "NotFound",
+        message: "Car not found",
+      });
+    }
     await sendCarEvent("car.deleted", {
-      _id,
+      id: _id,
     });
     return serviceResponse({ deletedCount: deletedData.deletedCount });
   });
