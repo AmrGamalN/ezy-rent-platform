@@ -3,7 +3,7 @@ import {
   serviceResponse,
   safeParser,
   ResponseOptions,
-} from "common";
+} from "@amrogamal/shared-code";
 import { Car } from "../../models/mongodb/car/car.model";
 import {
   AddCarDto,
@@ -27,14 +27,20 @@ export class CarService {
   }
 
   createCar = warpError(
-    async (data: AddCarDtoType, userId: string): Promise<ResponseOptions> => {
+    async (data: AddCarDtoType): Promise<ResponseOptions> => {
       const error = safeParser({
         data,
         userDto: AddCarDto,
       });
       if (!error.success) return error;
-      const createdCar = await Car.create({ ...data, userId });
-      await sendCarEvent("car.created", { ...createdCar, userId });
+      const createdCar = await Car.create({
+        ...data,
+        userId: Math.random().toString(36).substring(2, 15),
+      });
+      await sendCarEvent("car.created", {
+        ...createdCar.toObject(),
+        id: createdCar._id,
+      });
       return serviceResponse({
         statusText: "Created",
       });
@@ -48,13 +54,11 @@ export class CarService {
     });
   });
 
-  countCar = warpError(
-    async (queries: any, filtered?: boolean): Promise<ResponseOptions> => {
-      return serviceResponse({
-        count: await Car.countDocuments(),
-      });
-    }
-  );
+  countCar = warpError(async (): Promise<ResponseOptions> => {
+    return serviceResponse({
+      count: await Car.countDocuments(),
+    });
+  });
 
   updateCar = warpError(
     async (_id: string, data: UpdateCarDtoType): Promise<ResponseOptions> => {

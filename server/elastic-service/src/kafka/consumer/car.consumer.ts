@@ -1,13 +1,13 @@
 import { kafka } from "../../configs/kafka.config";
-import { ElasticService } from "../../services/car/elastic.service";
-import { HandleError } from "common";
+import { CarService } from "../../services/car.service";
+import { HandleError } from "@amrogamal/shared-code";
 const { warpError } = HandleError.getInstance();
 
 export class CarConsumer {
   private static instance: CarConsumer;
-  private elasticService: ElasticService;
+  private carService: CarService;
   private constructor() {
-    this.elasticService = ElasticService.getInstance();
+    this.carService = CarService.getInstance();
   }
 
   public static getInstance(): CarConsumer {
@@ -19,37 +19,36 @@ export class CarConsumer {
 
   startCarConsumer = warpError(async (): Promise<void> => {
     const consumer = kafka.consumer({ groupId: "car-group" });
+
     await consumer.connect();
+    await consumer.subscribe({
+      topic: "car-events",
+      fromBeginning: true,
+    });
 
     await consumer.run({
       eachMessage: async ({ topic, partition, message, heartbeat }) => {
-        console.log("topic", topic);
-        console.log("partition", partition);
-        console.log("message", message);
-        console.log("heartbeat", heartbeat);
-
-        if (message.value === null) return;
+        if (!message.value) return;
 
         const { data, type } = JSON.parse(message.value.toString());
+        const id = data?.id;
+
         if (type === "car.created") {
-          console.log(`[Kafka] Received event: ${type} - ID: ${data._id}`);
-          await this.elasticService.createCar({
+          await this.carService.createCar({
             data,
             index: "cars",
-            id: data._id,
+            id,
           });
         } else if (type === "car.updated") {
-          console.log(`[Kafka] Received event: ${type} - ID: ${data._id}`);
-          await this.elasticService.updateCar({
+          await this.carService.updateCar({
             data,
             index: "cars",
-            id: data._id,
+            id,
           });
         } else if (type === "car.deleted") {
-          console.log(`[Kafka] Received event: ${type} - ID: ${data._id}`);
-          await this.elasticService.deleteCar({
+          await this.carService.deleteCar({
             index: "cars",
-            id: data._id,
+            id,
           });
         }
       },

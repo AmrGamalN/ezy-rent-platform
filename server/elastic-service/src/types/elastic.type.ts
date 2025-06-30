@@ -6,7 +6,6 @@ export type ElasticCreateType = {
 };
 
 export type ElasticGetType = {
-  index: string;
   id: string;
 };
 
@@ -35,30 +34,62 @@ export type ElasticMappingType = {
   body: any;
 };
 
-export const elasticMappingCar = {
+export const ElasticMappingCar = {
   settings: {
     analysis: {
       analyzer: {
-        default: { type: "standard" },
+        default: {
+          type: "standard",
+          stopwords: "_none_",
+        },
       },
     },
   },
   mappings: {
     properties: {
-      name: {
-        type: "text",
-        analyzer: "english",
+      userId: { type: "keyword" },
+      phone: { type: "keyword" },
+      name: { type: "text" },
+      description: { type: "text" },
+      carModel: { type: "keyword" },
+      brand: { type: "keyword" },
+      year: { type: "integer" },
+      color: { type: "keyword" },
+      images: {
+        type: "nested",
+        properties: {
+          url: { type: "keyword" },
+          key: { type: "keyword" },
+        },
       },
-      description: {
-        type: "text",
-        analyzer: "english",
+      pricePerDay: { type: "float" },
+      availableFrom: { type: "date" },
+      availableTo: { type: "date" },
+      location: {
+        properties: {
+          city: { type: "keyword" },
+          address: { type: "text" },
+          coordinates: {
+            properties: {
+              lat: { type: "float" },
+              lng: { type: "float" },
+            },
+          },
+        },
       },
-      availableTo: {
-        type: "date",
+      isAvailable: { type: "boolean" },
+      guarantees: {
+        properties: {
+          hasInsurance: { type: "boolean" },
+          insuranceDetails: { type: "text" },
+          licenseValid: { type: "boolean" },
+          requiresDeposit: { type: "boolean" },
+          depositAmount: { type: "float" },
+          additionalNotes: { type: "text" },
+        },
       },
-      availableFrom: {
-        type: "date",
-      },
+      createdAt: { type: "date" },
+      updatedAt: { type: "date" },
     },
   },
 };

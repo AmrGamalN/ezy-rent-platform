@@ -3,5 +3,5 @@ import dotenv from "dotenv";
 dotenv.config();
 
 export const elasticClient = new Client({
-  node: String(process.env.ELASTICSEARCH_URL),
+  node: process.env.ELASTICSEARCH_URL,
 });

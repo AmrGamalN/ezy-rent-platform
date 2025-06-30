@@ -1,6 +1,5 @@
 import { NextFunction, Request, Response } from "express";
 import { CustomError, HandleError } from "@amrogamal/shared-code";;
-
 import { auth } from "../configs/firebase.config";
 import dotenv from "dotenv";
 import jwt from "jsonwebtoken";

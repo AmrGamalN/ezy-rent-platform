@@ -1,5 +1,4 @@
 # version: "3.8"
-
 x-mongo-common: &mongo-common
   image: mongo
   command: >
