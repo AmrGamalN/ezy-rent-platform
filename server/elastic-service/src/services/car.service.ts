@@ -1,48 +1,55 @@
-import { HandleError, ResponseOptions, serviceResponse } from "common";
+import {
+  HandleError,
+  ResponseOptions,
+  serviceResponse,
+} from "@amrogamal/shared-code";
 import { elasticClient } from "../configs/elastic.config";
 import {
   ElasticCreateType,
-  ElasticGetType,
   ElasticSearchType,
   ElasticUpdateType,
   ElasticDeleteType,
-  ElasticMappingType,
+  ElasticMappingCar,
 } from "../types/elastic.type";
 const { warpError } = HandleError.getInstance();
 
-export class ElasticService {
-  private static instance: ElasticService;
+export class CarService {
+  private static instance: CarService;
 
-  public static getInstance(): ElasticService {
-    if (!ElasticService.instance) {
-      this.instance = new ElasticService();
+  public static getInstance(): CarService {
+    if (!CarService.instance) {
+      this.instance = new CarService();
     }
     return this.instance;
   }
 
-  elasticMapping = async ({ index, body }: ElasticMappingType) => {
-    const exists = await elasticClient.indices.exists({ index });
-    if (exists) return;
-    await elasticClient.indices.create({ index, body });
+  elasticMapping = async () => {
+    const exists = await elasticClient.indices.exists({ index: "cars" });
+    if (exists) return { message: "Index already exists" };
+    const response = await elasticClient.indices.create({
+      index: "cars",
+      settings: ElasticMappingCar.settings as any,
+      mappings: ElasticMappingCar.mappings as any,
+    });
+    return { message: "Index created successfully", response };
   };
 
-  createCar = async ({ data, index, id, userId }: ElasticCreateType) => {
+  createCar = warpError(async ({ data, index, id }: ElasticCreateType) => {
     await elasticClient.index({
       index,
       id,
-      document: { ...data, userId },
+      document: data,
+      "refresh": "wait_for", 
     });
-  };
+  });
 
-  getCar = warpError(
-    async ({ id, index }: ElasticGetType): Promise<ResponseOptions> => {
-      const { _index, _source } = await elasticClient.get({
-        index,
-        id,
-      });
-      return serviceResponse({ data: _source });
-    }
-  );
+  getCar = warpError(async (id: string): Promise<ResponseOptions> => {
+    const { _index, _source } = await elasticClient.get({
+      index: "cars",
+      id,
+    });
+    return serviceResponse({ data: _source });
+  });
 
   SearchCar = warpError(
     async ({
