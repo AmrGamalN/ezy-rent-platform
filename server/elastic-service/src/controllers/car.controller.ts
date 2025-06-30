@@ -16,12 +16,22 @@ export class CarController {
   }
 
   createMapping = async (req: Request, res: Response): Promise<Response> => {
-    const result = await this.carService.elasticMapping();
+    const result = await this.carService.createMapping();
     return controllerResponse(res, result);
   };
 
   getCar = async (req: Request, res: Response): Promise<Response> => {
     const result = await this.carService.getCar(req.params.id);
+    return controllerResponse(res, result);
+  };
+
+  searchCar = async (req: Request, res: Response): Promise<Response> => {
+    const { page, limit, ...query } = req.query;
+    const result = await this.carService.searchCar(
+      query as any,
+      Number(page),
+      Number(limit)
+    );
     return controllerResponse(res, result);
   };
 }

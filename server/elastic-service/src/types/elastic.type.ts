@@ -10,12 +10,12 @@ export type ElasticGetType = {
 };
 
 export type ElasticSearchType = {
-  query: Record<string, any>;
-  index: string;
-  sort?: Array<Record<string, "asc" | "desc">>;
-  _source?: string[];
-  page: number | 1;
-  limit: number | 10;
+  brand: string;
+  name: string;
+  city: string;
+  minPrice: number;
+  maxPrice: number;
+  // sort?: Array<Record<string, "asc" | "desc">>;
 };
 
 export type ElasticUpdateType = {
