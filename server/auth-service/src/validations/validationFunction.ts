@@ -8,7 +8,7 @@ import {
   ValidationNumberType,
   ValidationStringType,
 } from "../types/validation.type";
-import { CustomError } from "../utils/customError.util";
+import { CustomError } from "@amrogamal/shared-code";
 
 export const validateString = ({
   field,

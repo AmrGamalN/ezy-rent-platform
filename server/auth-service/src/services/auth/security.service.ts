@@ -5,7 +5,12 @@ import { sendEmail } from "../../utils/sendEmail.util";
 import { TokenService } from "./token.service";
 import speakeasy from "speakeasy";
 import QRCode from "qrcode";
-import { HandleError, ResponseOptions, serviceResponse } from "common";
+import {
+  HandleError,
+  ResponseOptions,
+  serviceResponse,
+} from "@amrogamal/shared-code";
+
 import { auth } from "../../configs/firebase.config";
 const { warpError } = HandleError.getInstance();
 

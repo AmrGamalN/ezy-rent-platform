@@ -1,6 +1,4 @@
-// Auth
 import AuthRoutes from "./routes/auth/auth.route";
-
 import { Request, Response } from "express";
 import express from "express";
 const router = express.Router();

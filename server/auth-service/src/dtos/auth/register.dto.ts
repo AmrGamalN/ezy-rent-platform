@@ -1,5 +1,9 @@
-import { z } from "common";
 import { SecurityAddEmailDto, SecurityAddPhoneDto } from "../user/security.dto";
+import {
+  SecurityAddEmailDto,
+  SecurityAddPhoneDto,
+} from "../user/security.dto";
+import { z } from "@amrogamal/shared-code";
 import { ProfileAddDto } from "../user/profile.dto";
 
 export const RegisterEmailDto = SecurityAddEmailDto.merge(ProfileAddDto);

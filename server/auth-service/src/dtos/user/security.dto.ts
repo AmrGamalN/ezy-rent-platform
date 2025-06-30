@@ -1,4 +1,4 @@
-import { z } from "common";
+import { z } from "@amrogamal/shared-code";
 
 export const SecurityAdminDto = z.object({
   userId: z.string().min(1),

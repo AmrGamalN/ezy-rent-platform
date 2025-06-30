@@ -1,4 +1,5 @@
-import { z } from "common";
+import { z } from "@amrogamal/shared-code";
+
 export const ProfileDto = z.object({
   userId: z.string().min(1),
   username: z.string().min(1),

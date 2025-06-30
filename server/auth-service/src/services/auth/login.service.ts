@@ -12,7 +12,7 @@ import {
   ResponseOptions,
   serviceResponse,
   safeParser,
-} from "common";
+} from "@amrogamal/shared-code";
 const { warpError } = HandleError.getInstance();
 import speakeasy from "speakeasy";
 

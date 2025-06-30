@@ -2,7 +2,11 @@ import { Security } from "../../models/mongodb/user/security.model";
 import { SecurityDtoType } from "../../dtos/user/security.dto";
 import { comparePassword } from "../../utils/encrypt.util";
 import { TokenService } from "./token.service";
-import { HandleError, ResponseOptions, serviceResponse } from "common";
+import {
+  HandleError,
+  ResponseOptions,
+  serviceResponse,
+} from "@amrogamal/shared-code";
 const { warpError } = HandleError.getInstance();
 
 export class AuthLoginService {
