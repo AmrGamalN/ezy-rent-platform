@@ -1,5 +1,4 @@
-import { UserRoleType } from "./role.type";
-
+type UserRoleType = "user" | "admin" | "manager";
 export type UserRequestType = {
   userId: string;
   email: string;
