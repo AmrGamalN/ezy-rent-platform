@@ -3,13 +3,9 @@
     "target": "ES2020",
     "module": "CommonJS",
     "outDir": "./dist",
+     "rootDor":"./src",
     "strict": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
-    "paths": {
-      "common": [
-        "../common/src/index"
-      ]
-    }
-  }
+  },
 }

@@ -1,23 +1,11 @@
-#base image
 FROM node:20-alpine
-
-#working directory
 WORKDIR /src
-
-#copy files
 COPY package*.json ./
 ARG NODE_ENV
-RUN if ["${NODE_ENV}" = "production"]; \
-    then npm install --only=production; \
+RUN if [ "$NODE_ENV" = "production" ]; then \
+    npm install --only=production; \
     else npm install; \
     fi
-    
 COPY . .
-COPY ./common /common
-
-#expose port
 EXPOSE 4000
 
-#run app
-# CMD ["npm", "start"]
-# CMD ["npm", "run", "start-dev"]

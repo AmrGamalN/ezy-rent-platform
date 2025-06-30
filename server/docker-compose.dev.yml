@@ -23,3 +23,4 @@ services:
     depends_on:
       - kafka
       - elasticsearch
+
