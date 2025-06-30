@@ -7,10 +7,5 @@ RUN if [ "$NODE_ENV" = "production" ]; then \
     else npm install; \
     fi
 COPY . .
-<<<<<<< Updated upstream
-
-#expose port
-=======
->>>>>>> Stashed changes
 EXPOSE 4000
 

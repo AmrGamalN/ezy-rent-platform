@@ -1,8 +1,5 @@
-<<<<<<< Updated upstream
-version: "3.8"
+# version: "3.8"
 
-=======
->>>>>>> Stashed changes
 x-mongo-common: &mongo-common
   image: mongo
   command: >
@@ -81,11 +78,8 @@ services:
       - mongo1
       - mongo2
       - mongo3
-<<<<<<< Updated upstream
       - redis
-=======
       - kafka
->>>>>>> Stashed changes
     networks:
       - mongo-network
       - kafka-network
@@ -207,8 +201,6 @@ services:
       - kafka
     networks:
       - kafka-network
-
-
 
 volumes:
   mongo1-data:

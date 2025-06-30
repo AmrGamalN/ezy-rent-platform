@@ -1,10 +1,10 @@
-import { ZodObject, ZodRawShape } from "zod";
-import { UserRoleType } from "./role.type";
-export type ActionType = "getAll" | "update" | "getOne" | "delete";
 export const phonePattern = /^\+[1-9]\d{10,15}$/;
+
 export const emailPattern =
   /^[a-zA-Z0-9._-]+@(gmail|yahoo|outlook|hotmail|icloud|example)\.com$/;
+
 export type LocationType = "body" | "query" | "check" | "param";
+
 export type DateFieldType =
   | "startDate"
   | "endDate"
@@ -53,13 +53,4 @@ export type ValidationNumberType = MainValidationType & {
     min?: number;
     max?: number;
   };
-};
-
-export type ValidateZodType = {
-  data: any;
-  userDto: ZodObject<ZodRawShape>;
-  adminDto?: ZodObject<ZodRawShape>;
-  managerDto?: ZodObject<ZodRawShape>;
-  viewerRole?: UserRoleType;
-  actionType?: ActionType;
 };

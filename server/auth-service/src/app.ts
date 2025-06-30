@@ -3,7 +3,7 @@ import express from "express";
 import { swaggerDoc } from "./configs/swagger.config";
 import { mongodbConnect } from "./configs/mongodb.config";
 import { redis } from "./configs/redis.config";
-import { HandleError } from "./middlewares/handleError.middleware";
+import { HandleError } from "@amrogamal/shared-code";
 import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
 import helmet from "helmet";

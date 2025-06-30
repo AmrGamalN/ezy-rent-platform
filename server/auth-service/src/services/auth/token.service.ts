@@ -1,5 +1,4 @@
-import { HandleError } from "../../middlewares/handleError.middleware";
-import { ResponseOptions } from "../../types/response.type";
+import { HandleError, ResponseOptions } from "@amrogamal/shared-code";
 import { auth } from "../../configs/firebase.config";
 import jwt from "jsonwebtoken";
 const { warpError } = HandleError.getInstance();

@@ -7,7 +7,7 @@ import {
   validateLoginEmail,
   validateOtp,
 } from "../../validations/auth/login.validator";
-import { HandleError } from "../../middlewares/handleError.middleware";
+import { HandleError } from "@amrogamal/shared-code";
 const { handleError } = HandleError.getInstance();
 const controller = LoginController.getInstance();
 const authMiddleware = AuthMiddleware.getInstance();

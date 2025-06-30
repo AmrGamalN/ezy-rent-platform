@@ -3,15 +3,19 @@ import { OtpEmail } from "../../models/mongodb/auth/otp.model";
 import { Security } from "../../models/mongodb/user/security.model";
 import { sendEmail } from "../../utils/sendEmail.util";
 import { sendVerifyEmail } from "../../utils/message.util";
-import { serviceResponse } from "../../utils/response.util";
 import { generateEmailOtp } from "../../utils/generateCode.util";
-import { HandleError } from "../../middlewares/handleError.middleware";
+import {
+  HandleError,
+  ResponseOptions,
+  serviceResponse,
+} from "@amrogamal/shared-code";
+
 const { warpError } = HandleError.getInstance();
 import {
   RegisterEmailDtoType,
   RegisterPhoneDtoType,
 } from "../../dtos/auth/register.dto";
-import { ResponseOptions } from "../../types/response.type";
+
 import { Profile } from "../../models/mongodb/user/profile.model";
 import { v4 as uuidv4 } from "uuid";
 

@@ -1,5 +1,5 @@
 import { body, ValidationChain } from "express-validator";
-import { CustomError } from "../../utils/customError.util";
+import { CustomError } from "@amrogamal/shared-code";
 import { validateBoolean, validateString } from "../validationFunction";
 
 export const validateRegisterEmail = (): ValidationChain[] => [

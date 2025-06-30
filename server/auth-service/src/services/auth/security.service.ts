@@ -1,14 +1,16 @@
-import { OtpEmail } from "../../models/mongodb/auth/otp.model";
 import { Security } from "../../models/mongodb/user/security.model";
-import { ResponseOptions } from "../../types/response.type";
 import { hashPassword } from "../../utils/encrypt.util";
-import { serviceResponse } from "../../utils/response.util";
 import { sendResetPasswordEmail } from "../../utils/message.util";
 import { sendEmail } from "../../utils/sendEmail.util";
 import { TokenService } from "./token.service";
 import speakeasy from "speakeasy";
 import QRCode from "qrcode";
-import { HandleError } from "../../middlewares/handleError.middleware";
+import {
+  HandleError,
+  ResponseOptions,
+  serviceResponse,
+} from "@amrogamal/shared-code";
+
 import { auth } from "../../configs/firebase.config";
 const { warpError } = HandleError.getInstance();
 

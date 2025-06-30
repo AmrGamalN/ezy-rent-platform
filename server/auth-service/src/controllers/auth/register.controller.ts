@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { RegisterService } from "../../services/auth/register.service";
-import { controllerResponse } from "../../utils/response.util";
 import { AuthRegisterService } from "../../services/auth/auth.register.service";
+import { controllerResponse } from "@amrogamal/shared-code";
 
 export class RegisterController {
   static instance: RegisterController;
@@ -50,7 +50,7 @@ export class RegisterController {
   };
 
   verifyPhone = async (req: Request, res: Response) => {
-   const result =  await this.registerService.verifyPhone(req.decode);
+    const result = await this.registerService.verifyPhone(req.decode);
     return controllerResponse(res, result);
   };
 }

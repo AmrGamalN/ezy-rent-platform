@@ -4,13 +4,15 @@ import {
   LoginPhoneDto,
   LoginPhoneDtoType,
 } from "../../dtos/auth/login.dto";
-import { ResponseOptions } from "../../types/response.type";
-import { serviceResponse } from "../../utils/response.util";
-import { safeParser } from "../../utils/safeParser.util";
 import { TokenService } from "./token.service";
 import { AuthLoginService } from "./auth.login.service";
 import { Security } from "../../models/mongodb/user/security.model";
-import { HandleError } from "../../middlewares/handleError.middleware";
+import {
+  HandleError,
+  ResponseOptions,
+  serviceResponse,
+  safeParser,
+} from "@amrogamal/shared-code";
 const { warpError } = HandleError.getInstance();
 import speakeasy from "speakeasy";
 

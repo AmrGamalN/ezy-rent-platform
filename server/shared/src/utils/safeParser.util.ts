@@ -1,7 +1,7 @@
-import { ValidateZodType } from "../types/validation.type";
 import { ZodObject, ZodRawShape } from "zod";
 import { serviceResponse } from "./response.util";
 import { UserRoleType } from "../types/role.type";
+import { ValidateZodType } from "../types/validation.type";
 
 export const safeParser = <T>({
   data,

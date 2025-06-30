@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { SecurityService } from "../../services/auth/security.service";
-import { controllerResponse } from "../../utils/response.util";
+import { controllerResponse } from "@amrogamal/shared-code";
 
 export class SecurityController {
   static instance: SecurityController;

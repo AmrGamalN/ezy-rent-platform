@@ -3,20 +3,9 @@
     "target": "ES2020",
     "module": "CommonJS",
     "outDir": "./dist",
-<<<<<<< Updated upstream
-    "rootDir": "../auth-service",
+     "rootDor":"./src",
     "strict": true,
     "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true
-  },
-  "include": ["app.ts", "src/**/*"]
-}
-=======
-    "rootDir": "./src",
-    "strict": true,
-    "esModuleInterop": true,
-    "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-  }
+  },
 }
->>>>>>> Stashed changes

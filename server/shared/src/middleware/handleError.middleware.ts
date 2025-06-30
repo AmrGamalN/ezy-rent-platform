@@ -6,7 +6,7 @@ type funcExpress = (
   res: Response,
   next: NextFunction
 ) => Promise<any> | void;
-type func = (...args: any[]) => Promise<ResponseOptions>;
+type func = (...args: any[]) => Promise<ResponseOptions | void>;
 
 export class HandleError {
   private static instance: HandleError;

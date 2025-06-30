@@ -1,4 +1,4 @@
-import { serviceResponse } from "./response.util";
+import { serviceResponse } from "@amrogamal/shared-code";
 import nodemailer from "nodemailer";
 import dotenv from "dotenv";
 dotenv.config();
