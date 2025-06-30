@@ -4,6 +4,6 @@ dotenv.config();
 
 export const kafka = new Kafka({
   clientId: "car-service",
-  brokers: [String(process.env.KAFKA_URL)],
+  brokers: [process.env.KAFKA_BROKER || "kafka:9092"],
 });
 

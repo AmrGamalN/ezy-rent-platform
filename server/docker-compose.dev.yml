@@ -13,3 +13,13 @@ services:
       args:
         - NODE_ENV=development
     command: sh -c "sleep 10 && npm run start-dev"
+<<<<<<< Updated upstream
+=======
+
+  elastic-service:
+    build:
+      context: ./elastic-service
+      args:
+        - NODE_ENV=development
+    command: sh -c "sleep 10 && npm run start-dev"
+>>>>>>> Stashed changes

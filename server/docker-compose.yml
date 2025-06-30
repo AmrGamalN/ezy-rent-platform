@@ -1,13 +1,19 @@
+<<<<<<< Updated upstream
 version: "3.8"
 
+=======
+>>>>>>> Stashed changes
 x-mongo-common: &mongo-common
   image: mongo
-  command: ["bash", "-c", "chmod 600 /etc/mongo-keyfile && mongod --auth --replSet rs0 --keyFile /etc/mongo-keyfile --bind_ip_all"]
+  command: >
+    bash -c "
+    chmod 600 /etc/mongo-keyfile &&
+    mongod --replSet rs0 --keyFile /etc/mongo-keyfile --bind_ip_all"
   environment:
     MONGO_INITDB_ROOT_USERNAME: root
     MONGO_INITDB_ROOT_PASSWORD: example
   networks:
-    - mongo-cluster
+    - mongo-network
   restart: always
 
 services:
@@ -19,7 +25,6 @@ services:
     volumes:
       - mongo1-data:/data/db
       - ./mongo-keyfile:/etc/mongo-keyfile
-      - ./init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
 
   mongo2:
     <<: *mongo-common
@@ -29,7 +34,6 @@ services:
     volumes:
       - mongo2-data:/data/db
       - ./mongo-keyfile:/etc/mongo-keyfile
-      - ./init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
 
   mongo3:
     <<: *mongo-common
@@ -39,7 +43,6 @@ services:
     volumes:
       - mongo3-data:/data/db
       - ./mongo-keyfile:/etc/mongo-keyfile
-      - ./init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
 
   redis:
     image: redis
@@ -47,13 +50,13 @@ services:
     ports:
       - "6379:6379"
     networks:
-      - mongo-cluster
+      - mongo-network
     restart: always
 
   auth-service:
     container_name: auth-service
     volumes:
-      - ./auth-service:/app
+      - ./auth-service:/src
     env_file:
       - ./auth-service/.env
     ports:
@@ -64,12 +67,12 @@ services:
       - mongo3
       - redis
     networks:
-      - mongo-cluster
+      - mongo-network
 
   car-service:
     container_name: car-service
     volumes:
-      - ./car-service:/app
+      - ./car-service:/src
     env_file:
       - ./car-service/.env
     ports:
@@ -78,9 +81,29 @@ services:
       - mongo1
       - mongo2
       - mongo3
+<<<<<<< Updated upstream
       - redis
+=======
+      - kafka
+>>>>>>> Stashed changes
     networks:
-      - mongo-cluster
+      - mongo-network
+      - kafka-network
+
+  elastic-service:
+    container_name: elastic-service
+    volumes:
+      - ./elastic-service:/src
+    env_file:
+      - ./elastic-service/.env
+    ports:
+      - "5000:5000"
+    depends_on:
+      - elasticsearch
+      - kafka
+    networks:
+      - mongo-network
+      - kafka-network
 
   nginx:
     image: nginx:stable-alpine
@@ -93,7 +116,7 @@ services:
       - auth-service
       - car-service
     networks:
-      - mongo-cluster
+      - mongo-network
 
   mongo-express:
     image: mongo-express
@@ -111,7 +134,7 @@ services:
       - mongo2
       - mongo3
     networks:
-      - mongo-cluster
+      - mongo-network
 
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:8.13.4
@@ -121,12 +144,13 @@ services:
       - ES_JAVA_OPTS=-Xms512m -Xmx512m
       - xpack.security.enabled=false
       - xpack.security.transport.ssl.enabled=false
+      - ELASTIC_CLIENT_APIVERSIONING=true
     ports:
       - "9200:9200"
     volumes:
-      - esdata:/usr/share/elasticsearch/data
+      - elasticsearch-data:/usr/share/elasticsearch/data
     networks:
-      - mongo-cluster
+      - mongo-network
     depends_on:
       - kafka
       - zookeeper
@@ -141,26 +165,48 @@ services:
     depends_on:
       - elasticsearch
     networks:
-      - mongo-cluster
+      - mongo-network
 
   zookeeper:
     image: confluentinc/cp-zookeeper
     container_name: zookeeper
+    ports:
+      - "2181:2181"
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
+    networks:
+      - kafka-network
+      - mongo-network
 
   kafka:
-    image: confluentinc/cp-kafka
+    image: confluentinc/cp-kafka:7.6.0
     container_name: kafka
-    depends_on:
-      - zookeeper
     ports:
       - "9092:9092"
     environment:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    depends_on:
+      - zookeeper
+    networks:
+      - kafka-network
+      - mongo-network
+
+  kafka-ui:
+    image: provectuslabs/kafka-ui
+    container_name: kafka-ui
+    ports:
+      - "8080:8080"
+    environment:
+      KAFKA_CLUSTERS_0_NAME: local
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:9092
+    depends_on:
+      - kafka
+    networks:
+      - kafka-network
 
 
 
@@ -168,8 +214,11 @@ volumes:
   mongo1-data:
   mongo2-data:
   mongo3-data:
-  esdata:
+  elasticsearch-data:
 
 networks:
-  mongo-cluster:
+  mongo-network:
     driver: bridge
+  kafka-network:
+    driver: bridge
+
