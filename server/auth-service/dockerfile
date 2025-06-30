@@ -1,39 +1,11 @@
-#base image
 FROM node:20-alpine
-
-#working directory
 WORKDIR /src
-
-#copy files
 COPY package*.json ./
 ARG NODE_ENV
 RUN if [ "$NODE_ENV" = "production" ]; then \
     npm install --only=production; \
     else npm install; \
-    fi
-<<<<<<< Updated upstream
-    
+    fi   
 COPY . .
-
-#expose port
-=======
-<<<<<<< Updated upstream
-COPY . .
-COPY ./common /common
-=======
-<<<<<<< Updated upstream
-    
-COPY . .
-
-#expose port
-=======
-
-COPY . . 
->>>>>>> Stashed changes
->>>>>>> Stashed changes
->>>>>>> Stashed changes
 EXPOSE 3000
 
-#run app
-# CMD ["npm", "start"]
-# CMD ["npm", "run", "start-dev"]

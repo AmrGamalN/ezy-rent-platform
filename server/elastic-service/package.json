@@ -1,0 +1,18 @@
+{
+  "name": "elastic-search",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Amr Gamal",
+  "license": "ISC",
+  "description": "elastic-search",
+  "dependencies": {
+    "@elastic/elasticsearch": "^9.0.2",
+    "common": "file:../common",
+    "dotenv": "^17.0.0",
+    "kafkajs": "^2.2.4"
+  }
+}

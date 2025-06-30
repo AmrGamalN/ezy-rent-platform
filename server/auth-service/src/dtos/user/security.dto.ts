@@ -1,16 +1,4 @@
-<<<<<<< Updated upstream
-import { z } from "zod";
-=======
-<<<<<<< Updated upstream
-import { z } from "common";
-=======
-<<<<<<< Updated upstream
-import { z } from "zod";
-=======
 import { z } from "@amrogamal/shared-code";
->>>>>>> Stashed changes
->>>>>>> Stashed changes
->>>>>>> Stashed changes
 
 export const SecurityAdminDto = z.object({
   userId: z.string().min(1),

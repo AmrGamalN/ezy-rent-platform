@@ -7,19 +7,7 @@ import {
   validateLoginEmail,
   validateOtp,
 } from "../../validations/auth/login.validator";
-<<<<<<< Updated upstream
-import { HandleError } from "../../middlewares/handleError.middleware";
-=======
-<<<<<<< Updated upstream
-import { HandleError } from "common";
-=======
-<<<<<<< Updated upstream
-import { HandleError } from "../../middlewares/handleError.middleware";
-=======
 import { HandleError } from "@amrogamal/shared-code";
->>>>>>> Stashed changes
->>>>>>> Stashed changes
->>>>>>> Stashed changes
 const { handleError } = HandleError.getInstance();
 const controller = LoginController.getInstance();
 const authMiddleware = AuthMiddleware.getInstance();
