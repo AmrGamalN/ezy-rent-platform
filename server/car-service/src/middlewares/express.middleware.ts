@@ -1,7 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { ValidationChain, validationResult } from "express-validator";
-import { HandleError } from "./handleError.middleware";
-import { CustomError } from "../utils/customError.util";
+import { HandleError, CustomError } from "@amrogamal/shared-code";
 const { handleError } = HandleError.getInstance();
 
 export const expressValidator = (validators: ValidationChain[]) => {
