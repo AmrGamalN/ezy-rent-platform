@@ -1,6 +1,6 @@
 {
   "name": "@amrogamal/shared-code",
-  "version": "1.0.1",
+  "version": "2.0.0",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "description": "Common folder for shared code",
@@ -24,6 +24,7 @@
     "dotenv": "^17.0.0",
     "express": "^5.1.0",
     "winston": "^3.17.0",
+    "winston-daily-rotate-file": "^5.0.0",
     "zod": "^3.25.67"
   },
   "devDependencies": {

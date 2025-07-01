@@ -4,6 +4,9 @@
  *  get:
  *    summary: Get a car by ID
  *    tags: [Car]
+ *    description: Get a car by ID
+ *    security:
+ *      - bearerAuth: []
  *    parameters:
  *      - in: path
  *        name: id
@@ -27,6 +30,9 @@
  * /car/count:
  *   get:
  *     summary: Get the count of cars
+ *     description: Get the count of cars
+ *     security:
+ *       - bearerAuth: []
  *     tags: [Car]
  *     responses:
  *       200:
@@ -42,6 +48,9 @@
  * /car/create:
  *   post:
  *     summary: Add a new car
+ *     description: Add a new car
+ *     security:
+ *       - bearerAuth: []
  *     tags: [Car]
  *     requestBody:
  *       required: true
@@ -67,6 +76,8 @@
  *   summary: Update a car by ID
  *   tags: [Car]
  *   description: Update a car by ID
+ *   security:
+ *     - bearerAuth: []
  *   parameters:
  *     - in: path
  *       name: id
@@ -96,6 +107,9 @@
  *   delete:
  *     summary: Delete a car by ID
  *     tags: [Car]
+ *     description: Delete a car by ID
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id

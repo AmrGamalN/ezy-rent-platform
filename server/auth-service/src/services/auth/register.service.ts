@@ -16,6 +16,7 @@ import {
   ResponseOptions,
   serviceResponse,
   safeParser,
+  CustomError,
 } from "@amrogamal/shared-code";
 const { warpError } = HandleError.getInstance();
 
@@ -113,7 +114,7 @@ export class RegisterService {
     return await this.createUser(data.user.phone, "phone");
   });
 
-  private createUser = async (token: string, provider: string) => {
+  private createUser = warpError(async (token: string, provider: string) => {
     const getDataCaching = await redis.get(`token:${token}`);
     if (!getDataCaching)
       return serviceResponse({
@@ -158,13 +159,9 @@ export class RegisterService {
         message: `Awesome! Your ${provider} has been verified successfully. Let’s get started!`,
       });
     } catch (err: any) {
-      return serviceResponse({
-        statusText: "InternalServerError",
-        message: `An error occurred while verifying your ${provider}. Please try again later.`,
-        error: err,
-      });
+      throw new CustomError("InternalServerError", 500, err.message, false);
     } finally {
       await session.endSession();
     }
-  };
+  });
 }

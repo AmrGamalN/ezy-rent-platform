@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { ResponseOptions } from "../types/response.type";
+import { logger } from "../configs/winston.config";
 
 type funcExpress = (
   req: Request,
@@ -23,6 +24,7 @@ export class HandleError {
       try {
         return await (func as funcExpress)(req, res, next);
       } catch (err: any) {
+        logger.error(`Error: ${err.message} - ${func.name} - ${err.stack}`);
         next(err);
       }
     };
@@ -30,10 +32,11 @@ export class HandleError {
 
   errorMiddleware = () => {
     return (err: any, req: Request, res: Response, next: NextFunction) => {
+      logger.error(`${req.method} ${req.url} - ${err.message}`);
       res.status(err.status || 500).json({
         success: false,
         message: err.message || "Internal Server Error",
-        error: err.stack,
+        error: process.env.NODE_ENV === "development" ? err.stack : undefined,
       });
     };
   };
@@ -45,6 +48,7 @@ export class HandleError {
       try {
         return await func(...args);
       } catch (error: any) {
+        logger.error(`Error: ${error.message} - ${func.name} - ${error.stack}`);
         return {
           success: false,
           status: error.status || 500,
