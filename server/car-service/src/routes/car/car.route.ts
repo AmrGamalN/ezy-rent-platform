@@ -8,8 +8,8 @@ const { handleError } = HandleError.getInstance();
 const router = Router();
 
 const authentication = [
-  authMiddleware.authorization(["user", "admin", "manager"]),
   authMiddleware.verifyToken,
+  authMiddleware.authorization(["user", "admin", "manager"]),
 ];
 
 router.get("/:id", handleError(controller.getCar.bind(controller)));

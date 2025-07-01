@@ -24,7 +24,7 @@ export const logger = createLogger({
     //   level: "error",
     // }),
     new DailyRotateFile({
-      filename: path.join(process.cwd(), "/src/logs", "combined.log"),
+      filename: path.join(process.cwd(), "/src/logs", "error.log"),
       datePattern: "YYYY-MM-DD",
       zippedArchive: true,
       maxSize: "20m",

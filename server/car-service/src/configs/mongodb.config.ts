@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import dotenv from "dotenv";
+import { logger } from "@amrogamal/shared-code";
 dotenv.config();
 
 export const mongodbConnect = async () => {
@@ -13,6 +14,6 @@ export const mongodbConnect = async () => {
     const db = mongoose.connection.db;
     return db;
   } catch (error) {
-    console.error("Error connecting to MongoDB:", error);
+    logger.error(error);
   }
 };

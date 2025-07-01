@@ -15,7 +15,7 @@
   "license": "ISC",
   "description": "elastic-search",
   "dependencies": {
-    "@amrogamal/shared-code": "^2.0.0",
+    "@amrogamal/shared-code": "^2.0.1",
     "@elastic/elasticsearch": "^8.18.2",
     "body-parser": "^2.2.0",
     "cookie-parser": "^1.4.7",

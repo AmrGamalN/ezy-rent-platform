@@ -151,7 +151,7 @@ export class AuthLoginService {
     const check2FA = await this.check2FA(user, provider);
     if (check2FA.success) return check2FA;
 
-    const tokens = await this.tokenService.generateToken(user.userId);
+    const tokens = await this.tokenService.generateToken(user);
     return serviceResponse({
       statusText: "OK",
       message: "Login successful",
@@ -183,9 +183,7 @@ export class AuthLoginService {
       const check2FA = await this.check2FA(user, { email: user.email });
       if (check2FA.success) return check2FA;
 
-      const tokens = await this.tokenService.generateToken(
-        checkUser.data.userId
-      );
+      const tokens = await this.tokenService.generateToken(checkUser.data);
       return serviceResponse({
         statusText: "OK",
         message: "Login successful",

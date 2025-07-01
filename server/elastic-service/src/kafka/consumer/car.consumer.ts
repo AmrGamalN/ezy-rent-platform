@@ -1,6 +1,6 @@
 import { kafka } from "../../configs/kafka.config";
 import { CarService } from "../../services/car.service";
-import { HandleError } from "@amrogamal/shared-code";
+import { HandleError, logger } from "@amrogamal/shared-code";
 const { warpError } = HandleError.getInstance();
 
 export class CarConsumer {
@@ -40,7 +40,7 @@ export class CarConsumer {
             await this.carService.deleteCar({ index: "cars", id });
           }
         } catch (error) {
-          console.error("Error in Kafka Consumer:", error);
+          logger.error(error);
         }
       },
     });
