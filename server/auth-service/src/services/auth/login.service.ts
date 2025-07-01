@@ -88,7 +88,7 @@ export class LoginEmailService {
         message: "Invalid or expired 2FA code",
       });
 
-    const token = await this.tokenService.generateToken(security.userId);
+    const token = await this.tokenService.generateToken(security);
     return serviceResponse({
       statusText: "OK",
       message: "Login successful",

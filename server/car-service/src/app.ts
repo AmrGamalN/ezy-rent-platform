@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import express from "express";
 import { swaggerDoc } from "./configs/swagger.config";
 import { mongodbConnect } from "./configs/mongodb.config";
-import { HandleError } from "@amrogamal/shared-code";
+import { HandleError, logger } from "@amrogamal/shared-code";
 import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
 import helmet from "helmet";
@@ -54,5 +54,5 @@ Promise.all([mongodbConnect()])
     });
   })
   .catch((error) => {
-    console.error("Error starting the server:", error);
+   logger.error(error);
   });
