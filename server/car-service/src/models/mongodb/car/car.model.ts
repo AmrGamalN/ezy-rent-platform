@@ -4,21 +4,24 @@ import { ICar } from "../../../types/car.type";
 const CarSchema: Schema = new Schema<ICar>(
   {
     userId: { type: String, required: true },
-    phone: { type: String, required: true },
+    prefix: { type: String, required: true },
     name: { type: String, required: true },
+    phone: { type: String, required: true },
     description: { type: String, required: true },
     carModel: { type: String, required: true },
     brand: { type: String, required: true },
     year: { type: Number, required: true },
     color: { type: String, required: true },
-    images: [
+    category: { type: String, default: "car" },
+    carImages: [
       {
         url: { type: String, required: true },
         key: { type: String, required: true },
         _id: false,
       },
     ],
-    pricePerDay: { type: Number, required: true },
+    price: { type: Number, required: true },
+    discount: { type: Number, default: 0 },
     availableFrom: { type: Date, required: true },
     availableTo: { type: Date, required: true },
     location: {
@@ -30,6 +33,7 @@ const CarSchema: Schema = new Schema<ICar>(
       },
     },
     isAvailable: { type: Boolean, default: true },
+    allowNegotiate: { type: Boolean, default: false },
     guarantees: {
       hasInsurance: { type: Boolean, default: false },
       insuranceDetails: { type: String },

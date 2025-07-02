@@ -18,8 +18,10 @@ export class CarController {
   }
 
   createCar = async (req: Request, res: Response): Promise<Response> => {
-    // const result = await this.carService.createCar(req.body, req.curUser._id);
-    const result = await this.carService.createCar(req.body);
+    const result = await this.carService.createCar(
+      req.body,
+      String(req.curUser?.userId)
+    );
     return controllerResponse(res, result);
   };
 
@@ -34,7 +36,32 @@ export class CarController {
   };
 
   updateCar = async (req: Request, res: Response): Promise<Response> => {
-    const result = await this.carService.updateCar(req.params.id, req.body);
+    const files = req.files as {
+      [fieldname: string]: Express.MulterS3.File[];
+    };
+    const result = await this.carService.updateCar(
+      req.params.id,
+      files,
+      req.body,
+      req.body.keys
+    );
+    return controllerResponse(res, result);
+  };
+
+  uploadNewImages = async (req: Request, res: Response): Promise<Response> => {
+    const files = req.files as {
+      [fieldname: string]: Express.MulterS3.File[];
+    };
+    const result = await this.carService.uploadNewImages(req.params.id, files);
+    return controllerResponse(res, result);
+  };
+
+  deleteImages = async (req: Request, res: Response): Promise<Response> => {
+    const result = await this.carService.deleteImages(
+      req.params.id,
+      String(req.curUser?.userId),
+      req.body.keys
+    );
     return controllerResponse(res, result);
   };
 

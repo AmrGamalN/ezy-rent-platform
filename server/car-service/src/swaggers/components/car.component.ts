@@ -2,7 +2,7 @@
  * @swagger
  * components:
  *  schemas:
- *    Car:
+ *    BaseCar:
  *      type: object
  *      properties:
  *        userId:
@@ -29,28 +29,29 @@
  *        color:
  *          type: string
  *          example: "White"
- *        images:
+ *        category:
+ *          type: string
+ *          example: "car"
+ *        carImages:
  *          type: array
+ *          description: Array of images
  *          items:
- *            type: object
- *            properties:
- *              url:
- *                type: string
- *                example: "https://example.com/images/car1.jpg"
- *              key:
- *                type: string
- *                example: "car1.jpg"
- *        pricePerDay:
+ *            type: string
+ *            format: binary
+ *        price:
  *          type: number
  *          example: 750
+ *        discount:
+ *          type: number
+ *          example: 10
  *        availableFrom:
  *          type: string
- *          format: date
- *          example: "2025-06-30"
+ *          format: date-time
+ *          example: "2025-06-30T15:30:00Z"
  *        availableTo:
  *          type: string
- *          format: date
- *          example: "2025-07-15"
+ *          format: date-time
+ *          example: "2025-07-05T15:30:00Z"
  *        location:
  *          type: object
  *          properties:
@@ -70,6 +71,9 @@
  *                  type: number
  *                  example: 31.2357
  *        isAvailable:
+ *          type: boolean
+ *          example: true
+ *        allowNegotiate:
  *          type: boolean
  *          example: true
  *        guarantees:
@@ -93,10 +97,29 @@
  *            additionalNotes:
  *              type: string
  *              example: "No smoking in the car"
- *        createdAt:
- *          type: string
- *          example: "2025-06-29T12:00:00Z"
- *        updatedAt:
- *          type: string
- *          example: "2025-06-29T12:00:00Z"
+ *
+ *    CreateCar:
+ *      allOf:
+ *        - $ref: '#/components/schemas/BaseCar'
+ *
+ *    UpdateCar:
+ *      allOf:
+ *        - $ref: '#/components/schemas/BaseCar'
+ *        - type: object
+ *          properties:
+ *            keys:
+ *              type: array
+ *              description: Array of image keys you want to update
+ *              items:
+ *                type: string
+ *
+ *    CarImageUpload:
+ *      type: object
+ *      properties:
+ *       carImages:
+ *         type: array
+ *         description: Array of car images (max 5 images)
+ *         items:
+ *            type: string
+ *            format: binary
  */

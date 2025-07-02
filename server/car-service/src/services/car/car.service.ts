@@ -13,6 +13,8 @@ import {
   UpdateCarDtoType,
 } from "../../dtos/car/car.dto";
 import { sendCarEvent } from "../../kafka/producers/car.producer";
+import { S3Service } from "../s3/s3.service";
+const s3Service = S3Service.getInstance();
 const { warpError } = HandleError.getInstance();
 
 export class CarService {
@@ -27,7 +29,7 @@ export class CarService {
   }
 
   createCar = warpError(
-    async (data: AddCarDtoType): Promise<ResponseOptions> => {
+    async (data: AddCarDtoType, userId: string): Promise<ResponseOptions> => {
       const error = safeParser({
         data,
         userDto: AddCarDto,
@@ -35,7 +37,7 @@ export class CarService {
       if (!error.success) return error;
       const createdCar = await Car.create({
         ...data,
-        userId: Math.random().toString(36).substring(2, 15),
+        userId,
       });
       await sendCarEvent("car.created", {
         ...createdCar.toObject(),
@@ -61,20 +63,111 @@ export class CarService {
   });
 
   updateCar = warpError(
-    async (_id: string, data: UpdateCarDtoType): Promise<ResponseOptions> => {
+    async (
+      _id: string,
+      files: { [fieldname: string]: Express.MulterS3.File[] },
+      data: UpdateCarDtoType,
+      keys: string[]
+    ): Promise<ResponseOptions> => {
+      const prefix = `cars/${keys[0].split("/")[1]}/`;
       const result = safeParser({
         data,
         userDto: UpdateCarDto,
         actionType: "update",
       });
       if (!result.success) return result;
-      const updatedData = await Car.updateOne({ _id }, { $set: result.data });
-      await sendCarEvent("car.updated", {
-        _id,
-        ...updatedData,
-      });
+
+      await s3Service.checkImagesLimit(
+        prefix,
+        keys.length,
+        Number(files["carImages"].length)
+      );
+
+      const updatedCar = await s3Service.updateCarInDatabase(_id, result.data);
+      if (!updatedCar) {
+        return serviceResponse({
+          statusText: "Not Found",
+          message: "Car not found",
+        });
+      }
+
+      await Promise.all([
+        s3Service.uploadImages(files, prefix, keys),
+        sendCarEvent("car.updated", {
+          ...updatedCar.toObject(),
+          id: _id,
+        }),
+      ]);
+
       return serviceResponse({
-        updatedCount: updatedData.modifiedCount,
+        updatedCount: 1,
+      });
+    }
+  );
+
+  uploadNewImages = warpError(
+    async (
+      _id: string,
+      files: { [fieldname: string]: Express.MulterS3.File[] }
+    ): Promise<ResponseOptions> => {
+      const getCar = await Car.findById({ _id });
+      if (!getCar) {
+        return serviceResponse({
+          statusText: "Not Found",
+          message: "Car not found",
+        });
+      }
+
+      await s3Service.checkImagesLimit(
+        getCar.prefix,
+        0,
+        Number(files["carImages"].length)
+      );
+
+      const result = await s3Service.uploadImages(files, getCar.prefix);
+      getCar.carImages = [...result, ...getCar.carImages];
+
+      await Promise.all([
+        getCar.save(),
+        sendCarEvent("car.updated", {
+          ...getCar,
+          id: _id,
+        }),
+      ]);
+      return serviceResponse({
+        statusText: "OK",
+        message: "Image uploaded successfully",
+      });
+    }
+  );
+
+  deleteImages = warpError(
+    async (
+      _id: string,
+      userId: string,
+      keys: string[]
+    ): Promise<ResponseOptions> => {
+      const car = await Car.findById({ _id, userId });
+      if (!car)
+        return serviceResponse({
+          statusText: "Not Found",
+          message: "Car image not found",
+        });
+
+      if (keys.length == car.carImages.length)
+        return serviceResponse({
+          statusText: "Conflict",
+          message:
+            "You must keep at least one image. Deleting all images is not allowed.",
+        });
+
+      car.carImages = car.carImages.filter(
+        (image: any) => !keys.includes(image.key)
+      );
+      await Promise.all([car.save(), s3Service.deleteImages(keys)]);
+      return serviceResponse({
+        statusText: "OK",
+        message: "Image deleted successfully",
       });
     }
   );
@@ -82,7 +175,7 @@ export class CarService {
   deleteCar = warpError(async (_id: string): Promise<ResponseOptions> => {
     const deletedData = await Car.deleteOne({ _id });
     await sendCarEvent("car.deleted", {
-      _id,
+      id: _id,
     });
     return serviceResponse({ deletedCount: deletedData.deletedCount });
   });

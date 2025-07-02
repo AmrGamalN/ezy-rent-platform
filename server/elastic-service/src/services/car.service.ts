@@ -102,7 +102,7 @@ export class CarService {
     }
 
     if (query.minPrice && query.maxPrice) {
-      rangeQuery.pricePerDay = {
+      rangeQuery.price = {
         gte: query.minPrice,
         lte: query.maxPrice,
       };
@@ -111,7 +111,7 @@ export class CarService {
     for (const [key, value] of Object.entries(query)) {
       if (skipKeys.includes(key)) continue;
 
-      if (["brand", "carModel", "name"].includes(key)) {
+      if (["brand", "model", "name"].includes(key)) {
         mustQueries.push({
           match: {
             [key]: {
