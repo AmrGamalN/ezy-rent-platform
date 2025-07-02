@@ -39,7 +39,7 @@ export const validateString = ({
   if (options?.pattern) {
     validator = validator
       .matches(options.pattern)
-      .withMessage(options.customMessage || `${field} is in invalid format`)
+      .withMessage(options.customMessage || `${field} must be lowercase`)
       .bail();
   }
 

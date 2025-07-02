@@ -4,7 +4,7 @@ const parserFieldBoolean = ["isAvailable", "allowNegotiate"];
 const parserFieldNumber = ["year", "discount", "depositAmount", "price"];
 const parserObject = ["location", "guarantees"];
 const parserArray = ["keys"];
-const parserImage = ["carImages"];
+const parserImage = ["carImages", "categoryImage"];
 
 export class ParserField {
   private static Instance: ParserField;

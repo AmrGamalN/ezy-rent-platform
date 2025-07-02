@@ -2,5 +2,7 @@
  * @swagger
  * tags:
  *  - name: Car
- *    description: The Car api management
+ *    description: Car Api Management
+ *  - name: Category
+ *    description: Categories Api Management
  */

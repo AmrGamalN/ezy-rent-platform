@@ -20,8 +20,8 @@ export class CarController {
     return controllerResponse(res, result);
   };
 
-  getCar = async (req: Request, res: Response): Promise<Response> => {
-    const result = await this.carService.getCar(req.params.id);
+  get = async (req: Request, res: Response): Promise<Response> => {
+    const result = await this.carService.get(req.params.id);
     return controllerResponse(res, result);
   };
 

@@ -21,51 +21,53 @@ const authentication = [
   authMiddleware.authorization(["user", "admin", "manager"]),
 ];
 
-router.get("/:id", handleError(controller.getCar.bind(controller)));
+router.get("/:id", handleError(controller.get.bind(controller)));
 router.get(
   "/count",
-  // authentication,
-  handleError(controller.countCar.bind(controller))
+  authentication,
+  handleError(controller.count.bind(controller))
 );
 
 router.post(
   "/create",
-  // authentication,
-  uploadFile.uploadCarImagesCreate,
+  authentication,
+  uploadFile.prefixType("cars"),
+  uploadFile.uploadListMulterS3Images("carImages", 5),
   parserField.requiredImage("carImages"),
   parserField.parserFields(),
   parserField.parserImages(),
   expressValidator(validateCreateCar),
-  handleError(controller.createCar.bind(controller))
+  handleError(controller.create.bind(controller))
 );
 
 router.put(
   "/update/:id",
-  // authentication,
-  uploadFile.uploadCarImagesUpdate,
+  authentication,
+  uploadFile.prefixType("cars"),
+  uploadFile.uploadListMulterImages("carImages", 5),
   parserField.parserFields(),
   parserField.parserImages(),
   expressValidator(validateUpdateCar),
-  handleError(controller.updateCar.bind(controller))
+  handleError(controller.update.bind(controller))
 );
 
 router.put(
   "/image/upload/:id",
-  // authentication,
-  uploadFile.uploadCarImagesUpdate,
+  authentication,
+  uploadFile.uploadListMulterImages("carImages", 5),
   handleError(controller.uploadNewImages.bind(controller))
 );
 
 router.delete(
   "/image/remove/:id",
-  // authentication,
+  authentication,
   handleError(controller.deleteImages.bind(controller))
 );
 
 router.delete(
   "/delete/:id",
-  // authentication,
-  handleError(controller.deleteCar.bind(controller))
+  authentication,
+  handleError(controller.delete.bind(controller))
 );
 
 export default router;

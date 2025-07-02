@@ -12,6 +12,7 @@ declare global {
     interface Request {
       fileIndex?: number;
       prefix?: string;
+      prefixType?: string;
     }
   }
 }
@@ -64,9 +65,15 @@ export class UploadFile {
           req.prefix = uuidv4();
         }
         req.body.prefix = req.prefix;
-        cb(null, `cars/${req.prefix}/${uuidv4()}-${file.originalname}`);
+        const prefixType = req.prefixType;
+        const prefix =
+          prefixType === "cars"
+            ? `${prefixType}/${req.prefix}/${uuidv4()}-${file.originalname}`
+            : `${prefixType}/${uuidv4()}-${file.originalname}`;
+        cb(null, prefix);
       },
     }),
+
     ...this.callbackFunction(),
   });
 
@@ -90,15 +97,30 @@ export class UploadFile {
       });
     };
 
-  uploadCarImagesCreate = handleError(
-    this.uploadFile(
-      this.uploadMulterS3.fields([{ name: "carImages", maxCount: 5 }])
-    )
-  );
+  // PrefixType
+  prefixType = (prefixType: string) => {
+    return (req: Request, res: Response, next: NextFunction) => {
+      req.prefixType = prefixType;
+      next();
+    };
+  };
 
-  uploadCarImagesUpdate = handleError(
-    this.uploadFile(
-      this.uploadMulter.fields([{ name: "carImages", maxCount: 5 }])
-    )
-  );
+  // Upload List of images by MulterS3
+  uploadListMulterS3Images = (name: string, maxCount: number) => {
+    return handleError(
+      this.uploadFile(this.uploadMulterS3.fields([{ name, maxCount }]))
+    );
+  };
+
+  // Upload List of images by Multer
+  uploadListMulterImages = (name: string, maxCount: number) => {
+    return handleError(
+      this.uploadFile(this.uploadMulter.fields([{ name, maxCount }]))
+    );
+  };
+
+  // Upload single of images by Multer
+  uploadSingleMulterImages = (name: string) => {
+    return handleError(this.uploadFile(this.uploadMulter.single(name)));
+  };
 }

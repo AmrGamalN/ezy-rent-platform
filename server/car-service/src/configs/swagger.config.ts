@@ -33,10 +33,9 @@ const swaggerOptions = (route: string): object => {
       ],
     },
     apis: [
-      `./src/routes/${route}/*.ts`,
-      `./src/swaggers/routes/${route}.route.ts`,
-      `./src/swaggers/components/${route}.component.ts`,
-      `./src/swaggers/tags/${route}.tag.ts`,
+      `./src/swaggers/routes/*.ts`,
+      `./src/swaggers/components/*.ts`,
+      `./src/swaggers/tags/*.ts`,
     ],
   };
 };
