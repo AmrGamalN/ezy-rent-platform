@@ -8,7 +8,10 @@ import {
   validateCreateCar,
   validateUpdateCar,
 } from "../../validations/car/car.validator";
-import { expressValidator } from "../../middlewares/express.middleware";
+import {
+  expressValidator,
+  requiredId,
+} from "../../middlewares/express.middleware";
 const parserField = ParserField.getInstance();
 const authMiddleware = AuthMiddleware.getInstance();
 const controller = CarController.getInstance();
@@ -21,7 +24,7 @@ const authentication = [
   authMiddleware.authorization(["user", "admin", "manager"]),
 ];
 
-router.get("/:id", handleError(controller.get.bind(controller)));
+router.get("/:id", requiredId(), handleError(controller.get.bind(controller)));
 router.get(
   "/count",
   authentication,
@@ -43,6 +46,7 @@ router.post(
 router.put(
   "/update/:id",
   authentication,
+  requiredId(),
   uploadFile.prefixType("cars"),
   uploadFile.uploadListMulterImages("carImages", 5),
   parserField.parserFields(),
@@ -54,6 +58,7 @@ router.put(
 router.put(
   "/image/upload/:id",
   authentication,
+  requiredId(),
   uploadFile.uploadListMulterImages("carImages", 5),
   handleError(controller.uploadNewImages.bind(controller))
 );
@@ -61,12 +66,14 @@ router.put(
 router.delete(
   "/image/remove/:id",
   authentication,
+  requiredId(),
   handleError(controller.deleteImages.bind(controller))
 );
 
 router.delete(
   "/delete/:id",
   authentication,
+  requiredId(),
   handleError(controller.delete.bind(controller))
 );
 

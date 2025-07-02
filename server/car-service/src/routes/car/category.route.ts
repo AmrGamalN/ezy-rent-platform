@@ -2,7 +2,10 @@ import { Router } from "express";
 import { CategoryController } from "../../controllers/car/category.controller";
 import { AuthMiddleware } from "../../middlewares/auth.middleware";
 import { UploadFile } from "../../middlewares/uploadFile.middleware";
-import { expressValidator } from "../../middlewares/express.middleware";
+import {
+  expressValidator,
+  requiredId,
+} from "../../middlewares/express.middleware";
 import {
   validateCreateCategory,
   validateUpdateCategory,
@@ -27,11 +30,12 @@ router.post(
 
 router.get("/", controller.getAll.bind(controller));
 
-router.get("/:id", controller.getById.bind(controller));
+router.get("/:id", requiredId(), controller.getById.bind(controller));
 
 router.put(
   "/:id",
   authentication,
+  requiredId(),
   uploadFile.uploadSingleMulterImages("categoryImage"),
   expressValidator(validateUpdateCategory),
   controller.update.bind(controller)
