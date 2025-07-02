@@ -83,6 +83,21 @@ services:
       - mongo-network
       - kafka-network
 
+  payment-service:
+    container_name: payment-service
+    volumes:
+      - ./payment-service:/src
+    env_file:
+      - ./payment-service/.env
+    ports:
+      - "6000:6000"
+    depends_on:
+      - kafka
+      - zookeeper
+    networks:
+      - mongo-network
+      - kafka-network
+    
   elastic-service:
     container_name: elastic-service
     volumes:

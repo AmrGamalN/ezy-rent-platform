@@ -14,6 +14,13 @@ services:
         - NODE_ENV=development
     command: sh -c "sleep 10 && npm run start-dev"
 
+  payment-service:
+    build:
+      context: ./payment-service
+      args:
+        - NODE_ENV=development
+    command: sh -c "sleep 10 && npm run start-dev"
+
   elastic-service:
     build:
       context: ./elastic-service
