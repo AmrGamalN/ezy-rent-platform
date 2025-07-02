@@ -15,7 +15,7 @@
  *          type: string
  *        description:
  *          type: string
- *        carModel:
+ *        model:
  *          type: string
  *        brand:
  *          type: string
@@ -32,7 +32,7 @@
  *                type: string
  *              key:
  *                type: string
- *        pricePerDay:
+ *        price:
  *          type: number
  *        availableFrom:
  *          type: string
@@ -107,8 +107,8 @@
  *       description: Enter car brand
  *       schema:
  *         type: string
- *     CarModel:
- *       name: carModel
+ *     model:
+ *       name: model
  *       in: query
  *       description: Enter car model
  *       schema:

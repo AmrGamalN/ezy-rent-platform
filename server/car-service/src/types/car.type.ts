@@ -19,6 +19,7 @@ export type CarTypeFilter = {
 
 export interface ICar extends Document {
   userId: string;
+  prefix: string;
   phone: string;
   name: string;
   description: string;
@@ -26,22 +27,26 @@ export interface ICar extends Document {
   brand: string;
   year: number;
   color: string;
-  images: {
+  category: string;
+  carImages: {
     url: string;
     key: string;
+    prefix?: string;
   }[];
-  pricePerDay: number;
+  price: number;
+  discount: number;
   availableFrom: Date;
   availableTo: Date;
   location: {
     city: string;
     address: string;
     coordinates?: {
-      lat?: number;
-      lng?: number;
+      lat?: String;
+      lng?: String;
     };
   };
   isAvailable?: boolean;
+  allowNegotiate?: boolean;
   guarantees?: {
     hasInsurance?: boolean;
     insuranceDetails?: string;

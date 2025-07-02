@@ -40,7 +40,7 @@
  *       - $ref: '#/components/parameters/Limit'
  *       - $ref: '#/components/parameters/Name'
  *       - $ref: '#/components/parameters/Brand'
- *       - $ref: '#/components/parameters/CarModel'
+ *       - $ref: '#/components/parameters/model'
  *       - $ref: '#/components/parameters/Year'
  *       - $ref: '#/components/parameters/Color'
  *       - $ref: '#/components/parameters/AvailableFrom'

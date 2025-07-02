@@ -22,7 +22,7 @@
  *            schema:
  *              type: array
  *              items:
- *                $ref: '#/components/schemas/Car'
+ *                $ref: '#/components/schemas/BaseCar'
  */
 
 /**
@@ -55,50 +55,125 @@
  *     requestBody:
  *       required: true
  *       content:
- *         application/json:
+ *         multipart/form-data:
  *           schema:
- *             $ref: '#/components/schemas/Car'
+ *             $ref: '#/components/schemas/CreateCar'
  *     responses:
  *       201:
  *         description: Car created successfully
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/Car'
  *       400:
  *         description: Bad request
+ *       500:
+ *         description: Internal server error
  */
 
 /**
  * @swagger
  * /car/update/{id}:
- *  put:
- *   summary: Update a car by ID
- *   tags: [Car]
- *   description: Update a car by ID
- *   security:
- *     - bearerAuth: []
- *   parameters:
- *     - in: path
- *       name: id
- *       required: true
- *       description: The ID of the car
- *       schema:
- *         type: string
- *   requestBody:
- *     content:
- *       application/json:
+ *   put:
+ *     summary: Update a car by ID
+ *     description: Update a car by ID
+ *     tags: [Car]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: The ID of the car
  *         schema:
- *           $ref: '#/components/schemas/Car'
- *   responses:
- *     200:
- *       description: Car updated successfully
+ *           type: string
+ *     requestBody:
+ *       required: false
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             $ref: '#/components/schemas/UpdateCar'
+ *     responses:
+ *       200:
+ *         description: Car updated successfully
+ *       400:
+ *         description: Bad request
+ *       404:
+ *         description: Car not found
+ *       409:
+ *         description: Conflict
+ *       500:
+ *         description: Internal server error
+ */
+
+/**
+ * @swagger
+ * /car/image/upload/{id}:
+ *   put:
+ *     summary: Upload car image
+ *     description: Upload car image
+ *     tags: [Car]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: The ID of the car
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             $ref: '#/components/schemas/CarImageUpload'
+ *     responses:
+ *       200:
+ *         description: Car image uploaded successfully
+ *       400:
+ *         description: Bad request
+ *       404:
+ *         description: Car not found
+ *       409:
+ *         description: Conflict
+ *       500:
+ *         description: Internal server error
+ */
+
+/**
+ * @swagger
+ * /car/image/remove/{id}:
+ *   delete:
+ *     summary: Delete car image
+ *     description: Delete car image
+ *     security:
+ *       - bearerAuth: []
+ *     tags: [Car]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: The ID of the car
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       required: true
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/Car'
- *     400:
- *       description: Bad request
+ *             properties:
+ *               keys:
+ *                 type: array
+ *                 required: true
+ *                 description: Array of image keys
+ *                 items:
+ *                   type: string
+ *     responses:
+ *       201:
+ *         description: Car image deleted successfully
+ *       400:
+ *         description: Bad request
+ *       404:
+ *         description: Car not found
+ *       500:
+ *         description: Internal server error
  */
 
 /**
@@ -120,10 +195,8 @@
  *     responses:
  *       200:
  *         description: Car deleted successfully
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/Car'
  *       404:
  *         description: Car not found
+ *       500:
+ *         description: Internal server error
  */

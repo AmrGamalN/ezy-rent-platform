@@ -52,5 +52,6 @@ export type ValidationNumberType = MainValidationType & {
     isIn?: number[] | readonly number[];
     min?: number;
     max?: number;
+    isYear?: boolean;
   };
 };

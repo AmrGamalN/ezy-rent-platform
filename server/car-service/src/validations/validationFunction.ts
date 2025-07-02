@@ -124,6 +124,21 @@ export const validateNumber = ({
       )
       .bail();
   }
+
+  if (options?.isYear) {
+    validator = validator
+      .custom((value) => {
+        const currentYear = new Date().getFullYear();
+        if (value < 1900 || value > currentYear) {
+          throw new CustomError("BadRequest", 400, "Invalid year", false);
+        }
+        return true;
+      })
+      .isInt()
+      .withMessage("Invalid year")
+      .bail();
+  }
+
   return validator;
 };
 
@@ -198,10 +213,10 @@ export const validateDate = ({
     .isISO8601()
     .withMessage(`${field} must be a valid format YYYY-MM-DD`)
     .custom((value, { req }) => {
-      const start = req.query?.start || req.body?.availableFrom;
-      const end = req.query?.end || req.body?.availableTo;
+      const start = req.body?.availableFrom;
+      const end = req.body?.availableTo;
 
-      if (field === "startDate") {
+      if (field === "startDate" || field === "availableFrom") {
         if (value && !end) {
           throw new CustomError(
             "BadRequest",
@@ -221,7 +236,7 @@ export const validateDate = ({
         }
       }
 
-      if (field === "endDate") {
+      if (field === "endDate" || field === "availableTo") {
         if (value && !start) {
           throw new CustomError(
             "BadRequest",
