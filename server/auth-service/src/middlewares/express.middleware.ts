@@ -34,7 +34,7 @@ export const expressValidator = (validators: ValidationChain[]) => {
   );
 };
 
-export const requiredParamMiddleware = () => {
+export const requiredId = () => {
   return (req: Request, res: Response, next: NextFunction): void => {
     if (!req.params?.id || !/^[a-fA-F0-9]{24}$/.test(req.params?.id))
       throw new CustomError("NotFound", 404, "Not Found", false);

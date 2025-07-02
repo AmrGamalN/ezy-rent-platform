@@ -24,4 +24,4 @@ const categorySchema: Schema = new Schema<CategoryDocument>(
   { timestamps: true }
 );
 
-export const Category = model<CategoryDocument>("Category", categorySchema);
+export const Category = model<CategoryDocument>("car_Category", categorySchema);
