@@ -1,0 +1,11 @@
+
+FROM node:20-alpine
+WORKDIR /src
+copy package*.json ./
+ARG NODE_ENV
+RUN if [ "$NODE_ENV" = "production" ]; then \
+    npm install --only=production; \
+    else npm install; \
+    fi   
+COPY . .
+EXPOSE 6000
