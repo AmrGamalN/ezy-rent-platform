@@ -32,7 +32,7 @@ router.get(
 );
 
 router.post(
-  "/create",
+  "/",
   authentication,
   uploadFile.prefixType("cars"),
   uploadFile.uploadListMulterS3Images("carImages", 5),
@@ -44,7 +44,7 @@ router.post(
 );
 
 router.put(
-  "/update/:id",
+  "/:id",
   authentication,
   requiredId(),
   uploadFile.prefixType("cars"),
@@ -56,7 +56,7 @@ router.put(
 );
 
 router.put(
-  "/image/upload/:id",
+  "/upload-image/:id",
   authentication,
   requiredId(),
   uploadFile.uploadListMulterImages("carImages", 5),
@@ -64,14 +64,14 @@ router.put(
 );
 
 router.delete(
-  "/image/remove/:id",
+  "/remove-image/:id",
   authentication,
   requiredId(),
   handleError(controller.deleteImages.bind(controller))
 );
 
 router.delete(
-  "/delete/:id",
+  "/:id",
   authentication,
   requiredId(),
   handleError(controller.delete.bind(controller))

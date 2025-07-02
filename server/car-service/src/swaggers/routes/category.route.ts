@@ -1,6 +1,6 @@
 /**
  * @swagger
- * /category:
+ * /categories:
  *   post:
  *     summary: Create category
  *     description: Create a new category
@@ -22,7 +22,7 @@
 
 /**
  * @swagger
- * /category:
+ * /categories:
  *   get:
  *     summary: Get all categories
  *     tags: [Category]
@@ -39,7 +39,7 @@
 
 /**
  * @swagger
- * /category/{id}:
+ * /categories/{id}:
  *   get:
  *     summary: Get category by ID
  *     tags: [Category]
@@ -64,7 +64,7 @@
 
 /**
  * @swagger
- * /category/{id}:
+ * /categories/{id}:
  *   put:
  *     summary: Update category
  *     tags: [Category]
@@ -93,7 +93,7 @@
 
 /**
  * @swagger
- * /category/{id}:
+ * /categories/{id}:
  *   delete:
  *     summary: Delete category
  *     description: Delete category

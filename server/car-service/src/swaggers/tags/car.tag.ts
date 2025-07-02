@@ -6,5 +6,7 @@
  *  - name: Category
  *    description: Categories Api Management
  *  - name: Wishlist
- *    description: Wishlist Api Management
+ *    description: Wishlist Api  Management
+ *  - name: Order
+ *    description: Order Api Management
  */
