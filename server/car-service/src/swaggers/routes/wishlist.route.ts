@@ -1,6 +1,6 @@
 /**
  * @swagger
- * /wishlist:
+ * /wishlists:
  *   post:
  *     summary: Add car to wishlist
  *     description: Add car to wishlist
@@ -32,7 +32,7 @@
 
 /**
  * @swagger
- * /wishlist/{id}:
+ * /wishlists/{id}:
  *   get:
  *     summary: Get wishlist item by ID
  *     description: Get wishlist item by ID
@@ -59,7 +59,7 @@
 
 /**
  * @swagger
- * /wishlist:
+ * /wishlists:
  *   get:
  *     summary: Get all wishlist items for current user
  *     description: Get all wishlist items for current user
@@ -90,7 +90,7 @@
 
 /**
  * @swagger
- * /wishlist/{id}:
+ * /wishlists/{id}:
  *   delete:
  *     summary: Remove car from wishlist
  *     description: Remove car from wishlist

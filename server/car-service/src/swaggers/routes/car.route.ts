@@ -1,6 +1,6 @@
 /**
  * @swagger
- * /car/{id}:
+ * /cars/{id}:
  *  get:
  *    summary: Get a car by ID
  *    tags: [Car]
@@ -27,7 +27,7 @@
 
 /**
  * @swagger
- * /car/count:
+ * /cars/count:
  *   get:
  *     summary: Get the count of cars
  *     description: Get the count of cars
@@ -45,7 +45,7 @@
 
 /**
  * @swagger
- * /car/create:
+ * /cars:
  *   post:
  *     summary: Add a new car
  *     description: Add a new car
@@ -69,7 +69,7 @@
 
 /**
  * @swagger
- * /car/update/{id}:
+ * /cars/{id}:
  *   put:
  *     summary: Update a car by ID
  *     description: Update a car by ID
@@ -104,7 +104,7 @@
 
 /**
  * @swagger
- * /car/image/upload/{id}:
+ * /cars/upload-image/{id}:
  *   put:
  *     summary: Upload car image
  *     description: Upload car image
@@ -139,7 +139,7 @@
 
 /**
  * @swagger
- * /car/image/remove/{id}:
+ * /cars/remove-image/{id}:
  *   delete:
  *     summary: Delete car image
  *     description: Delete car image
@@ -178,7 +178,7 @@
 
 /**
  * @swagger
- * /car/delete/{id}:
+ * /cars/{id}:
  *   delete:
  *     summary: Delete a car by ID
  *     tags: [Car]

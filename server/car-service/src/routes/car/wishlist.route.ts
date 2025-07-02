@@ -15,23 +15,23 @@ const authentication = [
 
 router.post(
   "/",
-  // authentication,
+  authentication,
   handleError(controller.create.bind(controller))
 );
 router.get(
   "/:id",
-  // authentication,
+  authentication,
   requiredId(),
   handleError(controller.create.bind(controller))
 );
 router.get(
   "/",
-  // authentication,
+  authentication,
   handleError(controller.create.bind(controller))
 );
 router.delete(
   "/:id",
-  // authentication,
+  authentication,
   requiredId(),
   handleError(controller.create.bind(controller))
 );

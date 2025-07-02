@@ -1,4 +1,4 @@
-import { validateString, validateObject } from "../validationFunction";
+import { validateString } from "../validationFunction";
 import { ValidationChain } from "express-validator";
 
 const validateCategory = (isOptional: boolean = false): ValidationChain[] => [
