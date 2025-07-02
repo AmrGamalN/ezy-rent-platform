@@ -17,56 +17,59 @@ export class CarController {
     return CarController.instance;
   }
 
-  createCar = async (req: Request, res: Response): Promise<Response> => {
-    const result = await this.carService.createCar(
+  create = async (req: Request, res: Response): Promise<Response> => {
+    const response = await this.carService.create(
       req.body,
       String(req.curUser?.userId)
     );
-    return controllerResponse(res, result);
+    return controllerResponse(res, response);
   };
 
-  getCar = async (req: Request, res: Response): Promise<Response> => {
-    const result = await this.carService.getCar(req.params.id);
-    return controllerResponse(res, result);
+  get = async (req: Request, res: Response): Promise<Response> => {
+    const response = await this.carService.get(req.params.id);
+    return controllerResponse(res, response);
   };
 
-  countCar = async (req: Request, res: Response): Promise<Response> => {
-    const result = await this.carService.countCar();
-    return controllerResponse(res, result);
+  count = async (req: Request, res: Response): Promise<Response> => {
+    const response = await this.carService.count();
+    return controllerResponse(res, response);
   };
 
-  updateCar = async (req: Request, res: Response): Promise<Response> => {
+  update = async (req: Request, res: Response): Promise<Response> => {
     const files = req.files as {
       [fieldname: string]: Express.MulterS3.File[];
     };
-    const result = await this.carService.updateCar(
+    const response = await this.carService.update(
       req.params.id,
       files,
       req.body,
       req.body.keys
     );
-    return controllerResponse(res, result);
+    return controllerResponse(res, response);
   };
 
   uploadNewImages = async (req: Request, res: Response): Promise<Response> => {
     const files = req.files as {
       [fieldname: string]: Express.MulterS3.File[];
     };
-    const result = await this.carService.uploadNewImages(req.params.id, files);
-    return controllerResponse(res, result);
+    const response = await this.carService.uploadNewImages(
+      req.params.id,
+      files
+    );
+    return controllerResponse(res, response);
   };
 
   deleteImages = async (req: Request, res: Response): Promise<Response> => {
-    const result = await this.carService.deleteImages(
+    const response = await this.carService.deleteImages(
       req.params.id,
       String(req.curUser?.userId),
       req.body.keys
     );
-    return controllerResponse(res, result);
+    return controllerResponse(res, response);
   };
 
-  deleteCar = async (req: Request, res: Response): Promise<Response> => {
-    const result = await this.carService.deleteCar(req.params.id);
-    return controllerResponse(res, result);
+  delete = async (req: Request, res: Response): Promise<Response> => {
+    const response = await this.carService.delete(req.params.id);
+    return controllerResponse(res, response);
   };
 }

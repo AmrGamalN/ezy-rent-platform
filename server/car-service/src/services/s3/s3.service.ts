@@ -1,7 +1,7 @@
 import { CustomError } from "@amrogamal/shared-code";
-import { Car } from "../../models/mongodb/car/car.model";
 import {
   DeleteObjectsCommand,
+  DeleteObjectCommand,
   ListObjectsV2Command,
   PutObjectCommand,
 } from "@aws-sdk/client-s3";
@@ -19,7 +19,7 @@ export class S3Service {
     return this.instance;
   }
 
-  deleteImages = async (keys: string[]): Promise<void> => {
+  deleteMultiImages = async (keys: string[]): Promise<void> => {
     if (keys.length === 0) return;
     const deleteParams = {
       Bucket: String(process.env.AWS_BUCKET_NAME),
@@ -29,6 +29,15 @@ export class S3Service {
       },
     };
     await s3Client.send(new DeleteObjectsCommand(deleteParams));
+  };
+
+  deleteSingleImages = async (key: string): Promise<void> => {
+    await s3Client.send(
+      new DeleteObjectCommand({
+        Bucket: String(process.env.AWS_BUCKET_NAME),
+        Key: key,
+      })
+    );
   };
 
   checkImagesLimit = async (
@@ -58,7 +67,7 @@ export class S3Service {
     return response.Contents ? response.Contents.length : 0;
   };
 
-  uploadImages = async (
+  uploadMultiImages = async (
     files: { [fieldname: string]: Express.Multer.File[] },
     prefix: string,
     keys?: string[]
@@ -81,16 +90,23 @@ export class S3Service {
         return { url, key };
       }
     );
-
-    const uploadedImages = await Promise.all(uploadPromises);
-    return uploadedImages;
+    return await Promise.all(uploadPromises);
   };
 
-  updateCarInDatabase = async (_id: string, data: any) => {
-    const car = await Car.findOneAndUpdate({ _id }, { $set: data });
-    if (!car) {
-      throw new CustomError("NotFound", 404, "Car not found", false);
-    }
-    return car;
+  uploadSingleImage = async (
+    file: Express.Multer.File,
+    name?: string
+  ): Promise<{ url: string; key: string }> => {
+    const key = name ? name : `categories/${uuidv4()}-${file.originalname}`;
+    const url = `https://${process.env.AWS_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${key}`;
+    await s3Client.send(
+      new PutObjectCommand({
+        Bucket: String(process.env.AWS_BUCKET_NAME),
+        Key: String(key),
+        Body: file.buffer,
+        ContentType: file.mimetype,
+      })
+    );
+    return { url, key };
   };
 }

@@ -33,7 +33,7 @@ export class CarConsumer {
           const id = data?.id;
 
           if (type === "car.created") {
-            await this.carService.createCar({ data, index: "cars", id });
+            await this.carService.create({ data, index: "cars", id });
           } else if (type === "car.updated") {
             await this.carService.updateCar({ data, index: "cars", id });
           } else if (type === "car.deleted") {

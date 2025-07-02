@@ -57,7 +57,7 @@
  *       content:
  *         multipart/form-data:
  *           schema:
- *             $ref: '#/components/schemas/CreateCar'
+ *             $ref: '#/components/schemas/create'
  *     responses:
  *       201:
  *         description: Car created successfully

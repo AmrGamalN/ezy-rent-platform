@@ -6,7 +6,7 @@ const { handleError } = HandleError.getInstance();
 const router = Router();
 
 router.get("/seacrh", handleError(controller.searchCar.bind(controller)));
-router.get("/:id", handleError(controller.getCar.bind(controller)));
+router.get("/:id", handleError(controller.get.bind(controller)));
 router.post("/mapping", handleError(controller.createMapping.bind(controller)));
 
 export default router;
