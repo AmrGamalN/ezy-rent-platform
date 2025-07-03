@@ -61,6 +61,14 @@ const validateCar = (isOptional: boolean = false): ValidationChain[] => [
     field: "availableTo",
     isOptional,
   }),
+  validateDate({
+    field: "expired_At",
+    isOptional: true,
+  }),
+  validateBoolean({
+    field: "isExpired",
+    isOptional: true,
+  }),
   validateNumber({
     field: "price",
     isOptional,

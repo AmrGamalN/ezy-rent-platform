@@ -213,8 +213,8 @@ export const validateDate = ({
     .isISO8601()
     .withMessage(`${field} must be a valid format YYYY-MM-DD`)
     .custom((value, { req }) => {
-      const start = req.body?.availableFrom;
-      const end = req.body?.availableTo;
+      const start = req.body?.startDate || req.body?.availableFrom;
+      const end = req.body?.endDate || req.body?.availableTo;
 
       if (field === "startDate" || field === "availableFrom") {
         if (value && !end) {

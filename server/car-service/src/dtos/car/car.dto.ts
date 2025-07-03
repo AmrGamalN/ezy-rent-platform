@@ -43,6 +43,8 @@ export const CarDto = z.object({
   isAvailable: z.boolean().optional(),
   allowNegotiate: z.boolean().default(false),
   guarantees: guaranteesSchema.optional(),
+  isExpired: z.boolean().default(false).optional(),
+  expired_At: z.date().optional(),
 });
 
 export const AddCarDto = CarDto.omit({

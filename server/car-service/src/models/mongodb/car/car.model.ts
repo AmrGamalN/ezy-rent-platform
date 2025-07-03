@@ -42,8 +42,21 @@ const CarSchema: Schema = new Schema<ICar>(
       depositAmount: { type: Number, default: 0 },
       additionalNotes: { type: String },
     },
+    isExpired: { type: Boolean, default: false, index: true },
+    expired_At: {
+      type: Date,
+    },
   },
   { timestamps: true }
+);
+
+CarSchema.index(
+  { expired_At: 1 },
+  {
+    expireAfterSeconds: 0,
+    partialFilterExpression: { isExpired: true },
+    name: "booking_ttl_index",
+  }
 );
 
 export const Car = model<ICar>("car_car", CarSchema);
