@@ -1,6 +1,7 @@
+import { ObjectId } from "mongodb";
 import { z } from "@amrogamal/shared-code";
 export const WishlistDto = z.object({
-  _id: z.string(),
+  _id: z.instanceof(ObjectId),
   userId: z.string(),
   carId: z.string(),
   createdAt: z.date(),

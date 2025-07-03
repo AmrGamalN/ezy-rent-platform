@@ -97,6 +97,15 @@
  *             additionalNotes:
  *               type: string
  *               example: "No smoking in the car"
+ *         expired_At:
+ *           type: string
+ *           format: date-time
+ *           description: Date when the car is expired
+ *           example: "2023-06-30T15:30:00Z"
+ *         isExpired:
+ *           type: boolean
+ *           description: Check if the car is expired
+ *           example: true
  *
  *     create:
  *       allOf:

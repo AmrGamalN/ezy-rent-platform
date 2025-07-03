@@ -1,7 +1,8 @@
+import { ObjectId } from "mongodb";
 import { z } from "@amrogamal/shared-code";
 
 export const OrderDto = z.object({
-  _id: z.string(),
+  _id: z.instanceof(ObjectId),
   userId: z.string(),
   carId: z.string(),
   transactionId: z.string().optional(),

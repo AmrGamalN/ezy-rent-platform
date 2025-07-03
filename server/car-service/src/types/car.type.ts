@@ -55,6 +55,8 @@ export interface ICar extends Document {
     depositAmount?: number;
     additionalNotes?: string;
   };
+  isExpired: boolean;
+  expired_At: Date;
   createdAt?: Date;
   updatedAt?: Date;
 }

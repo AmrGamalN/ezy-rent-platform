@@ -1,5 +1,7 @@
+import { ObjectId } from "mongodb";
 import { z } from "@amrogamal/shared-code";
 export const CreateCategoryDto = z.object({
+  _id: z.instanceof(ObjectId),
   name: z.string().min(2).max(50),
   description: z.string().optional(),
   categoryImage: z
