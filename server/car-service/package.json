@@ -5,10 +5,11 @@
   "module": "es6",
   "main": "app.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node src/app.ts",
-    "start-dev": "nodemon --legacy-watch src/app.ts",
     "build": "tsc",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon --legacy-watch src/app.ts",
+    "prod": "node dist/app.js",
+    "pm2": "pm2-runtime ecosystem.config.js",
     "stop": "pkill -f node",
     "restart": "npm run stop && npm run start"
   },

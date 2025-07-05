@@ -49,71 +49,6 @@ services:
       - mongo-network
     restart: always
 
-  auth-service:
-    container_name: auth-service
-    volumes:
-      - ./auth-service:/src
-    env_file:
-      - ./auth-service/.env
-    ports:
-      - "3000:3000"
-    depends_on:
-      - mongo1
-      - mongo2
-      - mongo3
-      - redis
-    networks:
-      - mongo-network
-
-  car-service:
-    container_name: car-service
-    volumes:
-      - ./car-service:/src
-    env_file:
-      - ./car-service/.env
-    ports:
-      - "4000:4000"
-    depends_on:
-      - mongo1
-      - mongo2
-      - mongo3
-      - kafka
-      - zookeeper
-    networks:
-      - mongo-network
-      - kafka-network
-
-  payment-service:
-    container_name: payment-service
-    volumes:
-      - ./payment-service:/src
-    env_file:
-      - ./payment-service/.env
-    ports:
-      - "6000:6000"
-    depends_on:
-      - kafka
-      - zookeeper
-    networks:
-      - mongo-network
-      - kafka-network
-    
-  elastic-service:
-    container_name: elastic-service
-    volumes:
-      - ./elastic-service:/src
-    env_file:
-      - ./elastic-service/.env
-    ports:
-      - "5000:5000"
-    depends_on:
-      - elasticsearch
-      - kafka
-      - zookeeper
-    networks:
-      - mongo-network
-      - kafka-network
-
   nginx:
     image: nginx:stable-alpine
     container_name: nginx
@@ -214,10 +149,10 @@ services:
       KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:9092
     depends_on:
       - kafka
-      - zookeeper 
+      - zookeeper
     networks:
-      - kafka-network 
-      
+      - kafka-network
+
 
 volumes:
   mongo1-data:

@@ -36,5 +36,6 @@
   "editor.formatOnSave": true,
   "editor.formatOnType": true,
   "files.autoSave": "afterDelay",
-  "files.autoSaveDelay": 300
+  "files.autoSaveDelay": 300,
+  "files.eol": "\n", // end_of_line = lf
 }
