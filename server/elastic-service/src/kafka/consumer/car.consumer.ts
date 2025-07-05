@@ -1,6 +1,6 @@
-import { kafka } from "../../configs/kafka.config";
-import { CarService } from "../../services/car.service";
-import { HandleError, logger } from "@amrogamal/shared-code";
+import { kafka } from '../../configs/kafka.config';
+import { CarService } from '../../services/car.service';
+import { HandleError, logger } from '@amrogamal/shared-code';
 const { warpError } = HandleError.getInstance();
 
 export class CarConsumer {
@@ -18,26 +18,25 @@ export class CarConsumer {
   }
 
   startCarConsumer = warpError(async (): Promise<void> => {
-    const consumer = kafka.consumer({ groupId: "car-group" });
+    const consumer = kafka.consumer({ groupId: 'car-group' });
     await consumer.connect();
     await consumer.subscribe({
-      topic: "car-events",
+      topic: 'car-events',
       fromBeginning: true,
     });
 
     await consumer.run({
-      eachMessage: async ({ topic, partition, message, heartbeat }) => {
+      eachMessage: async ({ message }) => {
         try {
           if (!message.value) return;
           const { data, type } = JSON.parse(message.value.toString());
           const id = data?.id;
-
-          if (type === "car.created") {
-            await this.carService.create({ data, index: "cars", id });
-          } else if (type === "car.updated") {
-            await this.carService.updateCar({ data, index: "cars", id });
-          } else if (type === "car.deleted") {
-            await this.carService.deleteCar({ index: "cars", id });
+          if (type === 'car.created') {
+            await this.carService.create({ data, index: 'cars', id });
+          } else if (type === 'car.updated') {
+            await this.carService.update({ data, index: 'cars', id });
+          } else if (type === 'car.deleted') {
+            await this.carService.delete({ index: 'cars', id });
           }
         } catch (error) {
           logger.error(error);

@@ -1,29 +1,36 @@
 {
   "name": "elastic-search",
   "version": "1.0.0",
-  "main": "src/app.ts",
+  "description": "elastic-search car service to connect to elastic search and used to search for cars and add new cars.",
+  "main": "dist/app.js",
+  "engines": {
+    "node": "23.1.0",
+    "npm": "10.9.0",
+    "@elastic/elasticsearch": "^8.18.2"
+  },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node src/app.ts",
-    "start-dev": "nodemon --legacy-watch src/app.ts",
     "build": "tsc",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon --legacy-watch src/app.ts",
+    "prod": "node dist/app.js",
+    "pm2": "pm2-runtime ecosystem.config.js",
     "stop": "pkill -f node",
     "restart": "npm run stop && npm run start"
   },
   "keywords": [],
   "author": "Amr Gamal",
   "license": "ISC",
-  "description": "elastic-search",
   "dependencies": {
-    "@amrogamal/shared-code": "^2.0.1",
+    "@amrogamal/shared-code": "^2.1.0",
     "@elastic/elasticsearch": "^8.18.2",
     "body-parser": "^2.2.0",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
-    "dotenv": "^16.4.7",
+    "dotenv": "^17.0.1",
     "express": "^5.1.0",
     "helmet": "^8.1.0",
     "kafkajs": "^2.2.4",
+    "pm2": "^6.0.8",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.1",
     "swagger-ui-themes": "^3.0.1"
@@ -33,7 +40,7 @@
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.3",
     "@types/swagger-jsdoc": "^6.0.4",
-    "@types/swagger-ui-express": "^4.1.7",
+    "@types/swagger-ui-express": "^4.1.8",
     "nodemon": "^3.1.10",
     "ts-node-dev": "^2.0.0",
     "typescript": "^5.8.3"
