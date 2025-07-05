@@ -43,7 +43,7 @@ export class CarService {
     });
   };
 
-  createCar = warpError(async ({ data, index, id }: ElasticCreateType) => {
+  create = warpError(async ({ data, index, id }: ElasticCreateType) => {
     await elasticClient.index({
       index,
       id,
@@ -52,7 +52,7 @@ export class CarService {
     });
   });
 
-  getCar = warpError(async (id: string): Promise<ResponseOptions> => {
+  get = warpError(async (id: string): Promise<ResponseOptions> => {
     const { _index, _source } = await elasticClient.get({
       index: "cars",
       id,
@@ -102,7 +102,7 @@ export class CarService {
     }
 
     if (query.minPrice && query.maxPrice) {
-      rangeQuery.pricePerDay = {
+      rangeQuery.price = {
         gte: query.minPrice,
         lte: query.maxPrice,
       };
@@ -111,7 +111,7 @@ export class CarService {
     for (const [key, value] of Object.entries(query)) {
       if (skipKeys.includes(key)) continue;
 
-      if (["brand", "carModel", "name"].includes(key)) {
+      if (["brand", "model", "name"].includes(key)) {
         mustQueries.push({
           match: {
             [key]: {
@@ -152,7 +152,7 @@ export class CarService {
     return { esQuery, from };
   };
 
-  updateCar = async ({ data, index, id }: ElasticUpdateType) => {
+  update = async ({ data, index, id }: ElasticUpdateType) => {
     await elasticClient.update({
       index,
       id,
@@ -160,7 +160,7 @@ export class CarService {
     });
   };
 
-  deleteCar = async ({ index, id }: ElasticDeleteType) => {
+  delete = async ({ index, id }: ElasticDeleteType) => {
     await elasticClient.delete({
       index,
       id,

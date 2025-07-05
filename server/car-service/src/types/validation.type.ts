@@ -3,16 +3,16 @@ export const phonePattern = /^\+[1-9]\d{10,15}$/;
 export const emailPattern =
   /^[a-zA-Z0-9._-]+@(gmail|yahoo|outlook|hotmail|icloud|example)\.com$/;
 
-export type LocationType = "body" | "query" | "check" | "param";
+export type LocationType = 'body' | 'query' | 'check' | 'param';
 
 export type DateFieldType =
-  | "startDate"
-  | "endDate"
-  | "issuedAt"
-  | "interviewDate"
-  | "expireAt"
-  | "start"
-  | "end";
+  | 'startDate'
+  | 'endDate'
+  | 'issuedAt'
+  | 'interviewDate'
+  | 'expireAt'
+  | 'start'
+  | 'end';
 
 export type MainValidationType = {
   field?: string;
@@ -40,7 +40,7 @@ export type ValidationArrayType = MainValidationType & {
     location?: LocationType;
     minLength?: number;
     maxLength?: number;
-    elementType?: "string" | "number";
+    elementType?: 'string' | 'number';
     elementMessage?: string;
     isIn?: string[] | readonly string[];
   };
@@ -52,5 +52,6 @@ export type ValidationNumberType = MainValidationType & {
     isIn?: number[] | readonly number[];
     min?: number;
     max?: number;
+    isYear?: boolean;
   };
 };

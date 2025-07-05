@@ -1,36 +1,80 @@
-import { Router } from "express";
-import { HandleError } from "@amrogamal/shared-code";
-import { CarController } from "../../controllers/car/car.controller";
-import { AuthMiddleware } from "../../middlewares/auth.middleware";
+import { Router } from 'express';
+import { HandleError } from '@amrogamal/shared-code';
+import { CarController } from '../../controllers/car/car.controller';
+import { AuthMiddleware } from '../../middlewares/auth.middleware';
+import { UploadFile } from '../../middlewares/uploadFile.middleware';
+import { ParserField } from '../../middlewares/parser.middleware';
+import {
+  validateCreateCar,
+  validateUpdateCar,
+} from '../../validations/car/car.validator';
+import {
+  expressValidator,
+  requiredId,
+} from '../../middlewares/express.middleware';
+const parserField = ParserField.getInstance();
 const authMiddleware = AuthMiddleware.getInstance();
 const controller = CarController.getInstance();
+const uploadFile = UploadFile.getInstance();
 const { handleError } = HandleError.getInstance();
 const router = Router();
 
 const authentication = [
   authMiddleware.verifyToken,
-  authMiddleware.authorization(["user", "admin", "manager"]),
+  authMiddleware.authorization(['user', 'admin', 'manager']),
 ];
 
-router.get("/:id", handleError(controller.getCar.bind(controller)));
+router.get('/:id', requiredId(), handleError(controller.get.bind(controller)));
 router.get(
-  "/count",
+  '/count',
   authentication,
-  handleError(controller.countCar.bind(controller))
+  handleError(controller.count.bind(controller)),
 );
+
 router.post(
-  "/create",
+  '/',
   authentication,
-  handleError(controller.createCar.bind(controller))
+  uploadFile.prefixType('cars'),
+  uploadFile.uploadListMulterS3Images('carImages', 5),
+  parserField.requiredImage('carImages'),
+  parserField.parserFields(),
+  parserField.parserImages(),
+  expressValidator(validateCreateCar),
+  handleError(controller.create.bind(controller)),
 );
+
 router.put(
-  "/update/:id",
+  '/:id',
   authentication,
-  handleError(controller.updateCar.bind(controller))
+  requiredId(),
+  uploadFile.prefixType('cars'),
+  uploadFile.uploadListMulterImages('carImages', 5),
+  parserField.parserFields(),
+  parserField.parserImages(),
+  expressValidator(validateUpdateCar),
+  handleError(controller.update.bind(controller)),
 );
+
+router.put(
+  '/upload-image/:id',
+  authentication,
+  requiredId(),
+  uploadFile.uploadListMulterImages('carImages', 5),
+  handleError(controller.uploadNewImages.bind(controller)),
+);
+
 router.delete(
-  "/delete/:id",
+  '/remove-image/:id',
   authentication,
-  handleError(controller.deleteCar.bind(controller))
+  requiredId(),
+  handleError(controller.deleteImages.bind(controller)),
 );
+
+router.delete(
+  '/:id',
+  authentication,
+  requiredId(),
+  handleError(controller.delete.bind(controller)),
+);
+
 export default router;

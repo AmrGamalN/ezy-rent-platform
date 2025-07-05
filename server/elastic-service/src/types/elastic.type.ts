@@ -51,7 +51,7 @@ export const ElasticMappingCar = {
       phone: { type: "keyword" },
       name: { type: "text" },
       description: { type: "text" },
-      carModel: { type: "keyword" },
+      model: { type: "keyword" },
       brand: { type: "keyword" },
       year: { type: "integer" },
       color: { type: "keyword" },
@@ -62,7 +62,7 @@ export const ElasticMappingCar = {
           key: { type: "keyword" },
         },
       },
-      pricePerDay: { type: "float" },
+      price: { type: "float" },
       availableFrom: { type: "date" },
       availableTo: { type: "date" },
       location: {
