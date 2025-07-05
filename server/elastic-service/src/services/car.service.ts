@@ -2,15 +2,17 @@ import {
   HandleError,
   ResponseOptions,
   serviceResponse,
-} from "@amrogamal/shared-code";
-import { elasticClient } from "../configs/elastic.config";
+} from '@amrogamal/shared-code';
+import { elasticClient } from '../configs/elastic.config';
 import {
   ElasticCreateType,
   ElasticSearchType,
   ElasticMappingCar,
   ElasticUpdateType,
   ElasticDeleteType,
-} from "../types/elastic.type";
+  ElaticCarSettings,
+  ElasticCarMappings,
+} from '../types/elastic.type';
 const { warpError } = HandleError.getInstance();
 
 export class CarService {
@@ -23,23 +25,23 @@ export class CarService {
     return this.instance;
   }
 
-  createMapping = async () => {
-    const exists = await elasticClient.indices.exists({ index: "cars" });
+  createMapping = async (): Promise<ResponseOptions> => {
+    const exists = await elasticClient.indices.exists({ index: 'cars' });
     if (exists)
       return serviceResponse({
-        statusText: "Conflict",
-        message: "Index already exists",
+        statusText: 'Conflict',
+        message: 'Index already exists',
       });
 
     await elasticClient.indices.create({
-      index: "cars",
-      settings: ElasticMappingCar.settings as any,
-      mappings: ElasticMappingCar.mappings as any,
+      index: 'cars',
+      settings: ElasticMappingCar.settings as ElaticCarSettings,
+      mappings: ElasticMappingCar.mappings as ElasticCarMappings,
     });
 
     return serviceResponse({
-      statusText: "Created",
-      message: "Index created successfully",
+      statusText: 'Created',
+      message: 'Index created successfully',
     });
   };
 
@@ -48,13 +50,18 @@ export class CarService {
       index,
       id,
       document: data,
-      refresh: "wait_for",
+      refresh: 'wait_for',
     });
   });
 
   get = warpError(async (id: string): Promise<ResponseOptions> => {
+<<<<<<< Updated upstream
     const { _index, _source } = await elasticClient.get({
       index: "cars",
+=======
+    const { _source } = await elasticClient.get({
+      index: 'cars',
+>>>>>>> Stashed changes
       id,
     });
     return serviceResponse({ data: _source });
@@ -64,11 +71,11 @@ export class CarService {
     async (
       query: ElasticSearchType,
       page: number = 1,
-      limit: number = 10
+      limit: number = 10,
     ): Promise<ResponseOptions> => {
       const { esQuery, from } = await this.helperSearch(query, page, limit);
       const { hits } = await elasticClient.search({
-        index: "cars",
+        index: 'cars',
         query: esQuery,
         size: limit,
         from,
@@ -80,25 +87,25 @@ export class CarService {
       }));
 
       return serviceResponse({
-        statusText: "OK",
-        message: "Search successfully",
+        statusText: 'OK',
+        message: 'Search successfully',
         data: results,
       });
-    }
+    },
   );
 
   private helperSearch = async (
     query: ElasticSearchType,
     page: number = 1,
-    limit: number = 10
-  ) => {
+    limit: number = 10,
+  ): Promise<{ esQuery: any; from: number }> => {
     const from = (page - 1) * limit;
-    const skipKeys = ["city", "minPrice", "maxPrice"];
-    const mustQueries: any[] = [];
-    const rangeQuery: any = {};
+    const skipKeys = ['city', 'minPrice', 'maxPrice'];
+    const mustQueries: any = [];
+    const rangeQuery: { price?: { gte?: number; lte?: number } } = {};
 
     if (query.city) {
-      mustQueries.push({ match: { "location.city": query.city } });
+      mustQueries.push({ match: { 'location.city': query.city } });
     }
 
     if (query.minPrice && query.maxPrice) {
@@ -111,16 +118,20 @@ export class CarService {
     for (const [key, value] of Object.entries(query)) {
       if (skipKeys.includes(key)) continue;
 
+<<<<<<< Updated upstream
       if (["brand", "model", "name"].includes(key)) {
+=======
+      if (['brand', 'model', 'name'].includes(key)) {
+>>>>>>> Stashed changes
         mustQueries.push({
           match: {
             [key]: {
               query: value,
-              fuzziness: "AUTO",
+              fuzziness: 'AUTO',
             },
           },
         });
-      } else if (key === "color") {
+      } else if (key === 'color') {
         mustQueries.push({
           term: {
             color: value,
@@ -152,7 +163,12 @@ export class CarService {
     return { esQuery, from };
   };
 
+<<<<<<< Updated upstream
   update = async ({ data, index, id }: ElasticUpdateType) => {
+=======
+
+  update = async ({ data, index, id }: ElasticUpdateType): Promise<void> => {
+>>>>>>> Stashed changes
     await elasticClient.update({
       index,
       id,
@@ -160,7 +176,11 @@ export class CarService {
     });
   };
 
+<<<<<<< Updated upstream
   delete = async ({ index, id }: ElasticDeleteType) => {
+=======
+  delete = async ({ index, id }: ElasticDeleteType): Promise<void> => {
+>>>>>>> Stashed changes
     await elasticClient.delete({
       index,
       id,

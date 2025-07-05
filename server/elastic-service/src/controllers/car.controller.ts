@@ -1,6 +1,7 @@
-import { Request, Response } from "express";
-import { controllerResponse } from "@amrogamal/shared-code";
-import { CarService } from "../services/car.service";
+import { Request, Response } from 'express';
+import { controllerResponse } from '@amrogamal/shared-code';
+import { CarService } from '../services/car.service';
+import { SearchCar } from '../types/car.type';
 
 export class CarController {
   static instance: CarController;
@@ -27,10 +28,29 @@ export class CarController {
 
   searchCar = async (req: Request, res: Response): Promise<Response> => {
     const { page, limit, ...query } = req.query;
+    const Queries = {
+      name: query.name as string,
+      brand: query.brand as string,
+      carModel: query.model as string,
+      year: Number(query.year),
+      category: query.category as string,
+      isAvailable: query.isAvailable === 'true',
+      allowNegotiate: query.allowNegotiate === 'true',
+      minPrice: query.minPrice ? Number(query.minPrice) : undefined,
+      maxPrice: query.maxPrice ? Number(query.maxPrice) : undefined,
+      color: query.color as string,
+      city: query.city as string,
+      availableFrom: query.availableFrom
+        ? new Date(query.availableFrom.toString())
+        : undefined,
+      availableTo: query.availableTo
+        ? new Date(query.availableTo.toString())
+        : undefined,
+    };
     const result = await this.carService.searchCar(
-      query as any,
+      Queries as SearchCar,
       Number(page),
-      Number(limit)
+      Number(limit),
     );
     return controllerResponse(res, result);
   };

@@ -1,9 +1,8 @@
 node_modules
 dist
-logs
-*.log
-.DS_Store
-*.swp
-*.swo
-coverage
 .env
+.git
+.gitignore
+Dockerfile
+docker-compose*.yml
+README.md

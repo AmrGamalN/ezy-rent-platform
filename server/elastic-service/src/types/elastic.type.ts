@@ -1,5 +1,7 @@
+import { CreateCar, UpdateCar } from './car.type';
+
 export type ElasticCreateType = {
-  data: any;
+  data: CreateCar;
   index: string;
   id: string;
   userId?: string;
@@ -10,16 +12,23 @@ export type ElasticGetType = {
 };
 
 export type ElasticSearchType = {
-  brand: string;
   name: string;
+  brand: string;
+  color: string;
+  carModel: string;
   city: string;
+  category: string;
+  year: number;
   minPrice: number;
   maxPrice: number;
-  // sort?: Array<Record<string, "asc" | "desc">>;
+  availableFrom: Date;
+  availableTo: Date;
+  isAvailable: boolean;
+  allowNegotiate: boolean;
 };
 
 export type ElasticUpdateType = {
-  data: any;
+  data: UpdateCar;
   index: string;
   id: string;
 };
@@ -31,7 +40,7 @@ export type ElasticDeleteType = {
 
 export type ElasticMappingType = {
   index: string;
-  body: any;
+  body: MappingCar;
 };
 
 export const ElasticMappingCar = {
@@ -39,14 +48,15 @@ export const ElasticMappingCar = {
     analysis: {
       analyzer: {
         default: {
-          type: "standard",
-          stopwords: "_none_",
+          type: 'standard',
+          stopwords: '_none_',
         },
       },
     },
   },
   mappings: {
     properties: {
+<<<<<<< Updated upstream
       userId: { type: "keyword" },
       phone: { type: "keyword" },
       name: { type: "text" },
@@ -55,41 +65,112 @@ export const ElasticMappingCar = {
       brand: { type: "keyword" },
       year: { type: "integer" },
       color: { type: "keyword" },
+=======
+      userId: { type: 'keyword' },
+      phone: { type: 'keyword' },
+      name: { type: 'text' },
+      description: { type: 'text' },
+      model: { type: 'keyword' },
+      brand: { type: 'keyword' },
+      year: { type: 'integer' },
+      color: { type: 'keyword' },
+>>>>>>> Stashed changes
       images: {
-        type: "nested",
+        type: 'nested',
         properties: {
-          url: { type: "keyword" },
-          key: { type: "keyword" },
+          url: { type: 'keyword' },
+          key: { type: 'keyword' },
         },
       },
+<<<<<<< Updated upstream
       price: { type: "float" },
       availableFrom: { type: "date" },
       availableTo: { type: "date" },
+=======
+      price: { type: 'float' },
+      availableFrom: { type: 'date' },
+      availableTo: { type: 'date' },
+>>>>>>> Stashed changes
       location: {
         properties: {
-          city: { type: "keyword" },
-          address: { type: "text" },
-          coordinates: {
-            properties: {
-              lat: { type: "float" },
-              lng: { type: "float" },
+              lng: { type: 'float' },
             },
           },
-        },
       },
-      isAvailable: { type: "boolean" },
+      isAvailable: { type: 'boolean' },
       guarantees: {
         properties: {
-          hasInsurance: { type: "boolean" },
-          insuranceDetails: { type: "text" },
-          licenseValid: { type: "boolean" },
-          requiresDeposit: { type: "boolean" },
-          depositAmount: { type: "float" },
-          additionalNotes: { type: "text" },
+          hasInsurance: { type: 'boolean' },
+          insuranceDetails: { type: 'text' },
+          licenseValid: { type: 'boolean' },
+          requiresDeposit: { type: 'boolean' },
+          depositAmount: { type: 'float' },
+          additionalNotes: { type: 'text' },
         },
       },
-      createdAt: { type: "date" },
-      updatedAt: { type: "date" },
+      createdAt: { type: 'date' },
+      updatedAt: { type: 'date' },
     },
   },
 };
+
+export type ElaticCarSettings = {
+  analysis: {
+    analyzer: {
+      default: {
+        type: 'standard';
+        stopwords: '_none_';
+      };
+    };
+  };
+};
+
+export type ElasticCarMappings = {
+  properties: {
+    userId: { type: 'keyword' };
+    phone: { type: 'keyword' };
+    name: { type: 'text' };
+    description: { type: 'text' };
+    model: { type: 'keyword' };
+    brand: { type: 'keyword' };
+    year: { type: 'integer' };
+    color: { type: 'keyword' };
+    images: {
+      type: 'nested';
+      properties: {
+        url: { type: 'keyword' };
+        key: { type: 'keyword' };
+      };
+    };
+    price: { type: 'float' };
+    availableFrom: { type: 'date' };
+    availableTo: { type: 'date' };
+    location: {
+      properties: {
+        city: { type: 'keyword' };
+        address: { type: 'text' };
+        coordinates: {
+          properties: {
+            lat: { type: 'float' };
+            lng: { type: 'float' };
+          };
+        };
+      };
+    };
+    isAvailable: { type: 'boolean' };
+    guarantees: {
+      properties: {
+        hasInsurance: { type: 'boolean' };
+        insuranceDetails: { type: 'text' };
+        licenseValid: { type: 'boolean' };
+        requiresDeposit: { type: 'boolean' };
+        depositAmount: { type: 'float' };
+        additionalNotes: { type: 'text' };
+      };
+    };
+    createdAt: { type: 'date' };
+    updatedAt: { type: 'date' };
+  };
+};
+
+export type MappingCar = ElaticCarSettings & ElasticCarMappings;
