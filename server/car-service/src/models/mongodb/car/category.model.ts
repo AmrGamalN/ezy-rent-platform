@@ -1,4 +1,4 @@
-import { Schema, model, Document } from "mongoose";
+import { Schema, model, Document } from 'mongoose';
 
 export interface CategoryDocument extends Document {
   name: string;
@@ -21,7 +21,7 @@ const categorySchema: Schema = new Schema<CategoryDocument>(
       _id: false,
     },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
-export const Category = model<CategoryDocument>("car_Category", categorySchema);
+export const Category = model<CategoryDocument>('car_Category', categorySchema);

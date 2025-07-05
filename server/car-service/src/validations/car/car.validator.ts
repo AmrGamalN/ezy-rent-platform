@@ -5,27 +5,27 @@ import {
   validateBoolean,
   validateObject,
   validateArray,
-} from "../validationFunction";
-import { ValidationChain } from "express-validator";
+} from '../validationFunction';
+import { ValidationChain } from 'express-validator';
 
 const validateCar = (isOptional: boolean = false): ValidationChain[] => [
   validateString({
-    field: "name",
+    field: 'name',
     isOptional,
     options: { min: 1, max: 50 },
   }),
   validateString({
-    field: "phone",
+    field: 'phone',
     isOptional,
     options: { isPhone: true },
   }),
   validateString({
-    field: "description",
+    field: 'description',
     isOptional,
     options: { min: 1, max: 500 },
   }),
   validateString({
-    field: "carModel",
+    field: 'carModel',
     isOptional,
     options: {
       min: 1,
@@ -33,7 +33,7 @@ const validateCar = (isOptional: boolean = false): ValidationChain[] => [
     },
   }),
   validateString({
-    field: "brand",
+    field: 'brand',
     isOptional,
     options: {
       min: 1,
@@ -41,12 +41,12 @@ const validateCar = (isOptional: boolean = false): ValidationChain[] => [
     },
   }),
   validateNumber({
-    field: "year",
+    field: 'year',
     isOptional,
     options: { isYear: true },
   }),
   validateString({
-    field: "color",
+    field: 'color',
     isOptional,
     options: {
       min: 1,
@@ -54,45 +54,45 @@ const validateCar = (isOptional: boolean = false): ValidationChain[] => [
     },
   }),
   validateDate({
-    field: "availableFrom",
+    field: 'availableFrom',
     isOptional,
   }),
   validateDate({
-    field: "availableTo",
+    field: 'availableTo',
     isOptional,
   }),
   validateDate({
-    field: "expired_At",
+    field: 'expired_At',
     isOptional: true,
   }),
   validateBoolean({
-    field: "isExpired",
+    field: 'isExpired',
     isOptional: true,
   }),
   validateNumber({
-    field: "price",
+    field: 'price',
     isOptional,
   }),
   validateBoolean({
-    field: "allowNegotiate",
+    field: 'allowNegotiate',
     isOptional,
   }),
   validateBoolean({
-    field: "isAvailable",
+    field: 'isAvailable',
     isOptional,
   }),
 
   ...validateArray({
-    field: "carImages",
+    field: 'carImages',
     isOptional,
   }),
 
   validateObject({
-    field: "location",
+    field: 'location',
     isOptional,
   }),
   validateString({
-    field: "location.city",
+    field: 'location.city',
     isOptional,
     options: {
       min: 1,
@@ -100,7 +100,7 @@ const validateCar = (isOptional: boolean = false): ValidationChain[] => [
     },
   }),
   validateString({
-    field: "location.address",
+    field: 'location.address',
     isOptional,
     options: {
       min: 1,
@@ -108,20 +108,20 @@ const validateCar = (isOptional: boolean = false): ValidationChain[] => [
     },
   }),
   validateNumber({
-    field: "location.coordinates.lat",
+    field: 'location.coordinates.lat',
     isOptional,
   }),
   validateNumber({
-    field: "location.coordinates.lng",
+    field: 'location.coordinates.lng',
     isOptional,
   }),
 
   validateObject({
-    field: "guarantees",
+    field: 'guarantees',
     isOptional,
   }),
   validateString({
-    field: "guarantees.insuranceDetails",
+    field: 'guarantees.insuranceDetails',
     isOptional,
     options: {
       min: 1,
@@ -129,19 +129,19 @@ const validateCar = (isOptional: boolean = false): ValidationChain[] => [
     },
   }),
   validateBoolean({
-    field: "guarantees.licenseValid",
+    field: 'guarantees.licenseValid',
     isOptional,
   }),
   validateBoolean({
-    field: "guarantees.requiresDeposit",
+    field: 'guarantees.requiresDeposit',
     isOptional,
   }),
   validateNumber({
-    field: "guarantees.depositAmount",
+    field: 'guarantees.depositAmount',
     isOptional,
   }),
   validateString({
-    field: "guarantees.additionalNotes",
+    field: 'guarantees.additionalNotes',
     isOptional,
     options: {
       min: 1,

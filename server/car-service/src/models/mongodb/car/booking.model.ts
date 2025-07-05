@@ -1,4 +1,4 @@
-import { Schema, model } from "mongoose";
+import { Schema, model } from 'mongoose';
 
 export interface ICarBooking extends Document {
   _id: string;
@@ -12,15 +12,15 @@ export interface ICarBooking extends Document {
   deliveryTime: string;
   returnTime: string;
   rentType:
-    | "with_driver"
-    | "without_driver"
-    | "airport_delivery"
-    | "wedding"
-    | "other";
-  status: "pending" | "confirmed" | "cancelled" | "completed";
+    | 'with_driver'
+    | 'without_driver'
+    | 'airport_delivery'
+    | 'wedding'
+    | 'other';
+  status: 'pending' | 'confirmed' | 'cancelled' | 'completed';
   specifiedRentType: string;
-  insuranceType: "basic" | "full";
-  paymentMethod: "cash" | "card" | "wallet" | "paymob";
+  insuranceType: 'basic' | 'full';
+  paymentMethod: 'cash' | 'card' | 'wallet' | 'paymob';
   createdAt: Date;
   updatedAt: Date;
 }
@@ -39,24 +39,24 @@ const BookingSchema = new Schema<ICarBooking>(
     rentType: {
       type: String,
       enum: [
-        "with_driver",
-        "without_driver",
-        "airport_delivery",
-        "wedding",
-        "other",
+        'with_driver',
+        'without_driver',
+        'airport_delivery',
+        'wedding',
+        'other',
       ],
       required: true,
     },
     status: {
       type: String,
-      enum: ["pending", "confirmed", "cancelled", "completed"],
-      default: "pending",
+      enum: ['pending', 'confirmed', 'cancelled', 'completed'],
+      default: 'pending',
     },
     specifiedRentType: {
       type: String,
       validate: {
         validator: function (value: string) {
-          if (this.rentType === "other") {
+          if (this.rentType === 'other') {
             return !!value && value.trim().length > 0;
           }
           return true;
@@ -66,16 +66,16 @@ const BookingSchema = new Schema<ICarBooking>(
     },
     insuranceType: {
       type: String,
-      enum: ["basic", "full"],
-      default: "basic",
+      enum: ['basic', 'full'],
+      default: 'basic',
     },
     paymentMethod: {
       type: String,
-      enum: ["cash", "card", "wallet", "paymob"],
-      default: "cash",
+      enum: ['cash', 'card', 'wallet', 'paymob'],
+      default: 'cash',
     },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
-export const Booking = model<ICarBooking>("car_booking", BookingSchema);
+export const Booking = model<ICarBooking>('car_booking', BookingSchema);

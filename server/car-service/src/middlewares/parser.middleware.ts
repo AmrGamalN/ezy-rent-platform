@@ -1,10 +1,10 @@
-import { CustomError, logger } from "@amrogamal/shared-code";
-import { Request, Response, NextFunction } from "express";
-const parserFieldBoolean = ["isAvailable", "allowNegotiate"];
-const parserFieldNumber = ["year", "discount", "depositAmount", "price"];
-const parserObject = ["location", "guarantees"];
-const parserArray = ["keys"];
-const parserImage = ["carImages", "categoryImage"];
+import { CustomError, logger } from '@amrogamal/shared-code';
+import { Request, Response, NextFunction } from 'express';
+const parserFieldBoolean = ['isAvailable', 'allowNegotiate'];
+const parserFieldNumber = ['year', 'discount', 'depositAmount', 'price'];
+const parserObject = ['location', 'guarantees'];
+const parserArray = ['keys'];
+const parserImage = ['carImages', 'categoryImage'];
 
 export class ParserField {
   private static Instance: ParserField;
@@ -27,10 +27,10 @@ export class ParserField {
         files[field].length === 0;
       if (isMissing) {
         throw new CustomError(
-          "BadRequest",
+          'BadRequest',
           400,
           `Image is required in field "${field}"`,
-          false
+          false,
         );
       }
       return next();
@@ -50,7 +50,7 @@ export class ParserField {
           } else if (parserObject.includes(field)) {
             req.body[field] = JSON.parse(value);
           } else if (parserArray.includes(field))
-            req.body[field] = value.split(",");
+            req.body[field] = value.split(',');
           else {
             if (!parserImage.includes(field)) req.body[field] = value;
           }
@@ -59,10 +59,10 @@ export class ParserField {
             hasError = true;
             logger.error(error);
             throw new CustomError(
-              "BadRequest",
+              'BadRequest',
               400,
               `Invalid field "${field}"`,
-              false
+              false,
             );
           }
         }

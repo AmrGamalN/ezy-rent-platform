@@ -1,5 +1,5 @@
-import { Schema, model } from "mongoose";
-import { ICar } from "../../../types/car.type";
+import { Schema, model } from 'mongoose';
+import { ICar } from '../../../types/car.type';
 
 const CarSchema: Schema = new Schema<ICar>(
   {
@@ -12,7 +12,7 @@ const CarSchema: Schema = new Schema<ICar>(
     brand: { type: String, required: true },
     year: { type: Number, required: true },
     color: { type: String, required: true },
-    category: { type: String, default: "car" },
+    category: { type: String, default: 'car' },
     carImages: [
       {
         url: { type: String, required: true },
@@ -47,7 +47,7 @@ const CarSchema: Schema = new Schema<ICar>(
       type: Date,
     },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 CarSchema.index(
@@ -55,8 +55,8 @@ CarSchema.index(
   {
     expireAfterSeconds: 0,
     partialFilterExpression: { isExpired: true },
-    name: "booking_ttl_index",
-  }
+    name: 'booking_ttl_index',
+  },
 );
 
-export const Car = model<ICar>("car_car", CarSchema);
+export const Car = model<ICar>('car_car', CarSchema);

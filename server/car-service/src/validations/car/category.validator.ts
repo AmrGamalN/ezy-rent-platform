@@ -1,9 +1,9 @@
-import { validateString } from "../validationFunction";
-import { ValidationChain } from "express-validator";
+import { validateString } from '../validationFunction';
+import { ValidationChain } from 'express-validator';
 
 const validateCategory = (isOptional: boolean = false): ValidationChain[] => [
   validateString({
-    field: "name",
+    field: 'name',
     isOptional,
     options: {
       min: 1,
@@ -12,7 +12,7 @@ const validateCategory = (isOptional: boolean = false): ValidationChain[] => [
     },
   }),
   validateString({
-    field: "description",
+    field: 'description',
     isOptional: true,
     options: { min: 1, max: 500 },
   }),

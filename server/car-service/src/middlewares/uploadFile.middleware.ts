@@ -1,10 +1,10 @@
-import { Request, Response, NextFunction } from "express";
-import multer, { MulterError } from "multer";
-import multerS3 from "multer-s3";
-import { v4 as uuidv4 } from "uuid";
-import { s3Client } from "../configs/s3Bucket.config";
-import { HandleError } from "@amrogamal/shared-code";
-import { FileFilterCallback } from "multer";
+import { Request, Response, NextFunction } from 'express';
+import multer, { MulterError } from 'multer';
+import multerS3 from 'multer-s3';
+import { v4 as uuidv4 } from 'uuid';
+import { s3Client } from '../configs/s3Bucket.config';
+import { HandleError } from '@amrogamal/shared-code';
+import { FileFilterCallback } from 'multer';
 const { handleError } = HandleError.getInstance();
 
 declare global {
@@ -27,17 +27,17 @@ export class UploadFile {
   }
 
   private callbackFunction = () => {
-    const allowedMimeTypes = ["image/jpeg", "image/png", "image/jpg"];
+    const allowedMimeTypes = ['image/jpeg', 'image/png', 'image/jpg'];
     return {
       fileFilter: (
         req: Request,
         file: Express.Multer.File,
-        cb: FileFilterCallback
+        cb: FileFilterCallback,
       ) => {
         if (allowedMimeTypes.includes(file.mimetype)) {
           cb(null, true);
         } else {
-          cb(new Error("Only .png, .jpg, and .jpeg formats are allowed!"));
+          cb(new Error('Only .png, .jpg, and .jpeg formats are allowed!'));
         }
       },
       limits: {
@@ -67,7 +67,7 @@ export class UploadFile {
         req.body.prefix = req.prefix;
         const prefixType = req.prefixType;
         const prefix =
-          prefixType === "cars"
+          prefixType === 'cars'
             ? `${prefixType}/${req.prefix}/${uuidv4()}-${file.originalname}`
             : `${prefixType}/${uuidv4()}-${file.originalname}`;
         cb(null, prefix);
@@ -108,14 +108,14 @@ export class UploadFile {
   // Upload List of images by MulterS3
   uploadListMulterS3Images = (name: string, maxCount: number) => {
     return handleError(
-      this.uploadFile(this.uploadMulterS3.fields([{ name, maxCount }]))
+      this.uploadFile(this.uploadMulterS3.fields([{ name, maxCount }])),
     );
   };
 
   // Upload List of images by Multer
   uploadListMulterImages = (name: string, maxCount: number) => {
     return handleError(
-      this.uploadFile(this.uploadMulter.fields([{ name, maxCount }]))
+      this.uploadFile(this.uploadMulter.fields([{ name, maxCount }])),
     );
   };
 

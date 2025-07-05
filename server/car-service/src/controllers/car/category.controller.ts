@@ -1,6 +1,6 @@
-import { Request, Response } from "express";
-import { CategoryService } from "../../services/car/category.service";
-import { controllerResponse, HandleError } from "@amrogamal/shared-code";
+import { Request, Response } from 'express';
+import { CategoryService } from '../../services/car/category.service';
+import { controllerResponse, HandleError } from '@amrogamal/shared-code';
 const handleError = HandleError.getInstance().handleError;
 
 export class CategoryController {
@@ -38,7 +38,7 @@ export class CategoryController {
     const response = await this.categoryService.update(
       req.params.id,
       req.body,
-      file
+      file,
     );
     return controllerResponse(res, response);
   });
@@ -46,7 +46,7 @@ export class CategoryController {
   delete = handleError(async (req: Request, res: Response) => {
     const response = await this.categoryService.delete(
       req.params.id,
-      req.body.key
+      req.body.key,
     );
     return controllerResponse(res, response);
   });

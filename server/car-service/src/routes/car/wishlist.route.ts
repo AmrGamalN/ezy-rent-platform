@@ -1,8 +1,8 @@
-import { Router } from "express";
-import { WishlistController } from "../../controllers/car/wishlist.controller";
-import { AuthMiddleware } from "../../middlewares/auth.middleware";
-import { HandleError } from "@amrogamal/shared-code";
-import { requiredId } from "../../middlewares/express.middleware";
+import { Router } from 'express';
+import { WishlistController } from '../../controllers/car/wishlist.controller';
+import { AuthMiddleware } from '../../middlewares/auth.middleware';
+import { HandleError } from '@amrogamal/shared-code';
+import { requiredId } from '../../middlewares/express.middleware';
 const authMiddleware = AuthMiddleware.getInstance();
 const controller = WishlistController.getInstance();
 const { handleError } = HandleError.getInstance();
@@ -10,30 +10,30 @@ const router = Router();
 
 const authentication = [
   authMiddleware.verifyToken,
-  authMiddleware.authorization(["user", "admin", "manager"]),
+  authMiddleware.authorization(['user', 'admin', 'manager']),
 ];
 
 router.post(
-  "/",
+  '/',
   authentication,
-  handleError(controller.create.bind(controller))
+  handleError(controller.create.bind(controller)),
 );
 router.get(
-  "/:id",
+  '/:id',
   authentication,
   requiredId(),
-  handleError(controller.create.bind(controller))
+  handleError(controller.create.bind(controller)),
 );
 router.get(
-  "/",
+  '/',
   authentication,
-  handleError(controller.create.bind(controller))
+  handleError(controller.create.bind(controller)),
 );
 router.delete(
-  "/:id",
+  '/:id',
   authentication,
   requiredId(),
-  handleError(controller.create.bind(controller))
+  handleError(controller.create.bind(controller)),
 );
 
 export default router;

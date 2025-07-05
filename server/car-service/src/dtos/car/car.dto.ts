@@ -1,5 +1,5 @@
-import { ObjectId } from "mongodb";
-import { z } from "@amrogamal/shared-code";
+import { ObjectId } from 'mongodb';
+import { z } from '@amrogamal/shared-code';
 const imageSchema = z.object({
   url: z.string().url(),
   key: z.string(),
@@ -30,7 +30,7 @@ export const CarDto = z.object({
   brand: z.string(),
   year: z.number(),
   color: z.string(),
-  category: z.string().default("car"),
+  category: z.string().default('car'),
   price: z.number(),
   discount: z.number().default(0),
   availableFrom: z.coerce.date(),

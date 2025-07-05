@@ -1,4 +1,4 @@
-import { Schema, model, Types } from "mongoose";
+import { Schema, model, Types } from 'mongoose';
 
 export interface OrderDocument {
   userId: string;
@@ -7,10 +7,10 @@ export interface OrderDocument {
   availableTo: Date;
   discount: number;
   totalPrice: number;
-  status: "pending" | "confirmed" | "cancelled" | "completed";
+  status: 'pending' | 'confirmed' | 'cancelled' | 'completed';
   isPaid: boolean;
-  paymentStatus: "pending" | "paid" | "failed";
-  paymentMethod: "cash" | "card" | "wallet";
+  paymentStatus: 'pending' | 'paid' | 'failed';
+  paymentMethod: 'cash' | 'card' | 'wallet';
   transactionId?: string;
   paymobOrderId?: string;
   customer: {
@@ -25,7 +25,7 @@ export interface OrderDocument {
 const orderSchema = new Schema<OrderDocument>(
   {
     userId: { type: String, required: true },
-    carId: { type: Schema.Types.ObjectId, ref: "Car", required: true },
+    carId: { type: Schema.Types.ObjectId, ref: 'Car', required: true },
     availableFrom: { type: Date, required: true },
     availableTo: { type: Date, required: true },
     discount: { type: Number, default: 0 },
@@ -33,20 +33,20 @@ const orderSchema = new Schema<OrderDocument>(
 
     status: {
       type: String,
-      enum: ["pending", "confirmed", "cancelled", "completed"],
-      default: "pending",
+      enum: ['pending', 'confirmed', 'cancelled', 'completed'],
+      default: 'pending',
     },
 
     isPaid: { type: Boolean, default: false },
     paymentStatus: {
       type: String,
-      enum: ["pending", "paid", "failed"],
-      default: "pending",
+      enum: ['pending', 'paid', 'failed'],
+      default: 'pending',
     },
     paymentMethod: {
       type: String,
-      enum: ["cash", "card", "wallet"],
-      default: "cash",
+      enum: ['cash', 'card', 'wallet'],
+      default: 'cash',
     },
     transactionId: { type: String },
     paymobOrderId: { type: String },
@@ -57,7 +57,7 @@ const orderSchema = new Schema<OrderDocument>(
       email: { type: String, required: true },
     },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
-export const Order = model<OrderDocument>("Order", orderSchema);
+export const Order = model<OrderDocument>('Order', orderSchema);
