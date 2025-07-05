@@ -1,19 +1,16 @@
-type UserRoleType = "user" | "admin" | "manager";
-
-export type UserRequestType = {
+export type UserToken = {
   userId: string;
   email: string;
   phoneNumber?: string;
-  role: UserRoleType;
-  name?: string;
-  profileImage?: {
+  role: 'user' | 'admin' | 'manager';
+  userName?: string;
+  avatar?: {
     imageUrl: string;
     key: string;
   };
-  userName?: string;
   dateToJoin?: string;
+  lastLogin: string;
   sign_up_provider?: string;
   sign_in_provider?: string;
   isEmailVerified?: boolean;
-  lastSeen: string;
 };

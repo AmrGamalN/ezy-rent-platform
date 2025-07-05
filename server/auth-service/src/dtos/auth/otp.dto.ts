@@ -1,4 +1,4 @@
-import { z } from "@amrogamal/shared-code";
+import { z } from '@amrogamal/shared-code';
 
 export const OtpEmailDto = z.object({
   token: z.string().min(70),

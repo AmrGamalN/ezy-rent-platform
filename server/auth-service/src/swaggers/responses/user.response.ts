@@ -15,7 +15,7 @@
  *           type: boolean
  *         message:
  *           type: string
- * 
+ *
  *     AddressResponse:
  *       description: Successfully
  *       content:
@@ -27,7 +27,7 @@
  *                 properties:
  *                   data:
  *                     $ref: '#/components/schemas/AddressGetDTO'
- * 
+ *
  *     ProfileResponse:
  *       description: Successfully
  *       content:
@@ -39,7 +39,7 @@
  *                 properties:
  *                   data:
  *                     $ref: '#/components/schemas/ProfileGetDTO'
- * 
+ *
  *     UserResponse:
  *       description: Successfully
  *       content:
@@ -51,7 +51,7 @@
  *                 properties:
  *                   data:
  *                     $ref: '#/components/schemas/UserGetDTO'
- * 
+ *
  *     SecurityResponse:
  *       description: Successfully
  *       content:

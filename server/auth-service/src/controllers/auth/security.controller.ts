@@ -1,6 +1,6 @@
-import { Request, Response } from "express";
-import { SecurityService } from "../../services/auth/security.service";
-import { controllerResponse } from "@amrogamal/shared-code";
+import { Request, Response } from 'express';
+import { SecurityService } from '../../services/auth/security.service';
+import { controllerResponse } from '@amrogamal/shared-code';
 
 export class SecurityController {
   static instance: SecurityController;
@@ -19,7 +19,7 @@ export class SecurityController {
 
   generate2FA = async (req: Request, res: Response): Promise<Response> => {
     const result = await this.securityService.generate2FA(
-      req?.curUser?.email as string
+      req?.curUser?.email as string,
     );
     return controllerResponse(res, result);
   };
@@ -27,17 +27,17 @@ export class SecurityController {
   verify2FA = async (req: Request, res: Response): Promise<Response> => {
     const result = await this.securityService.verify2FA(
       req?.curUser?.email as string,
-      req.body.otp
+      req.body.otp,
     );
     return controllerResponse(res, result);
   };
 
   sendResetpasswordLink = async (
     req: Request,
-    res: Response
+    res: Response,
   ): Promise<Response> => {
     const result = await this.securityService.sendResetpasswordLink(
-      req.body.email
+      req.body.email,
     );
     return controllerResponse(res, result);
   };
@@ -45,7 +45,7 @@ export class SecurityController {
   updatePassword = async (req: Request, res: Response): Promise<Response> => {
     const result = await this.securityService.updatePassword(
       String(req.email),
-      req.body.password
+      req.body.password,
     );
     return controllerResponse(res, result);
   };

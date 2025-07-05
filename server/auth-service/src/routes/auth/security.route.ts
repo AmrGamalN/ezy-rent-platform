@@ -1,13 +1,13 @@
-import express from "express";
-import { SecurityController } from "../../controllers/auth/security.controller";
-import { expressValidator } from "../../middlewares/express.middleware";
+import express from 'express';
+import { SecurityController } from '../../controllers/auth/security.controller';
+import { expressValidator } from '../../middlewares/express.middleware';
 import {
   validateOtp,
   validateResetPassword,
   validateSendResetPasswordLink,
-} from "../../validations/auth/login.validator";
-import { userAuthorization } from "../../utils/authorization.util";
-import { HandleError } from "@amrogamal/shared-code";
+} from '../../validations/auth/login.validator';
+import { userAuthorization } from '../../utils/authorization.util';
+import { HandleError } from '@amrogamal/shared-code';
 
 const { handleError } = HandleError.getInstance();
 const controller = SecurityController.getInstance();
@@ -34,9 +34,9 @@ const router = express.Router();
  *          description: Internal Server Error
  */
 router.post(
-  "/2fa/generate",
+  '/2fa/generate',
   userAuthorization,
-  handleError(controller.generate2FA.bind(controller))
+  handleError(controller.generate2FA.bind(controller)),
 );
 
 /**
@@ -66,10 +66,10 @@ router.post(
  *          description: Internal Server Error
  */
 router.post(
-  "/2fa/verify",
+  '/2fa/verify',
   userAuthorization,
   expressValidator(validateOtp()),
-  handleError(controller.verify2FA.bind(controller))
+  handleError(controller.verify2FA.bind(controller)),
 );
 
 /**
@@ -97,9 +97,9 @@ router.post(
  *          description: Internal Server Error
  */
 router.post(
-  "/send-reset-password",
+  '/send-reset-password',
   expressValidator(validateSendResetPasswordLink()),
-  handleError(controller.sendResetpasswordLink.bind(controller))
+  handleError(controller.sendResetpasswordLink.bind(controller)),
 );
 
 /**
@@ -125,10 +125,10 @@ router.post(
  *          description: Internal Server Error
  */
 router.post(
-  "/update-password/:token",
+  '/update-password/:token',
   userAuthorization,
   expressValidator(validateResetPassword()),
-  handleError(controller.updatePassword.bind(controller))
+  handleError(controller.updatePassword.bind(controller)),
 );
 
 export default router;

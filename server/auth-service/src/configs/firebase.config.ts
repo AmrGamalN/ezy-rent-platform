@@ -1,7 +1,7 @@
-import admin from "firebase-admin";
-import { initializeApp } from "firebase/app";
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
-import dotenv from "dotenv";
+import admin from 'firebase-admin';
+import { initializeApp } from 'firebase/app';
+import { getAuth } from 'firebase/auth';
+import dotenv from 'dotenv';
 dotenv.config();
 
 const serviceAccount = JSON.parse(process.env.FIREBASE_CONFIG_ADMIN as string);

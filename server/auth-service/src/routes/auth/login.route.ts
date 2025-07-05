@@ -1,13 +1,13 @@
-import express from "express";
-import { LoginController } from "../../controllers/auth/login.controller";
-import { expressValidator } from "../../middlewares/express.middleware";
-import { AuthMiddleware } from "../../middlewares/authentication.middleware";
+import express from 'express';
+import { LoginController } from '../../controllers/auth/login.controller';
+import { expressValidator } from '../../middlewares/express.middleware';
+import { AuthMiddleware } from '../../middlewares/authentication.middleware';
 import {
   validateLoginPhone,
   validateLoginEmail,
   validateOtp,
-} from "../../validations/auth/login.validator";
-import { HandleError } from "@amrogamal/shared-code";
+} from '../../validations/auth/login.validator';
+import { HandleError } from '@amrogamal/shared-code';
 const { handleError } = HandleError.getInstance();
 const controller = LoginController.getInstance();
 const authMiddleware = AuthMiddleware.getInstance();
@@ -40,9 +40,9 @@ const router = express.Router();
  *          description: Internal Server Error
  */
 router.post(
-  "/login/email",
+  '/login/email',
   expressValidator(validateLoginEmail()),
-  handleError(controller.loginEmail.bind(controller))
+  handleError(controller.loginEmail.bind(controller)),
 );
 
 /**
@@ -72,9 +72,9 @@ router.post(
  *          description: Internal Server Error
  */
 router.post(
-  "/login/phone",
+  '/login/phone',
   expressValidator(validateLoginPhone()),
-  handleError(controller.loginPhone.bind(controller))
+  handleError(controller.loginPhone.bind(controller)),
 );
 
 /**
@@ -100,10 +100,10 @@ router.post(
  *          description: Internal Server Error
  */
 router.post(
-  "/login/2fa",
+  '/login/2fa',
   authMiddleware.verify2FATempToken,
   expressValidator(validateOtp()),
-  handleError(controller.login2FA.bind(controller))
+  handleError(controller.login2FA.bind(controller)),
 );
 
 /**
@@ -129,9 +129,9 @@ router.post(
  *          description: Internal Server Error
  */
 router.post(
-  "/login/facebook",
+  '/login/facebook',
   authMiddleware.verifyFirebaseProvider,
-  handleError(controller.loginFacebook.bind(controller))
+  handleError(controller.loginFacebook.bind(controller)),
 );
 
 /**
@@ -157,9 +157,9 @@ router.post(
  *          description: Internal Server Error
  */
 router.post(
-  "/login/google",
+  '/login/google',
   authMiddleware.verifyFirebaseProvider,
-  handleError(controller.loginGoogle.bind(controller))
+  handleError(controller.loginGoogle.bind(controller)),
 );
 
 export default router;

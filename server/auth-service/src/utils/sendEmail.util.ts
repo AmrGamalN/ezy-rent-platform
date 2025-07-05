@@ -1,10 +1,14 @@
-import { serviceResponse } from "@amrogamal/shared-code";
-import nodemailer from "nodemailer";
-import dotenv from "dotenv";
+import {
+  logger,
+  ResponseOptions,
+  serviceResponse,
+} from '@amrogamal/shared-code';
+import nodemailer from 'nodemailer';
+import dotenv from 'dotenv';
 dotenv.config();
 
 const transporter = nodemailer.createTransport({
-  service: "gmail",
+  service: 'gmail',
   host: process.env.HOST_NODE_MAILER,
   auth: {
     user: process.env.USER_NODE_MAILER,
@@ -17,8 +21,8 @@ const transporter = nodemailer.createTransport({
 export const sendEmail = async (
   email: string,
   subject: string,
-  content: string
-) => {
+  content: string,
+): Promise<ResponseOptions> => {
   try {
     const sendMail = await transporter.sendMail({
       from: process.env.USER_NODE_MAILER,
@@ -29,15 +33,15 @@ export const sendEmail = async (
 
     if (sendMail.rejected.length > 0)
       return serviceResponse({
-        statusText: "BadRequest",
-        message: `Email rejected: ${sendMail.rejected.join(", ")}`,
+        statusText: 'BadRequest',
+        message: `Email rejected: ${sendMail.rejected.join(', ')}`,
       });
     return { success: true };
   } catch (error) {
-    throw new Error(
-      error instanceof Error
-        ? error.message
-        : "Something went wrong. Please try again later"
-    );
+    logger.error(error);
+    return serviceResponse({
+      statusText: 'InternalServerError',
+      message: 'Internal server error',
+    });
   }
 };

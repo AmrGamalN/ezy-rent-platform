@@ -1,7 +1,11 @@
-import { Request, Response } from "express";
-import { RegisterService } from "../../services/auth/register.service";
-import { AuthRegisterService } from "../../services/auth/auth.register.service";
-import { controllerResponse } from "@amrogamal/shared-code";
+import { Request, Response } from 'express';
+import { RegisterService } from '../../services/auth/register.service';
+import { AuthRegisterService } from '../../services/auth/auth.register.service';
+import { controllerResponse } from '@amrogamal/shared-code';
+import {
+  FirebaseOAuthUser,
+  FirebasePhoneUser,
+} from '../../types/firebase.type';
 
 export class RegisterController {
   static instance: RegisterController;
@@ -25,16 +29,20 @@ export class RegisterController {
   };
 
   registerFacebook = async (req: Request, res: Response): Promise<Response> => {
-    const result = await this.registerService.registerFacebook(req.decode);
+    const result = await this.registerService.registerFacebook(
+      req.decode as FirebaseOAuthUser,
+    );
     return controllerResponse(res, result);
   };
 
   registerGoogle = async (req: Request, res: Response): Promise<Response> => {
-    const result = await this.registerService.registerGoogle(req.decode);
+    const result = await this.registerService.registerGoogle(
+      req.decode as FirebaseOAuthUser,
+    );
     return controllerResponse(res, result);
   };
 
-  verifyEmail = async (req: Request, res: Response) => {
+  verifyEmail = async (req: Request, res: Response): Promise<Response> => {
     const result = await this.registerService.verifyEmail(req.params.token);
     return controllerResponse(res, result);
   };
@@ -49,8 +57,10 @@ export class RegisterController {
     return controllerResponse(res, result);
   };
 
-  verifyPhone = async (req: Request, res: Response) => {
-    const result = await this.registerService.verifyPhone(req.decode);
+  verifyPhone = async (req: Request, res: Response): Promise<Response> => {
+    const result = await this.registerService.verifyPhone(
+      req.decode as FirebasePhoneUser,
+    );
     return controllerResponse(res, result);
   };
 }

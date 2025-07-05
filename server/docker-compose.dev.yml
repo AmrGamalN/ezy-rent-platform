@@ -1,26 +1,28 @@
-# version: "3.8"
 services:
   auth-service:
     build:
       context: ./auth-service
       args:
         - NODE_ENV=development
-    command: sh -c "sleep 10 && npm run start-dev"
+    command: sh -c "sleep 10 && npm run dev"
 
   car-service:
     build:
       context: ./car-service
       args:
         - NODE_ENV=development
-    command: sh -c "sleep 10 && npm run start-dev"
+    command: sh -c "sleep 10 && npm run dev"
+
+  payment-service:
+    build:
+      context: ./payment-service
+      args:
+        - NODE_ENV=development
+    command: sh -c "sleep 10 && npm run dev"
 
   elastic-service:
     build:
       context: ./elastic-service
       args:
         - NODE_ENV=development
-    command: sh -c "sleep 10 && npm run start-dev"
-    depends_on:
-      - kafka
-      - elasticsearch
-
+    command: sh -c "sleep 10 && npm run dev"
