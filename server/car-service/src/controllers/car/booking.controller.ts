@@ -1,6 +1,6 @@
-import { Request, Response } from "express";
-import { BookingService } from "../../services/car/booking.service";
-import { controllerResponse } from "@amrogamal/shared-code";
+import { Request, Response } from 'express';
+import { BookingService } from '../../services/car/booking.service';
+import { controllerResponse } from '@amrogamal/shared-code';
 
 export class BookingController {
   private static instance: BookingController;
@@ -13,7 +13,7 @@ export class BookingController {
   create = async (req: Request, res: Response) => {
     const result = await BookingService.getInstance().create(
       req.body,
-      String(req.curUser?.userId)
+      String(req.curUser?.userId),
     );
     return controllerResponse(res, result);
   };
@@ -23,7 +23,7 @@ export class BookingController {
     const result = await BookingService.getInstance().getAll(
       String(req.curUser?.userId),
       Number(page),
-      Number(limit)
+      Number(limit),
     );
     return controllerResponse(res, result);
   };
@@ -31,7 +31,7 @@ export class BookingController {
   get = async (req: Request, res: Response) => {
     const result = await BookingService.getInstance().get(
       req.params.id,
-      String(req.curUser?.userId)
+      String(req.curUser?.userId),
     );
     return controllerResponse(res, result);
   };
@@ -40,7 +40,7 @@ export class BookingController {
     const result = await BookingService.getInstance().updateByRenter(
       req.params.id,
       String(req.curUser?.userId),
-      req.body
+      req.body,
     );
     return controllerResponse(res, result);
   };
@@ -49,7 +49,7 @@ export class BookingController {
     const result = await BookingService.getInstance().updateStatus(
       req.params.id,
       String(req.curUser?.userId),
-      req.body.status
+      req.body.status,
     );
     return controllerResponse(res, result);
   };
@@ -57,7 +57,7 @@ export class BookingController {
   delete = async (req: Request, res: Response) => {
     const result = await BookingService.getInstance().delete(
       req.params.id,
-      String(req.curUser?.userId)
+      String(req.curUser?.userId),
     );
     return controllerResponse(res, result);
   };

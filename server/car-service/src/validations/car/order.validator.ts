@@ -1,34 +1,34 @@
 // validators/validateOrder.ts
-import { validateString, validateBoolean } from "../validationFunction";
-import { ValidationChain } from "express-validator";
+import { validateString, validateBoolean } from '../validationFunction';
+import { ValidationChain } from 'express-validator';
 
 export const validateCreateOrder = (): ValidationChain[] => [
   validateString({
-    field: "paymentMethod",
+    field: 'paymentMethod',
     isOptional: false,
     options: {
-      isIn: ["cash", "card", "wallet", "paymob"],
+      isIn: ['cash', 'card', 'wallet', 'paymob'],
     },
   }),
 ];
 
 export const validateUpdateOrder = (): ValidationChain[] => [
   validateString({
-    field: "status",
+    field: 'status',
     isOptional: true,
     options: {
-      isIn: ["pending", "confirmed", "cancelled", "completed"],
+      isIn: ['pending', 'confirmed', 'cancelled', 'completed'],
     },
   }),
   validateString({
-    field: "paymentStatus",
+    field: 'paymentStatus',
     isOptional: true,
     options: {
-      isIn: ["pending", "paid", "failed"],
+      isIn: ['pending', 'paid', 'failed'],
     },
   }),
   validateBoolean({
-    field: "isPaid",
+    field: 'isPaid',
     isOptional: true,
   }),
 ];

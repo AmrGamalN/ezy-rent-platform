@@ -1,4 +1,4 @@
-type UserRoleType = "user" | "admin" | "manager";
+type UserRoleType = 'user' | 'admin' | 'manager';
 export type UserRequestType = {
   userId: string;
   email: string;

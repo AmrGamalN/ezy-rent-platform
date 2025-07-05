@@ -1,6 +1,6 @@
-import { Request, Response } from "express";
-import { controllerResponse } from "@amrogamal/shared-code";
-import { CarService } from "../../services/car/car.service";
+import { Request, Response } from 'express';
+import { controllerResponse } from '@amrogamal/shared-code';
+import { CarService } from '../../services/car/car.service';
 
 export class CarController {
   static instance: CarController;
@@ -20,7 +20,7 @@ export class CarController {
   create = async (req: Request, res: Response): Promise<Response> => {
     const response = await this.carService.create(
       req.body,
-      String(req.curUser?.userId)
+      String(req.curUser?.userId),
     );
     return controllerResponse(res, response);
   };
@@ -43,7 +43,7 @@ export class CarController {
       req.params.id,
       files,
       req.body,
-      req.body.keys
+      req.body.keys,
     );
     return controllerResponse(res, response);
   };
@@ -54,7 +54,7 @@ export class CarController {
     };
     const response = await this.carService.uploadNewImages(
       req.params.id,
-      files
+      files,
     );
     return controllerResponse(res, response);
   };
@@ -63,7 +63,7 @@ export class CarController {
     const response = await this.carService.deleteImages(
       req.params.id,
       String(req.curUser?.userId),
-      req.body.keys
+      req.body.keys,
     );
     return controllerResponse(res, response);
   };

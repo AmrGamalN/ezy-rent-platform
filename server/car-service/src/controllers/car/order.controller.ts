@@ -1,7 +1,7 @@
-import { Request, Response } from "express";
-import { OrderService } from "../../services/car/order.service";
-import { controllerResponse } from "@amrogamal/shared-code";
-import { UserRequestType } from "../../types/request.type";
+import { Request, Response } from 'express';
+import { OrderService } from '../../services/car/order.service';
+import { controllerResponse } from '@amrogamal/shared-code';
+import { UserRequestType } from '../../types/request.type';
 
 export class OrderController {
   private static instance: OrderController;
@@ -21,7 +21,7 @@ export class OrderController {
   create = async (req: Request, res: Response) => {
     const response = await this.orderService.create(
       req.body,
-      req.curUser as UserRequestType
+      req.curUser as UserRequestType,
     );
     return controllerResponse(res, response);
   };
@@ -30,7 +30,7 @@ export class OrderController {
     const response = await this.orderService.getAll(
       String(req.curUser?.userId),
       Number(req.query.page),
-      Number(req.query.limit)
+      Number(req.query.limit),
     );
     return controllerResponse(res, response);
   };
@@ -38,7 +38,7 @@ export class OrderController {
   getById = async (req: Request, res: Response) => {
     const response = await this.orderService.getById(
       req.params.id,
-      String(req.curUser?.userId)
+      String(req.curUser?.userId),
     );
     return controllerResponse(res, response);
   };
@@ -47,7 +47,7 @@ export class OrderController {
     const response = await this.orderService.updateStatus(
       req.params.id,
       req.body,
-      String(req.curUser?.userId)
+      String(req.curUser?.userId),
     );
     return controllerResponse(res, response);
   };
@@ -60,9 +60,8 @@ export class OrderController {
   delete = async (req: Request, res: Response) => {
     const response = await this.orderService.delete(
       req.params.id,
-      String(req.curUser?.userId)
+      String(req.curUser?.userId),
     );
     return controllerResponse(res, response);
   };
 }
-

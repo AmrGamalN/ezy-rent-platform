@@ -1,5 +1,5 @@
-import {} from "mongoose";
-import { Document } from "mongoose";
+import {} from 'mongoose';
+import { Document } from 'mongoose';
 
 export type CarTypeFilter = {
   page: number;

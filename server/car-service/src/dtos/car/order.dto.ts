@@ -1,5 +1,5 @@
-import { ObjectId } from "mongodb";
-import { z } from "@amrogamal/shared-code";
+import { ObjectId } from 'mongodb';
+import { z } from '@amrogamal/shared-code';
 
 export const OrderDto = z.object({
   _id: z.instanceof(ObjectId),
@@ -13,10 +13,10 @@ export const OrderDto = z.object({
   totalPrice: z.number().min(0),
   isPaid: z.boolean(),
   status: z
-    .enum(["pending", "confirmed", "cancelled", "completed"])
-    .default("pending"),
-  paymentStatus: z.enum(["pending", "paid", "failed"]).default("pending"),
-  paymentMethod: z.enum(["cash", "card", "wallet", "paymob"]).default("cash"),
+    .enum(['pending', 'confirmed', 'cancelled', 'completed'])
+    .default('pending'),
+  paymentStatus: z.enum(['pending', 'paid', 'failed']).default('pending'),
+  paymentMethod: z.enum(['cash', 'card', 'wallet', 'paymob']).default('cash'),
   customer: z.object({
     name: z.string().min(1),
     phone: z.string().min(10),

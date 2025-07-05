@@ -1,5 +1,5 @@
-import { ObjectId } from "mongodb";
-import { z } from "@amrogamal/shared-code";
+import { ObjectId } from 'mongodb';
+import { z } from '@amrogamal/shared-code';
 
 export const BookingDto = z.object({
   _id: z.instanceof(ObjectId),
@@ -14,19 +14,19 @@ export const BookingDto = z.object({
   returnTime: z.string(),
   rentType: z
     .enum([
-      "with_driver",
-      "without_driver",
-      "airport_delivery",
-      "wedding",
-      "other",
+      'with_driver',
+      'without_driver',
+      'airport_delivery',
+      'wedding',
+      'other',
     ])
-    .default("other"),
+    .default('other'),
   status: z
-    .enum(["pending", "confirmed", "cancelled", "completed"])
-    .default("pending"),
+    .enum(['pending', 'confirmed', 'cancelled', 'completed'])
+    .default('pending'),
   specifiedRentType: z.string().optional(),
-  insuranceType: z.enum(["basic", "full"]),
-  paymentMethod: z.enum(["cash", "card", "wallet", "paymob"]),
+  insuranceType: z.enum(['basic', 'full']),
+  paymentMethod: z.enum(['cash', 'card', 'wallet', 'paymob']),
   createdAt: z.date(),
   updatedAt: z.date(),
 });

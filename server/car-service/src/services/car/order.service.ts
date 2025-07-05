@@ -1,18 +1,18 @@
-import { Order } from "../../models/mongodb/car/order.model";
+import { Order } from '../../models/mongodb/car/order.model';
 import {
   serviceResponse,
   ResponseOptions,
   HandleError,
   safeParser,
-} from "@amrogamal/shared-code";
+} from '@amrogamal/shared-code';
 import {
   CreateOrderDto,
   CreateOrderStatusDtoType,
   UpdateOrderStatusDto,
   UpdateOrderStatusDtoType,
-} from "../../dtos/car/order.dto";
-import { Car } from "../../models/mongodb/car/car.model";
-import { UserRequestType } from "../../types/request.type";
+} from '../../dtos/car/order.dto';
+import { Car } from '../../models/mongodb/car/car.model';
+import { UserRequestType } from '../../types/request.type';
 
 const { warpError } = HandleError.getInstance();
 
@@ -28,7 +28,7 @@ export class OrderService {
   create = warpError(
     async (
       data: CreateOrderStatusDtoType,
-      user: UserRequestType
+      user: UserRequestType,
     ): Promise<ResponseOptions> => {
       const result = safeParser({ data, userDto: CreateOrderDto });
       if (!result.success) throw result.error;
@@ -41,20 +41,20 @@ export class OrderService {
 
       if (!car || car.isAvailable === false)
         return serviceResponse({
-          statusText: "NotFound",
-          message: "Car not found",
+          statusText: 'NotFound',
+          message: 'Car not found',
         });
 
       if (car.userId === user?.userId)
         return serviceResponse({
-          statusText: "Forbidden",
+          statusText: 'Forbidden',
           message: "You can't order your own car",
         });
 
       if (existingOrder)
         return serviceResponse({
-          statusText: "Conflict",
-          message: "You already have an order for this car",
+          statusText: 'Conflict',
+          message: 'You already have an order for this car',
         });
 
       const discount = car.discount ?? 0;
@@ -68,8 +68,8 @@ export class OrderService {
         startDate: car.availableFrom,
         endDate: car.availableTo,
         isPaid: false,
-        paymentStatus: "pending",
-        status: "pending",
+        paymentStatus: 'pending',
+        status: 'pending',
         customer: {
           name: user.name,
           phone: user.phoneNumber,
@@ -78,10 +78,10 @@ export class OrderService {
       });
 
       return serviceResponse({
-        statusText: "Created",
-        message: "Order created successfully",
+        statusText: 'Created',
+        message: 'Order created successfully',
       });
-    }
+    },
   );
 
   getAll = warpError(
@@ -92,13 +92,13 @@ export class OrderService {
           .limit(limit)
           .lean(),
         userDto: CreateOrderDto,
-        actionType: "getAll",
+        actionType: 'getAll',
       });
       if (!result.success) throw result.error;
 
       const total = await Order.countDocuments({ userId });
       return serviceResponse({
-        statusText: "OK",
+        statusText: 'OK',
         data: {
           ...result.data,
           total,
@@ -106,7 +106,7 @@ export class OrderService {
           totalPages: Math.ceil(total / limit),
         },
       });
-    }
+    },
   );
 
   getById = warpError(async (_id: string, userId: string) => {
@@ -120,7 +120,7 @@ export class OrderService {
     async (
       _id: string,
       data: UpdateOrderStatusDtoType,
-      userId: string
+      userId: string,
     ): Promise<ResponseOptions> => {
       const result = safeParser({
         data,
@@ -129,14 +129,14 @@ export class OrderService {
       if (!result.success) throw result.error;
       const order = await Order.updateOne(
         { _id, userId },
-        { $set: result.data }
+        { $set: result.data },
       );
       return serviceResponse({
-        statusText: "OK",
-        message: "Order status updated",
+        statusText: 'OK',
+        message: 'Order status updated',
         updatedCount: order.modifiedCount,
       });
-    }
+    },
   );
 
   count = warpError(async (userId: string) => {

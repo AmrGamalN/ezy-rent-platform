@@ -1,12 +1,12 @@
-import { Booking, ICarBooking } from "../../models/mongodb/car/booking.model";
-import { Car } from "../../models/mongodb/car/car.model";
-import { UserRequestType } from "../../types/request.type";
+import { Booking, ICarBooking } from '../../models/mongodb/car/booking.model';
+import { Car } from '../../models/mongodb/car/car.model';
+import { UserRequestType } from '../../types/request.type';
 import {
   serviceResponse,
   HandleError,
   safeParser,
   ResponseOptions,
-} from "@amrogamal/shared-code";
+} from '@amrogamal/shared-code';
 import {
   BookingDto,
   CreateBookingDto,
@@ -15,7 +15,7 @@ import {
   UpdateBookingByRenterDtoType,
   UpdateBookingByOwnerDto,
   UpdateBookingByOwnerDtoType,
-} from "../../dtos/car/booking.dto";
+} from '../../dtos/car/booking.dto';
 
 const { warpError } = HandleError.getInstance();
 
@@ -31,7 +31,7 @@ export class BookingService {
   create = warpError(
     async (
       data: CreateBookingDtoType,
-      userId: string
+      userId: string,
     ): Promise<ResponseOptions> => {
       const result = safeParser({ data, userDto: CreateBookingDto });
       if (!result.success) throw result.error;
@@ -39,48 +39,48 @@ export class BookingService {
       const car = await Car.findById(data.carId);
       if (!car || !car.isAvailable)
         return serviceResponse({
-          statusText: "NotFound",
-          message: "Car not available",
+          statusText: 'NotFound',
+          message: 'Car not available',
         });
 
       if (car.userId === userId)
         return serviceResponse({
-          statusText: "Forbidden",
+          statusText: 'Forbidden',
           message: "You can't book your own car",
         });
 
       const isAlreadyBooked = await Booking.findOne({
         renterId: userId,
         carId: data.carId,
-        status: { $in: ["pending", "confirmed"] },
+        status: { $in: ['pending', 'confirmed'] },
       });
 
       if (isAlreadyBooked)
         return serviceResponse({
-          statusText: "Conflict",
-          message: "You already have a booking for this car",
+          statusText: 'Conflict',
+          message: 'You already have a booking for this car',
         });
 
       await Booking.create({
         ...result.data,
         renterId: userId,
         ownerId: car.userId,
-        status: "pending",
-        insuranceType: data.insuranceType || "basic",
+        status: 'pending',
+        insuranceType: data.insuranceType || 'basic',
       });
 
       return serviceResponse({
-        statusText: "Created",
-        message: "Booking created successfully",
+        statusText: 'Created',
+        message: 'Booking created successfully',
       });
-    }
+    },
   );
 
   getAll = warpError(
     async (
       userId: string,
       page: number = 1,
-      limit: number = 10
+      limit: number = 10,
     ): Promise<ResponseOptions> => {
       const skip = (page - 1) * limit;
       return safeParser({
@@ -91,9 +91,9 @@ export class BookingService {
           .limit(limit)
           .lean(),
         userDto: BookingDto,
-        actionType: "getAll",
+        actionType: 'getAll',
       });
-    }
+    },
   );
 
   get = warpError(
@@ -105,14 +105,14 @@ export class BookingService {
         }).lean(),
         userDto: BookingDto,
       });
-    }
+    },
   );
 
   updateByRenter = warpError(
     async (
       _id: string,
       renterId: string,
-      updateData: UpdateBookingByRenterDtoType
+      updateData: UpdateBookingByRenterDtoType,
     ): Promise<ResponseOptions> => {
       const result = safeParser({
         data: updateData,
@@ -123,8 +123,8 @@ export class BookingService {
       const booking = await Booking.findById({ _id, renterId });
       if (!booking)
         return serviceResponse({
-          statusText: "NotFound",
-          message: "Booking not found",
+          statusText: 'NotFound',
+          message: 'Booking not found',
         });
 
       const policy = await this.policyBooking(booking);
@@ -140,10 +140,10 @@ export class BookingService {
 
       await booking.save();
       return serviceResponse({
-        statusText: "OK",
-        message: "Booking updated successfully",
+        statusText: 'OK',
+        message: 'Booking updated successfully',
       });
-    }
+    },
   );
 
   private policyBooking = warpError(
@@ -158,27 +158,24 @@ export class BookingService {
         (startDate.getTime() - now.getTime()) / (1000 * 60 * 60);
 
       if (
-        booking.status !== "pending" ||
+        booking.status !== 'pending' ||
         hoursSinceCreated > 6 ||
         hoursUntilStart < 24
       ) {
         return serviceResponse({
-          statusText: "Forbidden",
+          statusText: 'Forbidden',
           message: "You can't modify this booking at this time",
         });
       }
       return { success: true };
-    }
+    },
   );
 
   updateStatus = warpError(
     async (
       _id: string,
       ownerId: string,
-      status:"pending"
-      | "confirmed"
-      | "cancelled"
-      | "completed"
+      status: 'pending' | 'confirmed' | 'cancelled' | 'completed',
     ): Promise<ResponseOptions> => {
       const result = safeParser({
         data: { status },
@@ -189,30 +186,30 @@ export class BookingService {
       const booking = await Booking.findOne({ _id, ownerId });
       if (!booking)
         return serviceResponse({
-          statusText: "NotFound",
-          message: "Booking not found",
+          statusText: 'NotFound',
+          message: 'Booking not found',
         });
 
       if (booking.ownerId !== ownerId)
         return serviceResponse({
-          statusText: "Forbidden",
-          message: "You are not the car owner",
+          statusText: 'Forbidden',
+          message: 'You are not the car owner',
         });
 
       if (status === booking.status)
         return serviceResponse({
-          statusText: "Conflict",
+          statusText: 'Conflict',
           message: `Status already ${status}`,
         });
 
-      booking.status = status
+      booking.status = status;
       await booking.save();
 
       return serviceResponse({
-        statusText: "OK",
-        message: "Status updated",
+        statusText: 'OK',
+        message: 'Status updated',
       });
-    }
+    },
   );
 
   delete = warpError(
@@ -223,20 +220,20 @@ export class BookingService {
       });
       if (!booking)
         return serviceResponse({
-          statusText: "NotFound",
-          message: "Booking not found",
+          statusText: 'NotFound',
+          message: 'Booking not found',
         });
 
-      if (booking.status !== "pending")
+      if (booking.status !== 'pending')
         return serviceResponse({
-          statusText: "Forbidden",
-          message: "Only pending bookings can be deleted",
+          statusText: 'Forbidden',
+          message: 'Only pending bookings can be deleted',
         });
 
       return serviceResponse({
-        statusText: "OK",
+        statusText: 'OK',
         deletedCount: (await Booking.deleteOne({ _id })).deletedCount,
       });
-    }
+    },
   );
 }

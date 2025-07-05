@@ -1,17 +1,17 @@
-import { Category } from "../../models/mongodb/car/category.model";
+import { Category } from '../../models/mongodb/car/category.model';
 import {
   CreateCategoryDto,
   CreateCategoryDtoType,
   UpdateCategoryDto,
   UpdateCategoryDtoType,
-} from "../../dtos/car/category.dto";
+} from '../../dtos/car/category.dto';
 import {
   serviceResponse,
   ResponseOptions,
   HandleError,
   safeParser,
-} from "@amrogamal/shared-code";
-import { S3Service } from "../s3/s3.service";
+} from '@amrogamal/shared-code';
+import { S3Service } from '../s3/s3.service';
 const s3Service = S3Service.getInstance();
 const { warpError } = HandleError.getInstance();
 
@@ -27,7 +27,7 @@ export class CategoryService {
   create = warpError(
     async (
       data: CreateCategoryDtoType,
-      file: Express.Multer.File
+      file: Express.Multer.File,
     ): Promise<ResponseOptions> => {
       const result = safeParser({
         data,
@@ -38,8 +38,8 @@ export class CategoryService {
       const category = await Category.findOne({ name: data.name }).lean();
       if (category)
         return serviceResponse({
-          statusText: "Conflict",
-          message: "Category name already exists",
+          statusText: 'Conflict',
+          message: 'Category name already exists',
         });
 
       let image;
@@ -48,17 +48,17 @@ export class CategoryService {
       }
       await Category.create({ ...data, categoryImage: image });
       return serviceResponse({
-        statusText: "Created",
-        message: "Category created successfully",
+        statusText: 'Created',
+        message: 'Category created successfully',
       });
-    }
+    },
   );
 
   getAll = warpError(async (): Promise<ResponseOptions> => {
     return safeParser({
       data: await Category.find().lean(),
       userDto: CreateCategoryDto,
-      actionType: "getAll",
+      actionType: 'getAll',
     });
   });
 
@@ -73,7 +73,7 @@ export class CategoryService {
     async (
       _id: string,
       data: UpdateCategoryDtoType,
-      file?: Express.Multer.File
+      file?: Express.Multer.File,
     ): Promise<ResponseOptions> => {
       const result = safeParser({
         data,
@@ -84,15 +84,15 @@ export class CategoryService {
       const category = await Category.findById(_id);
       if (!category) {
         return serviceResponse({
-          statusText: "Not Found",
-          message: "Category not found",
+          statusText: 'Not Found',
+          message: 'Category not found',
         });
       }
 
       if (category.name === data.name) {
         return serviceResponse({
-          statusText: "Conflict",
-          message: "Category name already exists",
+          statusText: 'Conflict',
+          message: 'Category name already exists',
         });
       }
 
@@ -103,23 +103,23 @@ export class CategoryService {
       }
       await category.save();
       return serviceResponse({
-        statusText: "OK",
-        message: "Category updated successfully",
+        statusText: 'OK',
+        message: 'Category updated successfully',
       });
-    }
+    },
   );
 
   delete = warpError(async (id: string, key): Promise<ResponseOptions> => {
     const category = await Category.findByIdAndDelete(id);
     if (!category)
       return serviceResponse({
-        statusText: "NotFound",
-        message: "Category not found",
+        statusText: 'NotFound',
+        message: 'Category not found',
       });
     await s3Service.deleteSingleImages(String(category.categoryImage?.key));
     return serviceResponse({
-      statusText: "Ok",
-      message: "Category deleted successfully",
+      statusText: 'Ok',
+      message: 'Category deleted successfully',
     });
   });
 }

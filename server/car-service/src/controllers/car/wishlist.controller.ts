@@ -1,6 +1,6 @@
-import { Request, Response } from "express";
-import { WishlistService } from "../../services/car/wishlist.service";
-import { controllerResponse } from "@amrogamal/shared-code";
+import { Request, Response } from 'express';
+import { WishlistService } from '../../services/car/wishlist.service';
+import { controllerResponse } from '@amrogamal/shared-code';
 
 export class WishlistController {
   private static instance: WishlistController;
@@ -19,7 +19,7 @@ export class WishlistController {
   create = async (req: Request, res: Response): Promise<Response> => {
     const response = await this.wishlistService.create(
       req.body,
-      String(req.curUser?.userId)
+      String(req.curUser?.userId),
     );
     return controllerResponse(res, response);
   };
@@ -27,7 +27,7 @@ export class WishlistController {
   get = async (req: Request, res: Response): Promise<Response> => {
     const response = await this.wishlistService.get(
       req.params.id,
-      String(req.curUser?.userId)
+      String(req.curUser?.userId),
     );
     return controllerResponse(res, response);
   };
@@ -36,7 +36,7 @@ export class WishlistController {
     const response = await this.wishlistService.getAll(
       String(req.curUser?.userId),
       Number(req.query.page),
-      Number(req.query.limit)
+      Number(req.query.limit),
     );
     return controllerResponse(res, response);
   };
@@ -44,7 +44,7 @@ export class WishlistController {
   delete = async (req: Request, res: Response): Promise<Response> => {
     const response = await this.wishlistService.delete(
       req.body,
-      String(req.curUser?.userId)
+      String(req.curUser?.userId),
     );
     return controllerResponse(res, response);
   };
