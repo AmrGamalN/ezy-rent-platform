@@ -1,4 +1,4 @@
-import { z } from "@amrogamal/shared-code";
+import { date, z } from '@amrogamal/shared-code';
 
 export const ProfileDto = z.object({
   userId: z.string().min(1),
@@ -7,6 +7,8 @@ export const ProfileDto = z.object({
     url: z.string().optional(),
     key: z.string().optional(),
   }),
+  dateJoined: date(),
+  lastLogin: date().optional(),
 });
 
 export const ProfileAddDto = ProfileDto.pick({

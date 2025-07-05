@@ -5,7 +5,7 @@ services:
       context: ./auth-service
       args:
         - NODE_ENV=production
-    command: sh -c "sleep 20 && npm run start"
+    command: ['pm2'] # Defualt pm2
 
   car-service:
     image: amrgamaleid/car-service
@@ -13,7 +13,7 @@ services:
       context: ./car-service
       args:
         - NODE_ENV=production
-    command: sh -c "sleep 20 && npm run start"
+    command: ['pm2']
 
   elastic-service:
     image: amrgamaleid/elastic-service
@@ -21,7 +21,7 @@ services:
       context: ./elastic-service
       args:
         - NODE_ENV=production
-    command: sh -c "sleep 20 && npm run start"
+    command: ['pm2']
 
   payment-service:
     image: amrgamaleid/payment-service
@@ -29,4 +29,4 @@ services:
       context: ./payment-service
       args:
         - NODE_ENV=production
-    command: sh -c "sleep 20 && npm run start"
+    command: ['pm2']

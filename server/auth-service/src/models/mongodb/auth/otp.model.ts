@@ -1,5 +1,5 @@
-import { Schema, model } from "mongoose";
-import { OtpEmailDtoType, OtpPhoneDtoType } from "../../../dtos/auth/otp.dto";
+import { Schema, model } from 'mongoose';
+import { OtpEmailDtoType, OtpPhoneDtoType } from '../../../dtos/auth/otp.dto';
 
 const otpEmailSchema: Schema = new Schema(
   {
@@ -7,7 +7,7 @@ const otpEmailSchema: Schema = new Schema(
     token: { type: String, required: true },
     expiresAt: { type: Date, required: true, index: { expires: 0 } },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 const otpPhoneSchema: Schema = new Schema(
@@ -16,14 +16,14 @@ const otpPhoneSchema: Schema = new Schema(
     otp: { type: String, required: true },
     expiresAt: { type: Date, required: true, index: { expires: 0 } },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 export const OtpEmail = model<OtpEmailDtoType>(
-  "security_otpEmail",
-  otpEmailSchema
+  'security_otpEmail',
+  otpEmailSchema,
 );
 export const OtpPhone = model<OtpPhoneDtoType>(
-  "security_otpPhone",
-  otpPhoneSchema
+  'security_otpPhone',
+  otpPhoneSchema,
 );

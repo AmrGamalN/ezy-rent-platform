@@ -1,5 +1,5 @@
-import { Schema, model } from "mongoose";
-import { ProfileDtoType } from "../../../dtos/user/profile.dto";
+import { Schema, model } from 'mongoose';
+import { ProfileDtoType } from '../../../dtos/user/profile.dto';
 
 const profileSchema = new Schema(
   {
@@ -14,15 +14,15 @@ const profileSchema = new Schema(
     avatar: {
       url: {
         type: String,
-        default: "",
+        default: '',
       },
       key: {
         type: String,
-        default: "",
+        default: '',
       },
     },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
-export const Profile = model<ProfileDtoType>("user_profile", profileSchema);
+export const Profile = model<ProfileDtoType>('user_profile', profileSchema);

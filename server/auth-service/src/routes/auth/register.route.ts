@@ -1,13 +1,13 @@
-import express from "express";
-import { RegisterController } from "../../controllers/auth/register.controller";
-import { AuthMiddleware } from "../../middlewares/authentication.middleware";
-import { expressValidator } from "../../middlewares/express.middleware";
+import express from 'express';
+import { RegisterController } from '../../controllers/auth/register.controller';
+import { AuthMiddleware } from '../../middlewares/authentication.middleware';
+import { expressValidator } from '../../middlewares/express.middleware';
 import {
   validateRegisterPhone,
   validateRegisterEmail,
   validateResendEmail,
-} from "../../validations/auth/register.validator";
-import { HandleError } from "@amrogamal/shared-code";
+} from '../../validations/auth/register.validator';
+import { HandleError } from '@amrogamal/shared-code';
 
 const { handleError } = HandleError.getInstance();
 const authMiddleware = AuthMiddleware.getInstance();
@@ -41,9 +41,9 @@ const router = express.Router();
  *          description: Internal Server Error
  */
 router.post(
-  "/register/email",
+  '/register/email',
   expressValidator(validateRegisterEmail()),
-  handleError(controller.registerEmail.bind(controller))
+  handleError(controller.registerEmail.bind(controller)),
 );
 
 /**
@@ -73,9 +73,9 @@ router.post(
  *          description: Internal Server Error
  */
 router.post(
-  "/resend-email",
+  '/resend-email',
   expressValidator(validateResendEmail()),
-  handleError(controller.resendEmail.bind(controller))
+  handleError(controller.resendEmail.bind(controller)),
 );
 
 /**
@@ -99,8 +99,8 @@ router.post(
  *          description: Internal Server Error
  */
 router.get(
-  "/verify-email/:token",
-  handleError(controller.verifyEmail.bind(controller))
+  '/verify-email/:token',
+  handleError(controller.verifyEmail.bind(controller)),
 );
 
 /**
@@ -126,9 +126,9 @@ router.get(
  *          description: Internal Server Error
  */
 router.post(
-  "/register/facebook",
+  '/register/facebook',
   authMiddleware.verifyFirebaseProvider,
-  handleError(controller.registerFacebook.bind(controller))
+  handleError(controller.registerFacebook.bind(controller)),
 );
 
 /**
@@ -154,9 +154,9 @@ router.post(
  *          description: Internal Server Error
  */
 router.post(
-  "/register/google",
+  '/register/google',
   authMiddleware.verifyFirebaseProvider,
-  handleError(controller.registerGoogle.bind(controller))
+  handleError(controller.registerGoogle.bind(controller)),
 );
 
 /**
@@ -186,9 +186,9 @@ router.post(
  *          description: Internal Server Error
  */
 router.post(
-  "/register/phone",
+  '/register/phone',
   expressValidator(validateRegisterPhone()),
-  handleError(controller.registerPhone.bind(controller))
+  handleError(controller.registerPhone.bind(controller)),
 );
 
 /**
@@ -218,9 +218,9 @@ router.post(
  *          description: Internal Server Error
  */
 router.post(
-  "/verify-phone",
+  '/verify-phone',
   authMiddleware.verifyFirebaseProvider,
-  handleError(controller.verifyPhone.bind(controller))
+  handleError(controller.verifyPhone.bind(controller)),
 );
 
 export default router;

@@ -1,23 +1,24 @@
-import { redis } from "../../configs/redis.config";
-import { OtpEmail } from "../../models/mongodb/auth/otp.model";
-import { Security } from "../../models/mongodb/user/security.model";
-import { sendEmail } from "../../utils/sendEmail.util";
-import { sendVerifyEmail } from "../../utils/message.util";
-import { generateEmailOtp } from "../../utils/generateCode.util";
+import { redis } from '../../configs/redis.config';
+import { OtpEmail } from '../../models/mongodb/auth/otp.model';
+import { Security } from '../../models/mongodb/user/security.model';
+import { sendEmail } from '../../utils/sendEmail.util';
+import { sendVerifyEmail } from '../../utils/message.util';
+import { generateEmailOtp } from '../../utils/generateCode.util';
 import {
   HandleError,
   ResponseOptions,
   serviceResponse,
-} from "@amrogamal/shared-code";
+} from '@amrogamal/shared-code';
 
 const { warpError } = HandleError.getInstance();
 import {
   RegisterEmailDtoType,
   RegisterPhoneDtoType,
-} from "../../dtos/auth/register.dto";
+} from '../../dtos/auth/register.dto';
 
-import { Profile } from "../../models/mongodb/user/profile.model";
-import { v4 as uuidv4 } from "uuid";
+import { Profile } from '../../models/mongodb/user/profile.model';
+import { v4 as uuidv4 } from 'uuid';
+import { FirebaseOAuthUser } from '../../types/firebase.type';
 
 export class AuthRegisterService {
   private static instance: AuthRegisterService;
@@ -33,13 +34,13 @@ export class AuthRegisterService {
     const user = await Security.findOne({ email });
     if (user) {
       return serviceResponse({
-        statusText: "Conflict",
+        statusText: 'Conflict',
         message:
-          "Email address already exists, Please try again with a different email address",
+          'Email address already exists, Please try again with a different email address',
       });
     }
     return serviceResponse({
-      statusText: "OK",
+      statusText: 'OK',
     });
   };
 
@@ -47,45 +48,45 @@ export class AuthRegisterService {
     const user = await Security.findOne({ phone });
     if (user) {
       return serviceResponse({
-        statusText: "Conflict",
+        statusText: 'Conflict',
         message:
-          "Phone number already exists, Please try again with a different phone number",
+          'Phone number already exists, Please try again with a different phone number',
       });
     }
     return serviceResponse({
-      statusText: "OK",
+      statusText: 'OK',
     });
   };
 
   private addDataInCache = async (
     data: RegisterEmailDtoType,
-    token: string
+    token: string,
   ): Promise<ResponseOptions> => {
     const resultCache = await redis.setEx(
       `token:${token}`,
       600,
-      JSON.stringify(data)
+      JSON.stringify(data),
     );
-    if (resultCache != "OK")
+    if (resultCache !== 'OK')
       return serviceResponse({
-        statusText: "InternalServerError",
-        message: "Error while register, try again later",
+        statusText: 'InternalServerError',
+        message: 'Error while register, try again later',
       });
     return serviceResponse({
-      statusText: "OK",
+      statusText: 'OK',
     });
   };
 
   sendEmailVerification = async (
     data: RegisterEmailDtoType,
-    email: string
+    email: string,
   ): Promise<ResponseOptions> => {
     const checkEmail = await OtpEmail.findOne({ email });
     if (checkEmail)
       return serviceResponse({
-        statusText: "Conflict",
+        statusText: 'Conflict',
         message:
-          "verification link already exists or the email already register but not verify. Please check your email",
+          'verification link already exists or the email already register but not verify. Please check your email',
       });
     const token = await generateEmailOtp();
     await OtpEmail.create({
@@ -97,8 +98,8 @@ export class AuthRegisterService {
     const link = `${process.env.BACKEND_URL}/auth/verify-email/${token}`;
     const resultSendEmail = await sendEmail(
       email,
-      "Email Verification",
-      sendVerifyEmail(link, data?.username)
+      'Email Verification',
+      sendVerifyEmail(link, data?.username),
     );
     if (!resultSendEmail.success) return resultSendEmail;
 
@@ -112,26 +113,26 @@ export class AuthRegisterService {
     const checkEmail = await OtpEmail.findOne({ email });
     if (!checkEmail)
       return serviceResponse({
-        statusText: "BadRequest",
-        message: "Expired time, return to signup page and register again",
+        statusText: 'BadRequest',
+        message: 'Expired time, return to signup page and register again',
       });
 
     const link = `${process.env.BACKEND_URL}/auth/verify-email/${checkEmail.token}`;
     const resultSendEmail = await sendEmail(
       email,
-      "Email Verification",
-      sendVerifyEmail(link, checkEmail.email)
+      'Email Verification',
+      sendVerifyEmail(link, checkEmail.email),
     );
     if (!resultSendEmail.success) return resultSendEmail;
     await OtpEmail.updateOne({ email }, { $inc: { numSend: 1 } });
     return serviceResponse({
-      statusText: "OK",
-      message: "Email send successfully",
+      statusText: 'OK',
+      message: 'Email send successfully',
     });
   });
 
   phoneVerification = async (
-    data: RegisterPhoneDtoType
+    data: RegisterPhoneDtoType,
   ): Promise<ResponseOptions> => {
     const checkPhone = await this.checkPhone(data.phone);
     if (!checkPhone.success) return checkPhone;
@@ -143,8 +144,8 @@ export class AuthRegisterService {
   };
 
   createFirebaseProvider = async (
-    data: any,
-    provider: string
+    data: FirebaseOAuthUser,
+    provider: string,
   ): Promise<ResponseOptions> => {
     const isExistUser = await Security.exists({ email: data.email });
     if (!isExistUser) {
@@ -170,17 +171,20 @@ export class AuthRegisterService {
 
   handleProvider = warpError(
     async (
-      data: any,
+      data: FirebaseOAuthUser,
       provider: string,
-      createUser: (data: any, provider: string) => Promise<ResponseOptions>
+      createUser: (
+        data: FirebaseOAuthUser,
+        provider: string,
+      ) => Promise<ResponseOptions>,
     ): Promise<ResponseOptions> => {
       const checkEmail = await this.checkEmail(data.user.email);
       if (!checkEmail.success) return checkEmail;
       await createUser(data.user, provider);
       return serviceResponse({
-        statusText: "OK",
-        message: "Register successfully",
+        statusText: 'OK',
+        message: 'Register successfully',
       });
-    }
+    },
   );
 }

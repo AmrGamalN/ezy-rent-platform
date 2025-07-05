@@ -1,43 +1,43 @@
-import { body, ValidationChain } from "express-validator";
-import { CustomError } from "@amrogamal/shared-code";
-import { validateBoolean, validateString } from "../validationFunction";
+import { body, ValidationChain } from 'express-validator';
+import { CustomError } from '@amrogamal/shared-code';
+import { validateBoolean, validateString } from '../validationFunction';
 
 export const validateRegisterEmail = (): ValidationChain[] => [
   validateString({
-    field: "email",
+    field: 'email',
     isOptional: false,
     options: { isEmail: true },
   }),
   validateString({
-    field: "password",
+    field: 'password',
     isOptional: false,
     options: { isPassword: true },
   }),
-  body("confirmPassword").custom((value, { req }) => {
+  body('confirmPassword').custom((value, { req }) => {
     if (value !== req.body.password) {
       throw new CustomError(
-        "BadRequest",
+        'BadRequest',
         400,
-        "Password and confirm password not match",
-        false
+        'Password and confirm password not match',
+        false,
       );
     }
     return true;
   }),
   validateString({
-    field: "username",
+    field: 'username',
     isOptional: false,
     options: { min: 3, max: 20 },
   }),
   validateBoolean({
-    field: "terms",
+    field: 'terms',
     isOptional: false,
   }),
 ];
 
 export const validateResendEmail = (): ValidationChain[] => [
   validateString({
-    field: "email",
+    field: 'email',
     isOptional: false,
     options: { isEmail: true },
   }),
@@ -45,31 +45,31 @@ export const validateResendEmail = (): ValidationChain[] => [
 
 export const validateRegisterPhone = (): ValidationChain[] => [
   validateString({
-    field: "phone",
+    field: 'phone',
     isOptional: false,
     options: { isPhone: true },
   }),
   validateString({
-    field: "username",
+    field: 'username',
     isOptional: false,
     options: { min: 3, max: 20 },
   }),
   validateBoolean({
-    field: "terms",
+    field: 'terms',
     isOptional: false,
   }),
   validateString({
-    field: "password",
+    field: 'password',
     isOptional: false,
     options: { isPassword: true },
   }),
-  body("confirmPassword").custom((value, { req }) => {
+  body('confirmPassword').custom((value, { req }) => {
     if (value !== req.body.password) {
       throw new CustomError(
-        "BadRequest",
+        'BadRequest',
         400,
-        "Password and confirm password not match",
-        false
+        'Password and confirm password not match',
+        false,
       );
     }
     return true;

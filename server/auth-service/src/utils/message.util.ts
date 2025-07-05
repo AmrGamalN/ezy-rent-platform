@@ -1,4 +1,4 @@
-const emailHeader = () => `
+const emailHeader = (): string => `
   <div style="background-color: rgb(0, 0, 0); padding: 10px;">
     <table align="center" cellpadding="0" cellspacing="0" style="margin: 0 auto;">
       <tr>
@@ -17,7 +17,7 @@ const emailHeader = () => `
   </div>
 `;
 
-const emailFooter = () => `
+const emailFooter = (): string => `
   <div style="width: 100%; margin-top: 30px; font-size: 12px; color: gray; text-align: center;">
     <p>Eazy Rent 2025 ©</p>
     <p>Eazy Rent is a registered trademark of Eazy Rent.</p>
@@ -36,7 +36,7 @@ const emailFooter = () => `
   </div>
 `;
 
-export const sendVerifyEmail = (link: string, userName: string) => `
+export const sendVerifyEmail = (link: string, userName: string): string => `
   ${emailHeader()}
   <p style="margin-top: 30px;">Hello, ${userName}</p>
 
@@ -65,8 +65,10 @@ export const sendVerifyEmail = (link: string, userName: string) => `
   ${emailFooter()}
 `;
 
-
-export const sendResetPasswordEmail = (link: string, userName: string) => `
+export const sendResetPasswordEmail = (
+  link: string,
+  userName: string,
+): string => `
   ${emailHeader()}
   <p style="margin-top: 30px;">Hello, ${userName}</p>
 

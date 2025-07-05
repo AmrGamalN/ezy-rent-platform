@@ -1,5 +1,5 @@
-import { Schema, model } from "mongoose";
-import { SecurityDtoType } from "../../../dtos/user/security.dto";
+import { Schema, model } from 'mongoose';
+import { SecurityDtoType } from '../../../dtos/user/security.dto';
 
 const securitySchema = new Schema(
   {
@@ -20,12 +20,12 @@ const securitySchema = new Schema(
     password: {
       type: String,
       required: true,
-      default: "",
+      default: '',
     },
     role: {
       type: String,
-      enum: ["admin", "manager", "user"],
-      default: "user",
+      enum: ['admin', 'manager', 'user'],
+      default: 'user',
     },
     isEmailVerified: { type: Boolean, default: false },
     isPhoneVerified: { type: Boolean, default: false },
@@ -33,16 +33,16 @@ const securitySchema = new Schema(
     isAccountBlocked: { type: Boolean, default: false },
     isAccountDeleted: { type: Boolean, default: false },
     is2FA: { type: Boolean, default: false },
-    FASecret: { type: String, default: "" },
-    prefixS3: { type: String, default: "" },
+    FASecret: { type: String, default: '' },
+    prefixS3: { type: String, default: '' },
     numberFailedLogin: { type: Number, default: 0 },
     lastFailedLoginAt: { type: Date, default: null },
-    sign_up_provider: { type: String, default: "" },
-    sign_in_provider: { type: String, default: "" },
-    status: { type: String, enum: ["online", "offline"], default: "offline" },
+    sign_up_provider: { type: String, default: '' },
+    sign_in_provider: { type: String, default: '' },
+    status: { type: String, enum: ['online', 'offline'], default: 'offline' },
     terms: { type: Boolean, default: false },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
-export const Security = model<SecurityDtoType>("user_security", securitySchema);
+export const Security = model<SecurityDtoType>('user_security', securitySchema);

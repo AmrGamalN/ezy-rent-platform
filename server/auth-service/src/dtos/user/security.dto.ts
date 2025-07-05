@@ -1,11 +1,11 @@
-import { z } from "@amrogamal/shared-code";
+import { z } from '@amrogamal/shared-code';
 
 export const SecurityAdminDto = z.object({
   userId: z.string().min(1),
   email: z.union([z.string().email(), z.null()]),
   phone: z.union([z.string(), z.null()]),
   password: z.string().min(6),
-  role: z.enum(["admin", "manager", "user"]).optional(),
+  role: z.enum(['admin', 'manager', 'user']).optional(),
   isEmailVerified: z.boolean().optional(),
   isPhoneVerified: z.boolean().optional(),
   isPasswordReset: z.boolean().optional(),
@@ -18,7 +18,7 @@ export const SecurityAdminDto = z.object({
   lastFailedLoginAt: z.date().optional(),
   sign_up_provider: z.string().optional(),
   sign_in_provider: z.string().optional(),
-  status: z.enum(["online", "offline"]).optional(),
+  status: z.enum(['online', 'offline']).optional(),
   terms: z.boolean().optional(),
 });
 

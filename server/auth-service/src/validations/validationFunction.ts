@@ -1,4 +1,4 @@
-import { body, query, param, check, ValidationChain } from "express-validator";
+import { body, query, param, check, ValidationChain } from 'express-validator';
 import {
   emailPattern,
   LocationType,
@@ -7,8 +7,8 @@ import {
   ValidationArrayType,
   ValidationNumberType,
   ValidationStringType,
-} from "../types/validation.type";
-import { CustomError } from "@amrogamal/shared-code";
+} from '../types/validation.type';
+import { CustomError } from '@amrogamal/shared-code';
 
 export const validateString = ({
   field,
@@ -30,8 +30,8 @@ export const validateString = ({
       })
       .withMessage(
         `${field} must be between ${options.min ?? 0} and ${
-          options.max ?? "∞"
-        } characters`
+          options.max ?? '∞'
+        } characters`,
       )
       .bail();
   }
@@ -47,27 +47,27 @@ export const validateString = ({
     validator = validator
       .isIn(options?.isIn)
       .withMessage(
-        `${field} must be one of the following: ${options?.isIn.join(", ")}`
+        `${field} must be one of the following: ${options?.isIn.join(', ')}`,
       )
       .bail();
   }
 
   if (options?.isUrl) {
-    validator = validator.isURL().withMessage("Invalid URL").bail();
+    validator = validator.isURL().withMessage('Invalid URL').bail();
   }
 
   if (options?.isEmail) {
     validator = validator
       .matches(emailPattern)
-      .withMessage("Email provider not supported")
+      .withMessage('Email provider not supported')
       .bail();
   }
 
   if (options?.isPhone) {
     validator = validator
-      .customSanitizer((val) => val.replace(/[\s\-()]/g, ""))
+      .customSanitizer((val) => val.replace(/[\s\-()]/g, ''))
       .matches(phonePattern)
-      .withMessage("Invalid format")
+      .withMessage('Invalid format')
       .bail();
   }
 
@@ -81,7 +81,7 @@ export const validateString = ({
         minSymbols: 1,
       })
       .withMessage(
-        "Password must be contains at least 1 lowercase, 1 uppercase, 1 number, 1 symbol and at least 10 characters"
+        'Password must be contains at least 1 lowercase, 1 uppercase, 1 number, 1 symbol and at least 10 characters',
       )
       .bail();
   }
@@ -120,7 +120,7 @@ export const validateNumber = ({
     validator = validator
       .isIn(options?.isIn)
       .withMessage(
-        `${field} must be one of the following: ${options?.isIn.join(", ")}`
+        `${field} must be one of the following: ${options?.isIn.join(', ')}`,
       )
       .bail();
   }
@@ -144,8 +144,8 @@ export const validateArray = ({
       })
       .withMessage(
         `${field} must have between ${options.minLength ?? 0} and ${
-          options.maxLength ?? "∞"
-        } items`
+          options.maxLength ?? '∞'
+        } items`,
       )
       .bail();
   }
@@ -154,9 +154,9 @@ export const validateArray = ({
 
   if (options?.elementType) {
     const element = body(`${field}.*`)
-      [options.elementType === "string" ? "isString" : "isNumeric"]()
+      [options.elementType === 'string' ? 'isString' : 'isNumeric']()
       .withMessage(
-        options.elementMessage || `${field}.* must be ${options.elementType}`
+        options.elementMessage || `${field}.* must be ${options.elementType}`,
       );
     chains.push(element);
   }
@@ -168,7 +168,7 @@ export const validateArray = ({
         return arr.every((val: string) => options.isIn!.includes(val));
       })
       .withMessage(
-        `${field} contains invalid values. Allowed: ${options.isIn.join(", ")}`
+        `${field} contains invalid values. Allowed: ${options.isIn.join(', ')}`,
       );
     chains.push(inValidator);
   }
@@ -180,7 +180,7 @@ export const validateObject = ({
   field,
   isOptional,
 }: MainValidationType): ValidationChain => {
-  let validator = body(field)
+  const validator = body(field)
     .isObject()
     .withMessage(`${field} must be an object`);
   return !isOptional
@@ -201,33 +201,33 @@ export const validateDate = ({
       const start = req.query?.start || req.body?.availableFrom;
       const end = req.query?.end || req.body?.availableTo;
 
-      if (field === "startDate") {
+      if (field === 'startDate') {
         if (value && !end) {
           throw new CustomError(
-            "BadRequest",
+            'BadRequest',
             400,
-            "If start is provided, end must also be provided",
-            false
+            'If start is provided, end must also be provided',
+            false,
           );
         }
 
         if (start && end && new Date(start) > new Date(end)) {
           throw new CustomError(
-            "BadRequest",
+            'BadRequest',
             400,
-            "Start date must be before or equal to end date",
-            false
+            'Start date must be before or equal to end date',
+            false,
           );
         }
       }
 
-      if (field === "endDate") {
+      if (field === 'endDate') {
         if (value && !start) {
           throw new CustomError(
-            "BadRequest",
+            'BadRequest',
             400,
-            "If end is provided, start must also be provided",
-            false
+            'If end is provided, start must also be provided',
+            false,
           );
         }
       }
@@ -240,16 +240,16 @@ export const validateDate = ({
 const buildValidator = (
   field?: string,
   isOptional?: boolean,
-  location?: LocationType
+  location?: LocationType,
 ): ValidationChain => {
   let validator =
-    location == "query"
+    location === 'query'
       ? query(field)
-      : location == "param"
-      ? param(field)
-      : location == "check"
-      ? check(field)
-      : body(field);
+      : location === 'param'
+        ? param(field)
+        : location === 'check'
+          ? check(field)
+          : body(field);
 
   if (!isOptional) {
     validator = validator.notEmpty().withMessage(`${field} is required`).bail();

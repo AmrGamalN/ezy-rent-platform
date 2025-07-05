@@ -46,7 +46,7 @@
  *         idToken:
  *           type: string
  *           description: Enter user idToken
- * 
+ *
  *     LoginGoogleDto:
  *       type: object
  *       required:
@@ -55,7 +55,7 @@
  *         idToken:
  *           type: string
  *           description: Enter user idToken
- * 
+ *
  *     VerifyPhoneDto:
  *       type: object
  *       required:
