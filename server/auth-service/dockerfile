@@ -1,37 +1,32 @@
-# FROM node:20-alpine
-# WORKDIR /src
-# RUN npm install -g pm2 typescript
-# COPY package*.json ./
-# ARG NODE_ENV
-# RUN if [ "$NODE_ENV" = "production" ]; then \
-#     npm install --only=production; \
-#     else npm install; \
-#     fi
-# COPY . .
-# EXPOSE 3000
-# RUN chmod +x entrypoint.sh
-# ENTRYPOINT ["sh", "./entrypoint.sh"]
-# CMD ["pm2"]
-
-# ===== Step 1: Build Stage =====
-FROM node:20-alpine as builder
+# ===== Build Stage =====
+FROM node:20-alpine AS  builder
 WORKDIR /src
-RUN npm install -g pm2 typescript
 COPY package*.json ./
-RUN npm install 
+RUN npm install
 COPY . .
 RUN npm run build
 
-# ===== Step 2: Production Stage =====
-FROM node:20-alpine
+# ===== Development Stage =====
+FROM node:20 AS  dev
+WORKDIR /src
+COPY package*.json ./
+RUN npm install
+COPY . .
+EXPOSE 3000
+RUN chmod +x docker-entrypoint.sh
+ENTRYPOINT ["./docker-entrypoint.sh"]
+CMD ["dev"]
+
+# ===== Production Stage =====
+FROM node:20-alpine AS  prod
 WORKDIR /src
 RUN npm install -g pm2
 COPY package*.json ./
 RUN npm install --only=production
 COPY --from=builder /src/dist ./dist
 COPY --from=builder /src/ecosystem.config.js ./ecosystem.config.js
-COPY --from=builder /src/entrypoint.sh ./entrypoint.sh
+COPY --from=builder /src/docker-entrypoint.sh ./docker-entrypoint.sh
 EXPOSE 3000
-RUN chmod +x entrypoint.sh
-ENTRYPOINT ["sh", "./entrypoint.sh"]
+RUN chmod +x docker-entrypoint.sh
+ENTRYPOINT ["./docker-entrypoint.sh"]
 CMD ["pm2"]

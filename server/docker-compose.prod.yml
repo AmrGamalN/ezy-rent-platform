@@ -6,6 +6,7 @@ services:
       context: ./auth-service
       args:
         - NODE_ENV=production
+      target: prod
     env_file:
       - ./auth-service/.env
     ports:
@@ -17,7 +18,6 @@ services:
       - redis
     networks:
       - mongo-network
-    # command: ['pm2']
 
   car-service:
     image: amrgamaleid/car-service
@@ -26,6 +26,7 @@ services:
       context: ./car-service
       args:
         - NODE_ENV=production
+      target: prod
     env_file:
       - ./car-service/.env
     ports:
@@ -39,7 +40,6 @@ services:
     networks:
       - mongo-network
       - kafka-network
-    # command: ['pm2']
 
   elastic-service:
     image: amrgamaleid/elastic-service
@@ -48,6 +48,7 @@ services:
       context: ./elastic-service
       args:
         - NODE_ENV=production
+      target: prod
     env_file:
       - ./elastic-service/.env
     ports:
@@ -59,23 +60,21 @@ services:
     networks:
       - mongo-network
       - kafka-network
-    # command: ['pm2']
 
-  # payment-service:
-  #   image: amrgamaleid/payment-service
-  #   container_name: payment-service
-  #   build:
-  #     context: ./payment-service
-  #     args:
-  #       - NODE_ENV=production
-  #   env_file:
-  #     - ./payment-service/.env
-  #   # ports:
-  #   #   - '6000:6000'
-  #   depends_on:
-  #     - kafka
-  #     - zookeeper
-  #   networks:
-  #     - mongo-network
-  #     - kafka-network
-  #   # command: ['pm2']
+  payment-service:
+    image: amrgamaleid/payment-service
+    container_name: payment-service
+    build:
+      context: ./payment-service
+      args:
+        - NODE_ENV=production
+    env_file:
+      - ./payment-service/.env
+    ports:
+      - '6000:6000'
+    depends_on:
+      - kafka
+      - zookeeper
+    networks:
+      - mongo-network
+      - kafka-network
