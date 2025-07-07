@@ -5,6 +5,7 @@ services:
       context: ./auth-service
       args:
         - NODE_ENV=development
+      target: dev
     volumes:
       - ./auth-service:/src
     env_file:
@@ -18,8 +19,6 @@ services:
       - redis
     networks:
       - mongo-network
-    # command: sh -c "sleep 10 && npm run dev"
-    command: ["dev"]
 
   car-service:
     container_name: car-service
@@ -27,6 +26,7 @@ services:
       context: ./car-service
       args:
         - NODE_ENV=development
+      target: dev
     volumes:
       - ./car-service:/src
     env_file:
@@ -42,8 +42,6 @@ services:
     networks:
       - mongo-network
       - kafka-network
-    # command: sh -c "sleep 10 && npm run dev"
-    command: ["dev"]
 
   elastic-service:
     container_name: elastic-service
@@ -51,6 +49,7 @@ services:
       context: ./elastic-service
       args:
         - NODE_ENV=development
+      target: dev
     volumes:
       - ./elastic-service:/src
     env_file:
@@ -64,8 +63,6 @@ services:
     networks:
       - mongo-network
       - kafka-network
-    # command: sh -c "sleep 10 && npm run dev"
-    command: ["dev"]
 
   payment-service:
     container_name: payment-service
@@ -85,5 +82,3 @@ services:
     networks:
       - mongo-network
       - kafka-network
-    # command: sh -c "sleep 10 && npm run dev"
-    command: ["dev"]
