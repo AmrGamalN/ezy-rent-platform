@@ -14,8 +14,8 @@
     "typescript-eslint": "^8.35.1"
   },
   "scripts": {
-    "lint": "eslint auth-service/src/**/*.{ts,js} car-service/src/**/*.{ts,js} elastic-service/src/**/*.{ts,js} payment-service/src/**/*.{ts,js}",
-    "lint:fix": "eslint 'auth-service/src/**/*.{ts,js}' 'car-service/src/**/*.{ts,js}' 'elastic-service/src/**/*.{ts,js}' 'payment-service/src/**/*.{ts,js}' --fix",
+    "lint": "eslint server/auth-service/src/**/*.{ts,js} server/car-service/src/**/*.{ts,js} server/elastic-service/src/**/*.{ts,js} server/payment-service/src/**/*.{ts,js}",
+    "lint:fix": "eslint server/auth-service/src/**/*.{ts,js} server/car-service/src/**/*.{ts,js} server/elastic-service/src/**/*.{ts,js} server/payment-service/src/**/*.{ts,js} --fix",
     "format": "prettier --write '**/*.{ts,js,json,md}'",
     "check-format": "prettier --check '**/*.{ts,js,json,md}'"
   },
