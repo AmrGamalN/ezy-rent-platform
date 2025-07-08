@@ -1,22 +1,42 @@
-name: Deploy to Docker Hub and EC2
+name: CI/CD Pipeline
 
 on:
   push:
-    branches:
-      - main
+    branches: [main, develop, feature/*]
+  pull_request:
+    branches: [main]
 
 jobs:
-  deploy:
+  check-code:
+    name: Check Lint and Format
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout the code
+      - name: Checkout code
         uses: actions/checkout@v3
 
       - name: Install dependencies
         run: npm install
 
-      - name: Run Prettier and ESLint
+      - name: Run ESLint & Prettier
+        run: |
+          npm run lint
+          npm run format
+
+  deploy:
+    name: Deploy to EC2 (Only on main)
+    runs-on: ubuntu-latest
+    needs: check-code
+    if: github.ref == 'refs/heads/main'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run ESLint & Prettier
         run: |
           npm run lint
           npm run format
@@ -43,17 +63,12 @@ jobs:
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_KEY }}
           script: |
-            echo "Pulling Docker Images..."
             docker pull ${{ secrets.DOCKER_USERNAME }}/auth-service:latest
             docker pull ${{ secrets.DOCKER_USERNAME }}/car-service:latest
             docker pull ${{ secrets.DOCKER_USERNAME }}/elastic-service:latest
 
-            echo "Stopping and removing old containers..."
             docker stop auth-service || true && docker rm auth-service || true
             docker stop car-service || true && docker rm car-service || true
             docker stop elastic-service || true && docker rm elastic-service || true
 
-            echo "Starting containers with Docker Compose..."
             docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d
-
-            echo "Deployment complete "
