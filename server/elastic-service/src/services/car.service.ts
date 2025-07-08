@@ -13,6 +13,8 @@ import {
   ElaticCarSettings,
   ElasticCarMappings,
 } from '../types/elastic.type';
+import { CreateCar } from '../types/car.type';
+import { QueryDslQueryContainer } from '@elastic/elasticsearch/lib/api/types';
 const { warpError } = HandleError.getInstance();
 
 export class CarService {
@@ -76,9 +78,9 @@ export class CarService {
         from,
         // sort,
       });
-      const results = hits.hits.map((hit: any) => ({
-        id: hit._id,
-        ...hit._source,
+      const results = hits.hits.map((hit) => ({
+        id: hit._id ?? '',
+        ...(hit._source as CreateCar),
       }));
 
       return serviceResponse({
@@ -93,10 +95,10 @@ export class CarService {
     query: ElasticSearchType,
     page: number = 1,
     limit: number = 10,
-  ): Promise<{ esQuery: any; from: number }> => {
+  ): Promise<{ esQuery: QueryDslQueryContainer; from: number }> => {
     const from = (page - 1) * limit;
     const skipKeys = ['city', 'minPrice', 'maxPrice'];
-    const mustQueries: any = [];
+    const mustQueries: QueryDslQueryContainer[] = [];
     const rangeQuery: { price?: { gte?: number; lte?: number } } = {};
 
     if (query.city) {
@@ -116,7 +118,7 @@ export class CarService {
         mustQueries.push({
           match: {
             [key]: {
-              query: value,
+              query: value instanceof Date ? value.toISOString() : value,
               fuzziness: 'AUTO',
             },
           },
@@ -129,7 +131,7 @@ export class CarService {
         });
       } else {
         mustQueries.push({
-          match: { [key]: value },
+          [key]: value instanceof Date ? value.toISOString() : value,
         });
       }
     }
