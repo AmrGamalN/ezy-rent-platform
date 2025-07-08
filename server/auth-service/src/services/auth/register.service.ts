@@ -167,8 +167,17 @@ export class RegisterService {
         statusText: 'Created',
         message: `Awesome! Your ${provider} has been verified successfully. Let’s get started!`,
       });
-    } catch (err: any) {
-      throw new CustomError('InternalServerError', 500, err.message, false);
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        throw new CustomError('InternalServerError', 500, err.message, false);
+      } else {
+        throw new CustomError(
+          'InternalServerError',
+          500,
+          'InternalServerError',
+          false,
+        );
+      }
     } finally {
       await session.endSession();
     }
