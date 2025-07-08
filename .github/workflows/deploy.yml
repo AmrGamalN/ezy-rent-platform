@@ -2,65 +2,87 @@ name: CI/CD Pipeline
 
 on:
   push:
-    branches: [main, develop, feature/*]
+    branches: [main, feature/*]
   pull_request:
     branches: [main]
+  workflow_dispatch:
 
 jobs:
-  check-code:
-    name: Check Lint and Format
+
+  lint-and-format:
+    name: Lint & Format
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
+      - name: Checkout Repository
         uses: actions/checkout@v3
 
       - name: Install dependencies
         run: npm install
 
-      - name: Run ESLint & Prettier
-        run: |
-          npm run lint
-          npm run format
+      - name: Run ESLint
+        run: npm run lint
 
-  deploy:
-    name: Deploy to EC2 (Only on main)
+      - name: Run Prettier
+        run: npm run format
+
+  build-and-push:
+    name: Build & Push Docker Images
     runs-on: ubuntu-latest
-    needs: check-code
+    needs: lint-and-format
     if: github.ref == 'refs/heads/main'
 
     steps:
-      - name: Checkout code
+      - name: Checkout Repository
         uses: actions/checkout@v3
 
-      - name: Install dependencies
-        run: npm install
-
-      - name: Run ESLint & Prettier
-        run: |
-          npm run lint
-          npm run format
-
       - name: Login to Docker Hub
-        run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Build Docker Images
-        run: |
-              docker buildx build --load -t amrgamaleid/auth-service:latest ./server/auth-service
-              docker buildx build --load -t amrgamaleid/car-service:latest ./server/car-service
-              docker buildx build --load -t amrgamaleid/elastic-service:latest ./server/elastic-service
-          
+      - name: Build & Push Docker Images
+        uses: docker/build-push-action@v5
+        with:
+          context: ./server/auth-service
+          push: true
+          tags: amrgamaleid/auth-service:latest
 
-      - name: SSH into EC2 and deploy
+      - name: Build & Push Car Service
+        uses: docker/build-push-action@v5
+        with:
+          context: ./server/car-service
+          push: true
+          tags: amrgamaleid/car-service:latest
+
+      - name: Build & Push Elastic Service
+        uses: docker/build-push-action@v5
+        with:
+          context: ./server/elastic-service
+          push: true
+          tags: amrgamaleid/elastic-service:latest
+
+  deploy-to-ec2:
+    name: Deploy to EC2
+    runs-on: ubuntu-latest
+    needs: build-and-push
+    if: github.ref == 'refs/heads/main'
+
+    steps:
+      - name: SSH to EC2 & Deploy
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_KEY }}
           script: |
-            docker pull ${{ secrets.DOCKER_USERNAME }}/auth-service:latest
-            docker pull ${{ secrets.DOCKER_USERNAME }}/car-service:latest
-            docker pull ${{ secrets.DOCKER_USERNAME }}/elastic-service:latest
+            cd /home/ubuntu/paymob/server
+            git pull origin main
+
+            docker pull amrgamaleid/auth-service:latest
+            docker pull amrgamaleid/car-service:latest
+            docker pull amrgamaleid/elastic-service:latest
 
             docker stop auth-service || true && docker rm auth-service || true
             docker stop car-service || true && docker rm car-service || true

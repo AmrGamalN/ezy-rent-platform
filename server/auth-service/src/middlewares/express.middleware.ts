@@ -9,7 +9,11 @@ const { handleError } = HandleError.getInstance();
 
 export const expressValidator = (
   validators: ValidationChain[],
-): ((req: Request, res: Response, next: NextFunction) => Promise<void>) => {
+): ((
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => Promise<void | Response>) => {
   return handleError(
     async (
       req: Request,
@@ -19,7 +23,6 @@ export const expressValidator = (
       for (const validator of validators) {
         await validator?.run(req);
       }
-
       const errors = validationResult(req);
       if (!errors.isEmpty()) {
         if (!res.headersSent) {

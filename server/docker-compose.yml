@@ -10,8 +10,6 @@ x-mongo-common: &mongo-common
     MONGO_INITDB_ROOT_PASSWORD: example
   networks:
     - mongo-network
-  volumes:
-    - ./mongo-keyfile:/etc/mongo-keyfile
   restart: always
 
 services:
@@ -22,6 +20,7 @@ services:
       - '27017:27017'
     volumes:
       - mongo1-data:/data/db
+      - ./mongo-keyfile:/etc/mongo-keyfile
 
   mongo2:
     <<: *mongo-common
@@ -30,6 +29,7 @@ services:
       - '27018:27017'
     volumes:
       - mongo2-data:/data/db
+      - ./mongo-keyfile:/etc/mongo-keyfile
 
   mongo3:
     <<: *mongo-common
@@ -38,6 +38,7 @@ services:
       - '27019:27017'
     volumes:
       - mongo3-data:/data/db
+      - ./mongo-keyfile:/etc/mongo-keyfile
 
   redis:
     image: redis

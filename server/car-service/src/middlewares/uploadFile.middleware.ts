@@ -17,6 +17,12 @@ declare global {
   }
 }
 
+type funcExpress = (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => Promise<Response | void> | void;
+
 export class UploadFile {
   private static Instance: UploadFile;
   public static getInstance(): UploadFile {
@@ -78,7 +84,7 @@ export class UploadFile {
   });
 
   private uploadFile =
-    (uploadMiddleware: RequestHandler): RequestHandler =>
+    (uploadMiddleware: RequestHandler): funcExpress =>
     (req: Request, res: Response, next: NextFunction) => {
       uploadMiddleware(req, res, (err: unknown) => {
         if (!err) return next();
@@ -98,29 +104,26 @@ export class UploadFile {
       });
     };
 
-  prefixType = (prefixType: string) => {
+  prefixType = (prefixType: string): funcExpress => {
     return (req: Request, res: Response, next: NextFunction): void => {
       req.prefixType = prefixType;
       next();
     };
   };
 
-  uploadListMulterS3Images = (
-    name: string,
-    maxCount: number,
-  ): RequestHandler => {
+  uploadListMulterS3Images = (name: string, maxCount: number): funcExpress => {
     return handleError(
       this.uploadFile(this.uploadMulterS3.fields([{ name, maxCount }])),
     );
   };
 
-  uploadListMulterImages = (name: string, maxCount: number): RequestHandler => {
+  uploadListMulterImages = (name: string, maxCount: number): funcExpress => {
     return handleError(
       this.uploadFile(this.uploadMulter.fields([{ name, maxCount }])),
     );
   };
 
-  uploadSingleMulterImages = (name: string): RequestHandler => {
+  uploadSingleMulterImages = (name: string): funcExpress => {
     return handleError(this.uploadFile(this.uploadMulter.single(name)));
   };
 }

@@ -10,6 +10,8 @@ import {
   validateCreateCategory,
   validateUpdateCategory,
 } from '../../validations/car/category.validator';
+import { HandleError } from '@amrogamal/shared-code';
+const { handleError } = HandleError.getInstance();
 const authMiddleware = AuthMiddleware.getInstance();
 const controller = CategoryController.getInstance();
 const uploadFile = UploadFile.getInstance();
@@ -23,24 +25,32 @@ const authentication = [
 router.post(
   '/',
   authentication,
-  uploadFile.uploadSingleMulterImages('categoryImage'),
+  handleError(uploadFile.uploadSingleMulterImages('categoryImage')),
   expressValidator(validateCreateCategory),
-  controller.create.bind(controller),
+  handleError(controller.create.bind(controller)),
 );
 
-router.get('/', controller.getAll.bind(controller));
+router.get('/', handleError(controller.getAll.bind(controller)));
 
-router.get('/:id', requiredId(), controller.getById.bind(controller));
+router.get(
+  '/:id',
+  requiredId(),
+  handleError(controller.getById.bind(controller)),
+);
 
 router.put(
   '/:id',
   authentication,
   requiredId(),
-  uploadFile.uploadSingleMulterImages('categoryImage'),
+  handleError(uploadFile.uploadSingleMulterImages('categoryImage')),
   expressValidator(validateUpdateCategory),
-  controller.update.bind(controller),
+  handleError(controller.update.bind(controller)),
 );
 
-router.delete('/:id', authentication, controller.delete.bind(controller));
+router.delete(
+  '/:id',
+  authentication,
+  handleError(controller.delete.bind(controller)),
+);
 
 export default router;

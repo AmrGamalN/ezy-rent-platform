@@ -39,6 +39,7 @@ app.use(express.urlencoded({ extended: true }));
 
 swaggerDoc(app);
 app.use('/api/v1', routes);
+
 Promise.all([mongodbConnect(), redis.connect()])
   .then(() => {
     app.use((req: Request, res: Response) => {

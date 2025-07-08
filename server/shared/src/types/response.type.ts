@@ -3,8 +3,8 @@ export type ResponseOptions<T = any> = {
   success?: boolean;
   status?: number;
   message?: string;
-  error?: any;
-  data?: any;
+  error?: unknown;
+  data?: T;
   count?: number;
   accessToken?: string;
   refreshToken?: string;

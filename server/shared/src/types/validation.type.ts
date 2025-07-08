@@ -3,7 +3,7 @@ import { UserRole } from './role.type';
 export type ActionType = 'getAll' | 'update' | 'getOne' | 'delete';
 
 export type ValidateZodType = {
-  data: any;
+  data: unknown;
   userDto: ZodObject<ZodRawShape>;
   adminDto?: ZodObject<ZodRawShape>;
   managerDto?: ZodObject<ZodRawShape>;

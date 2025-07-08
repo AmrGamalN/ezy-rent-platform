@@ -178,9 +178,9 @@ export class AuthRegisterService {
         provider: string,
       ) => Promise<ResponseOptions>,
     ): Promise<ResponseOptions> => {
-      const checkEmail = await this.checkEmail(data.user.email);
+      const checkEmail = await this.checkEmail(data.email);
       if (!checkEmail.success) return checkEmail;
-      await createUser(data.user, provider);
+      await createUser(data, provider);
       return serviceResponse({
         statusText: 'OK',
         message: 'Register successfully',

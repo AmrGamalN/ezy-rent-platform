@@ -21,7 +21,7 @@
   "author": "Amr Gamal",
   "license": "ISC",
   "dependencies": {
-    "@amrogamal/shared-code": "^2.1.0",
+    "@amrogamal/shared-code": "^2.2.2",
     "@elastic/elasticsearch": "^8.18.2",
     "body-parser": "^2.2.0",
     "cookie-parser": "^1.4.7",

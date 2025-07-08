@@ -15,7 +15,7 @@
   "author": "Amr Gamal",
   "license": "ISC",
   "dependencies": {
-    "@amrogamal/shared-code": "^2.1.0",
+    "@amrogamal/shared-code": "^2.2.1",
     "@types/express": "^5.0.3",
     "@types/mongoose": "^5.11.97",
     "@types/uuid": "^10.0.0",
