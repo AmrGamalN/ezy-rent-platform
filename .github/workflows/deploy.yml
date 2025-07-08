@@ -46,15 +46,10 @@ jobs:
 
       - name: Build Docker Images
         run: |
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/auth-service:latest ./auth-service
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/car-service:latest ./car-service
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/elastic-service:latest ./elastic-service
-
-      - name: Push Docker Images
-        run: |
-          docker push ${{ secrets.DOCKER_USERNAME }}/auth-service:latest
-          docker push ${{ secrets.DOCKER_USERNAME }}/car-service:latest
-          docker push ${{ secrets.DOCKER_USERNAME }}/elastic-service:latest
+              docker buildx build --load -t amrgamaleid/auth-service:latest ./server/auth-service
+              docker buildx build --load -t amrgamaleid/car-service:latest ./server/car-service
+              docker buildx build --load -t amrgamaleid/elastic-service:latest ./server/elastic-service
+          
 
       - name: SSH into EC2 and deploy
         uses: appleboy/ssh-action@master

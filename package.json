@@ -17,7 +17,8 @@
     "lint": "eslint server/auth-service/src/**/*.{ts,js} server/car-service/src/**/*.{ts,js} server/elastic-service/src/**/*.{ts,js} server/payment-service/src/**/*.{ts,js}",
     "lint:fix": "eslint server/auth-service/src/**/*.{ts,js} server/car-service/src/**/*.{ts,js} server/elastic-service/src/**/*.{ts,js} server/payment-service/src/**/*.{ts,js} --fix",
     "format": "prettier --write '**/*.{ts,js,json,md}'",
-    "check-format": "prettier --check '**/*.{ts,js,json,md}'"
+    "check-format": "prettier --check '**/*.{ts,js,json,md}'",
+    "build": "tsc"
   },
   "keywords": [],
   "author": "",
