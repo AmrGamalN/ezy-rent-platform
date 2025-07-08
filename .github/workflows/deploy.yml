@@ -46,9 +46,7 @@ jobs:
 
       - name: Build Docker Images with buildx
         run: |
-          docker buildx build --load -t ${{ secrets.DOCKER_USERNAME }}/auth-service:latest ./server/auth-service
-          docker buildx build --load -t ${{ secrets.DOCKER_USERNAME }}/car-service:latest ./server/car-service
-          docker buildx build --load -t ${{ secrets.DOCKER_USERNAME }}/elastic-service:latest ./server/elastic-service
+            docker-compose -f server/docker-compose.yml -f server/docker-compose.prod.yml build
 
       - name: Push Docker Images
         run: |
