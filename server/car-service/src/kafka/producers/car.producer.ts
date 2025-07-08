@@ -1,23 +1,21 @@
 import { kafka } from '../../configs/kafka.config';
+import { ICar } from '../../types/car.type';
 const producer = kafka.producer();
 const connectProducer = producer.connect();
 
 type CarEventType = 'car.created' | 'car.updated' | 'car.deleted';
-export const sendCarEvent = async (
+export const sendCarEvent = async <T extends ICar | { _id: string }>(
   eventType: CarEventType,
-  payload: any,
+  payload: T,
 ): Promise<void> => {
-  const { ...rest } = payload;
-  delete rest._id;
-  delete rest.__v;
   await connectProducer;
   await producer.send({
     topic: 'car-events',
     messages: [
       {
-        key: rest.id.toString(),
+        key: payload._id.toString(),
         value: JSON.stringify({
-          data: rest,
+          data: payload,
           type: eventType,
         }),
       },
