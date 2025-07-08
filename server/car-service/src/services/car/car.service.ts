@@ -14,7 +14,7 @@ import {
 } from '../../dtos/car/car.dto';
 import { sendCarEvent } from '../../kafka/producers/car.producer';
 import { S3Service } from '../s3/s3.service';
-import { CarImage } from '../../types/car.type';
+import { CarImage, ICar } from '../../types/car.type';
 const s3Service = S3Service.getInstance();
 const { warpError } = HandleError.getInstance();
 
@@ -56,10 +56,7 @@ export class CarService {
         ...data,
         userId,
       });
-      await sendCarEvent('car.created', {
-        ...createdCar.toObject(),
-        id: createdCar._id,
-      });
+      await sendCarEvent<ICar>('car.created', createdCar as ICar);
       return serviceResponse({
         statusText: 'Created',
       });
@@ -105,10 +102,7 @@ export class CarService {
 
       await Promise.all([
         s3Service.uploadMultiImages(files, prefix, keys),
-        sendCarEvent('car.updated', {
-          ...updatedCar.data.toObject(),
-          id: _id,
-        }),
+        sendCarEvent<ICar>('car.updated', updatedCar.data as ICar),
       ]);
 
       return serviceResponse({
@@ -141,10 +135,7 @@ export class CarService {
 
       await Promise.all([
         get.save(),
-        sendCarEvent('car.updated', {
-          ...get,
-          id: _id,
-        }),
+        sendCarEvent<ICar>('car.updated', get as ICar),
       ]);
       return serviceResponse({
         statusText: 'OK',
@@ -186,9 +177,8 @@ export class CarService {
 
   delete = warpError(async (_id: string): Promise<ResponseOptions> => {
     const deletedData = await Car.deleteOne({ _id });
-    await sendCarEvent('car.deleted', {
-      id: _id,
-    });
+    if (deletedData.deletedCount > 0)
+      await sendCarEvent<{ _id: string }>('car.deleted', { _id });
     return serviceResponse({ deletedCount: deletedData.deletedCount });
   });
 }

@@ -18,9 +18,10 @@ export type CarTypeFilter = {
 };
 
 export interface ICar extends Document {
+  _id: string;
   userId: string;
-  prefix: string;
   phone: string;
+  prefix: string;
   name: string;
   description: string;
   carModel: string;
@@ -31,7 +32,6 @@ export interface ICar extends Document {
   carImages: {
     url: string;
     key: string;
-    prefix?: string;
   }[];
   price: number;
   discount: number;
