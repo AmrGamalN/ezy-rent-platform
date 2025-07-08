@@ -13,8 +13,7 @@ export type FirebaseOAuthUser = {
   };
   iat: number;
   exp: number;
-  [key: string]: any;
-};
+} & Record<string, unknown>;
 
 export type FirebasePhoneUser = {
   user: {
@@ -23,5 +22,4 @@ export type FirebasePhoneUser = {
   };
   iat?: number;
   exp?: number;
-  [key: string]: any;
-};
+} & Record<string, unknown>;
