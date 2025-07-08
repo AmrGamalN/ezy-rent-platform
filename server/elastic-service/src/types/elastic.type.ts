@@ -98,6 +98,7 @@ export const ElasticMappingCar = {
     isExpired: { type: 'boolean' },
     createdAt: { type: 'date' },
     updatedAt: { type: 'date' },
+    __v: { type: 'integer' },
   },
 };
 
@@ -156,6 +157,7 @@ export type ElasticCarMappings = {
   isExpired: { type: 'boolean' };
   createdAt: { type: 'date' };
   updatedAt: { type: 'date' };
+  __v: { type: 'integer' };
 };
 
 export type MappingCar = ElaticCarSettings & ElasticCarMappings;

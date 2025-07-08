@@ -15,6 +15,7 @@ export type SearchCar = {
 };
 
 export type CreateCar = {
+  userId: string;
   prefix: string;
   phone: string;
   name: string;
@@ -27,7 +28,6 @@ export type CreateCar = {
   carImages: {
     url: string;
     key: string;
-    prefix?: string;
   }[];
   price: number;
   discount: number;
@@ -36,14 +36,14 @@ export type CreateCar = {
   location: {
     city: string;
     address: string;
-    coordinates?: {
+    coordinates: {
       lat?: string;
       lng?: string;
     };
   };
-  isAvailable?: boolean;
-  allowNegotiate?: boolean;
-  guarantees?: {
+  isAvailable: boolean;
+  allowNegotiate: boolean;
+  guarantees: {
     hasInsurance?: boolean;
     insuranceDetails?: string;
     licenseValid?: boolean;
@@ -51,11 +51,15 @@ export type CreateCar = {
     depositAmount?: number;
     additionalNotes?: string;
   };
-  isExpired: boolean;
-  expired_At: Date;
+  isExpired?: boolean;
+  expired_At?: Date;
+  createdAt?: string;
+  updatedAt?: string;
+  __v?: number;
 };
 
 export type UpdateCar = {
+  userId: string;
   phone: string;
   name: string;
   description: string;
@@ -67,7 +71,6 @@ export type UpdateCar = {
   carImages: {
     url: string;
     key: string;
-    prefix?: string;
   }[];
   price: number;
   discount: number;
@@ -91,6 +94,9 @@ export type UpdateCar = {
     depositAmount?: number;
     additionalNotes?: string;
   };
-  isExpired: boolean;
-  expired_At: Date;
+  isExpired?: boolean;
+  expired_At?: Date;
+  createdAt?: string;
+  updatedAt?: string;
+  __v?: number;
 };
