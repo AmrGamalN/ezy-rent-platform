@@ -12,7 +12,7 @@ const otpEmailSchema: Schema = new Schema(
 
 const otpPhoneSchema: Schema = new Schema(
   {
-    phone: { type: String, required: true, unique: true },
+    phoneNumber: { type: String, required: true, unique: true },
     otp: { type: String, required: true },
     expiresAt: { type: Date, required: true, index: { expires: 0 } },
   },

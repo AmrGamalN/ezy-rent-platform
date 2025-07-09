@@ -24,10 +24,10 @@
  *       description: Login by phone
  *       type: object
  *       required:
- *         - phone
+ *         - phoneNumber
  *         - password
  *       properties:
- *         phone:
+ *         phoneNumber:
  *           type: string
  *           format: phone
  *           description: User phone number
@@ -150,11 +150,11 @@
  *     RegisterPhoneDto:
  *       type: object
  *       required:
- *         - phone
+ *         - phoneNumber
  *         - username
  *         - terms
  *       properties:
- *         phone:
+ *         phoneNumber:
  *           type: string
  *           format: phone
  *           description: User phone number
@@ -181,9 +181,9 @@
  *     RegisterSendOtpDto:
  *       type: object
  *       required:
- *         - phone
+ *         - phoneNumber
  *       properties:
- *         phone:
+ *         phoneNumber:
  *           type: string
  *           format: phone
  *           description: User phone number

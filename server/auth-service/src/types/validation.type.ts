@@ -1,7 +1,7 @@
 export const phonePattern = /^\+[1-9]\d{10,15}$/;
 
 export const emailPattern =
-  /^[a-zA-Z0-9._-]+@(gmail|yahoo|outlook|hotmail|icloud|example)\.com$/;
+  /^[a-zA-Z0-9._-]+@(gmail|yahoo|outlook|hotmail|icloud)\.com$/;
 
 export type LocationType = 'body' | 'query' | 'check' | 'param';
 

@@ -44,8 +44,8 @@ export class AuthRegisterService {
     });
   };
 
-  checkPhone = async (phone: string): Promise<ResponseOptions> => {
-    const user = await Security.findOne({ phone });
+  checkPhone = async (phoneNumber: string): Promise<ResponseOptions> => {
+    const user = await Security.findOne({ phoneNumber });
     if (user) {
       return serviceResponse({
         statusText: 'Conflict',
@@ -134,10 +134,10 @@ export class AuthRegisterService {
   phoneVerification = async (
     data: RegisterPhoneDtoType,
   ): Promise<ResponseOptions> => {
-    const checkPhone = await this.checkPhone(data.phone);
+    const checkPhone = await this.checkPhone(data.phoneNumber);
     if (!checkPhone.success) return checkPhone;
 
-    const resultCache = await this.addDataInCache(data, data.phone);
+    const resultCache = await this.addDataInCache(data, data.phoneNumber);
     if (!resultCache.success) return resultCache;
 
     return { success: true };

@@ -4,7 +4,7 @@ export type FirebaseOAuthUser = {
   name: string;
   picture: string;
   email_verified: boolean;
-  phone_number: string;
+  phoneNumber: string;
   firebase: {
     sign_in_provider: 'google.com' | 'facebook.com' | string;
     identities: {
@@ -18,7 +18,7 @@ export type FirebaseOAuthUser = {
 export type FirebasePhoneUser = {
   user: {
     uid: string;
-    phone: string;
+    phoneNumber: string;
   };
   iat?: number;
   exp?: number;

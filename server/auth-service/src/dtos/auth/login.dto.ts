@@ -5,7 +5,7 @@ export const LoginEmailDto = z.object({
 });
 
 export const LoginPhoneDto = z.object({
-  phone: z.string(),
+  phoneNumber: z.string(),
   password: z.string(),
 });
 export type LoginEmailDtoType = z.infer<typeof LoginEmailDto>;

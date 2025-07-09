@@ -129,10 +129,10 @@ export class AuthLoginService {
   handleLogin = async (
     identifier: string,
     password: string,
-    getUser: (identifier: string) => Promise<ResponseOptions>,
+    getUser: (identifier: string, type?: string) => Promise<ResponseOptions>,
     type?: string,
   ): Promise<ResponseOptions> => {
-    const checkUser = await getUser(identifier);
+    const checkUser = await getUser(identifier, type);
     if (!checkUser.success) return checkUser;
     const user = checkUser.data;
 
@@ -171,7 +171,7 @@ export class AuthLoginService {
     if (data.is2FA === true)
       return serviceResponse({
         statusText: 'OK',
-        message: 'Two-factor authentication required, Please enter the code.',
+        message: 'Two-factor authentication required, Please enter the code',
         data: this.tokenService.generate2faToken(provider),
       });
     return { success: false };

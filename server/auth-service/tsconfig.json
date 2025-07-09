@@ -1,11 +1,13 @@
 {
   "compilerOptions": {
-    "target": "ES2020",
-    "module": "CommonJS",
+    "types": ["jest"],
+    "esModuleInterop": true,
+    "module": "commonjs",
+    "target": "es6",
+    "strict": true,
+    "skipLibCheck": true,
     "outDir": "./dist",
     "rootDir": "./src",
-    "strict": true,
-    "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true
   },
   "include": ["src"]

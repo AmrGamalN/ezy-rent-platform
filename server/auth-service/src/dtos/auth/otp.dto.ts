@@ -7,13 +7,13 @@ export const OtpEmailDto = z.object({
 });
 
 export const OtpPhoneDto = z.object({
-  phone: z.string(),
+  phoneNumber: z.string(),
   otp: z.string().min(6),
   expireAt: z.coerce.date(),
 });
 
 export const OtpVerifyPhoneDto = z.object({
-  phone: z.string(),
+  phoneNumber: z.string(),
   otp: z.string().min(6),
 });
 

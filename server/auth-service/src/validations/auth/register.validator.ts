@@ -45,7 +45,7 @@ export const validateResendEmail = (): ValidationChain[] => [
 
 export const validateRegisterPhone = (): ValidationChain[] => [
   validateString({
-    field: 'phone',
+    field: 'phoneNumber',
     isOptional: false,
     options: { isPhone: true },
   }),

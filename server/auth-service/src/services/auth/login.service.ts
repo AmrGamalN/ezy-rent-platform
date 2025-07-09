@@ -47,6 +47,7 @@ export class LoginEmailService {
         credential.email,
         credential.password,
         this.authLoginService.checkEmail,
+        'email',
       );
     },
   );
@@ -60,16 +61,17 @@ export class LoginEmailService {
       if (!error.success) return error;
 
       return this.authLoginService.handleLogin(
-        credential.phone,
+        credential.phoneNumber,
         credential.password,
         this.authLoginService.checkPhone,
+        'phone',
       );
     },
   );
 
   login2FA = warpError(async (credential: string, otp: string) => {
     const security = await Security.findOne({
-      $or: [{ email: credential }, { phone: credential }],
+      $or: [{ email: credential }, { phoneNumber: credential }],
       is2FA: true,
     })
       .select('userId email phone role provider')
@@ -121,7 +123,7 @@ export class LoginEmailService {
     const payload: UserToken = {
       userId: security.userId,
       email: security.email as string,
-      phoneNumber: security.phone as string,
+      phoneNumber: security.phoneNumber as string,
       role: security.role as 'user' | 'admin' | 'manager',
       userName: profile?.username,
       avatar: profile?.avatar as { imageUrl: string; key: string },

@@ -3,7 +3,7 @@ import { z } from '@amrogamal/shared-code';
 export const SecurityAdminDto = z.object({
   userId: z.string().min(1),
   email: z.union([z.string().email(), z.null()]),
-  phone: z.union([z.string(), z.null()]),
+  phoneNumber: z.union([z.string(), z.null()]),
   password: z.string().min(6),
   role: z.enum(['admin', 'manager', 'user']).optional(),
   isEmailVerified: z.boolean().optional(),
@@ -31,11 +31,11 @@ export const SecurityAddEmailDto = SecurityAdminDto.pick({
   terms: true,
 }).extend({
   email: z.string().email().optional(),
-  phone: z.string().optional(),
+  phoneNumber: z.string().optional(),
 });
 
 export const SecurityAddPhoneDto = z.object({
-  phone: z.string(),
+  phoneNumber: z.string(),
   password: z.string(),
   terms: z.boolean(),
 });
@@ -47,7 +47,7 @@ export const SecurityUpdatePasswordDto = SecurityAdminDto.pick({
 export const SecurityAdminUpdateDto = SecurityAdminDto.omit({
   userId: true,
   email: true,
-  phone: true,
+  phoneNumber: true,
   password: true,
   prefixS3: true,
 });
