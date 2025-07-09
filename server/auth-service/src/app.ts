@@ -40,7 +40,13 @@ app.use(express.urlencoded({ extended: true }));
 swaggerDoc(app);
 app.use('/api/v1', routes);
 
-Promise.all([mongodbConnect(), redis.connect()])
+Promise.all([
+  mongodbConnect(),
+  redis
+    .connect()
+    .then(() => logger.info('Connected to Redis!'))
+    .catch((error) => logger.error(error)),
+])
   .then(() => {
     app.use((req: Request, res: Response) => {
       res.status(404).json({ message: 'Page not found' });
@@ -53,3 +59,5 @@ Promise.all([mongodbConnect(), redis.connect()])
   .catch((error) => {
     logger.error(error);
   });
+
+export default app;

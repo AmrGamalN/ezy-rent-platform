@@ -15,7 +15,7 @@ const router = express.Router();
 
 /**
  *  @swagger
- *  /auth/2fa/generate:
+ *  /auth/security/2fa/generate:
  *    post:
  *      summary: Generate 2fa
  *      tags: [Auth]
@@ -34,14 +34,14 @@ const router = express.Router();
  *          description: Internal Server Error
  */
 router.post(
-  '/2fa/generate',
+  '/security/2fa/generate',
   userAuthorization,
   handleError(controller.generate2FA.bind(controller)),
 );
 
 /**
  *  @swagger
- *  /auth/2fa/verify:
+ *  /auth/security/2fa/verify:
  *    post:
  *      summary: Verify 2fa
  *      tags: [Auth]
@@ -66,7 +66,7 @@ router.post(
  *          description: Internal Server Error
  */
 router.post(
-  '/2fa/verify',
+  '/security/2fa/verify',
   userAuthorization,
   expressValidator(validateOtp()),
   handleError(controller.verify2FA.bind(controller)),
@@ -74,7 +74,7 @@ router.post(
 
 /**
  *  @swagger
- *  /auth/send-reset-password:
+ *  /auth/security/send-reset-password:
  *    post:
  *      summary: Send reset password link
  *      tags: [Auth]
@@ -97,14 +97,14 @@ router.post(
  *          description: Internal Server Error
  */
 router.post(
-  '/send-reset-password',
+  '/security/send-reset-password',
   expressValidator(validateSendResetPasswordLink()),
   handleError(controller.sendResetpasswordLink.bind(controller)),
 );
 
 /**
  *  @swagger
- *  /auth/update-password/{token}:
+ *  /auth/security/update-password/{token}:
  *    post:
  *      summary: Update password
  *      tags: [Auth]
@@ -125,7 +125,7 @@ router.post(
  *          description: Internal Server Error
  */
 router.post(
-  '/update-password/:token',
+  '/security/update-password/:token',
   userAuthorization,
   expressValidator(validateResetPassword()),
   handleError(controller.updatePassword.bind(controller)),

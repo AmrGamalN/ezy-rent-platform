@@ -15,7 +15,7 @@ export const validateLoginEmail = (): ValidationChain[] => [
 
 export const validateLoginPhone = (): ValidationChain[] => [
   validateString({
-    field: 'phone',
+    field: 'phoneNumber',
     isOptional: false,
     options: { isPhone: true },
   }),

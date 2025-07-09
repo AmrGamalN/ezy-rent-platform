@@ -12,7 +12,7 @@ const securitySchema = new Schema(
       unique: true,
       sparse: true,
     },
-    phone: {
+    phoneNumber: {
       type: String,
       unique: true,
       sparse: true,

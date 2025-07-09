@@ -119,7 +119,7 @@ export class RegisterService {
 
   verifyPhone = warpError(
     async (data: FirebasePhoneUser): Promise<ResponseOptions> => {
-      return await this.createUser(data.user.phone, 'phone');
+      return await this.createUser(data.user.phoneNumber, 'phone');
     },
   );
 
