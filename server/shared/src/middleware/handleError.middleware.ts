@@ -29,10 +29,17 @@ export class HandleError {
       try {
         return await (func as funcExpress)(req, res, next);
       } catch (err: unknown) {
-        if (err instanceof Error) {
+        if (err instanceof CustomError)
+          return res.status(err.statusCode).json({
+            success: false,
+            status: err.statusCode,
+            message: err.message,
+          });
+
+        if (err instanceof Error)
           logger.error(`Error: ${err.message} - ${func.name} - ${err.stack}`);
-          next(err);
-        }
+        next(err);
+
         return res.status(500).json({
           success: false,
           status: 500,

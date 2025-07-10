@@ -1,6 +1,7 @@
 import crypto from 'crypto';
 import bcrypt from 'bcryptjs';
 import dotenv from 'dotenv';
+import { CustomError } from '@amrogamal/shared-code';
 dotenv.config();
 
 const ENCRYPTION_KEY = process.env.ENCRYPTION_KEY;
@@ -15,16 +16,20 @@ export const encrypt = (text: string): string => {
   return iv.toString('hex') + ':' + encrypted;
 };
 
-export const decrypt = (encryptedText: string): string => {
-  const [iv, encrypted] = encryptedText.split(':');
-  const decipher = crypto.createDecipheriv(
-    'aes-256-cbc',
-    Buffer.from(key!),
-    Buffer.from(iv, 'hex'),
-  );
-  let decrypted = decipher.update(encrypted, 'hex', 'utf8');
-  decrypted += decipher.final('utf8');
-  return decrypted;
+export const decrypt = (encryptedText: string): string | void => {
+  try {
+    const [iv, encrypted] = encryptedText.split(':');
+    const decipher = crypto.createDecipheriv(
+      'aes-256-cbc',
+      Buffer.from(key!),
+      Buffer.from(iv, 'hex'),
+    );
+    let decrypted = decipher.update(encrypted, 'hex', 'utf8');
+    decrypted += decipher.final('utf8');
+    return decrypted;
+  } catch {
+    throw new CustomError('Unauthorized', 401, 'Invalid token', false);
+  }
 };
 
 export const hashPassword = (password: string): Promise<string> =>

@@ -2,12 +2,14 @@ import express, { Router, Application, Request, Response } from 'express';
 import { mongodbConnect } from '../../src/configs/mongodb.config';
 import { redis } from '../../src/configs/redis.config';
 import { HandleError, logger } from '@amrogamal/shared-code';
+import cookieParser from 'cookie-parser';
 const { errorMiddleware } = HandleError.getInstance();
 const PORT = process.env.PORT || 3000;
 
 export const createTestApp = (route: Router, path: string): Application => {
   const app = express();
   app.use(express.json());
+  app.use(cookieParser());
   app.use(path, route);
   Promise.all([
     mongodbConnect(),

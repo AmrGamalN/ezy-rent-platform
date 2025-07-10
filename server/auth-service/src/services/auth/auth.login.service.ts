@@ -69,11 +69,19 @@ export class AuthLoginService {
     return { success: true };
   };
 
-  checkStatusAccount = (data: SecurityDtoType): ResponseOptions => {
+  checkStatusAccount = (
+    data: SecurityDtoType,
+    provider: string,
+  ): ResponseOptions => {
     const status =
       (data.isAccountBlocked && 'Account is blocked') ||
       (data.isAccountDeleted && 'Account is deleted') ||
-      (!data.isEmailVerified && 'Account is not verified');
+      (!data.isEmailVerified &&
+        provider === 'email' &&
+        'Account is not verified') ||
+      (!data.isPhoneVerified &&
+        provider === 'phone' &&
+        'Account is not verified');
     if (status)
       return serviceResponse({
         statusText: 'Unauthorized',
@@ -130,13 +138,13 @@ export class AuthLoginService {
     identifier: string,
     password: string,
     getUser: (identifier: string, type?: string) => Promise<ResponseOptions>,
-    type?: string,
+    type: string,
   ): Promise<ResponseOptions> => {
     const checkUser = await getUser(identifier, type);
     if (!checkUser.success) return checkUser;
     const user = checkUser.data;
 
-    const checkStatusAccount = await this.checkStatusAccount(user);
+    const checkStatusAccount = await this.checkStatusAccount(user, type);
     if (!checkStatusAccount.success) return checkStatusAccount;
 
     const provider: Record<string, string> =
@@ -178,15 +186,12 @@ export class AuthLoginService {
   };
 
   firebaseProvider = warpError(
-    async (
-      body: FirebaseOAuthUser,
-      identifier: string,
-    ): Promise<ResponseOptions> => {
-      const checkUser = await this.checkEmail(body.email, identifier);
+    async (body: FirebaseOAuthUser, type: string): Promise<ResponseOptions> => {
+      const checkUser = await this.checkEmail(body.email, type);
       if (!checkUser.success) return checkUser;
       const user = checkUser.data;
 
-      const checkStatusAccount = await this.checkStatusAccount(user);
+      const checkStatusAccount = await this.checkStatusAccount(user, type);
       if (!checkStatusAccount.success) return checkStatusAccount;
 
       const checkAttemptLogin = await this.checkAttemptLogin(user);
