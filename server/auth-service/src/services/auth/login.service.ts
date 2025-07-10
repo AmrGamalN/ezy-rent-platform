@@ -73,15 +73,12 @@ export class LoginEmailService {
     const security = await Security.findOne({
       $or: [{ email: credential }, { phoneNumber: credential }],
       is2FA: true,
-    })
-      .select('userId email phone role provider')
-      .lean();
+    }).lean();
     if (!security)
       return serviceResponse({
         statusText: 'Conflict',
         message: `2FA already enable`,
       });
-
     const isValid = speakeasy.totp.verify({
       secret: security.FASecret!,
       encoding: 'base32',
@@ -91,7 +88,7 @@ export class LoginEmailService {
     if (!isValid)
       return serviceResponse({
         statusText: 'BadRequest',
-        message: 'Invalid or expired 2FA code',
+        message: 'Invalid OTP code',
       });
 
     const token = await this.tokenService.generateToken(

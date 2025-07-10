@@ -37,20 +37,27 @@ export class AuthMiddleware {
     };
   };
 
-  verify2FATempToken = (
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ): void => {
-    const token = req.cookies?.tempToken;
-    const decoded = jwt.verify(decrypt(token), String(process.env.JWT_SECRET), {
-      algorithms: ['HS256'],
-    });
-    if (!decoded)
-      throw new CustomError('Unauthorized', 401, 'Unauthorized', false);
-    req.email = decrypt(decoded as string);
-    return next();
-  };
+  verify2FATempToken = handleError(
+    (req: Request, res: Response, next: NextFunction): void => {
+      const token = req.cookies?.tempToken;
+      if (!token)
+        throw new CustomError(
+          'Unauthorized',
+          401,
+          'Invalid token expired, please try again',
+          false,
+        );
+
+      const decrypted = decrypt(token) as string;
+      const decoded = jwt.verify(decrypted, String(process.env.JWT_SECRET), {
+        algorithms: ['HS256'],
+      });
+      if (!decoded)
+        throw new CustomError('Unauthorized', 401, 'Unauthorized', false);
+      req.email = (decoded as { email: string }).email;
+      return next();
+    },
+  );
 
   verifyFirebaseProvider = handleError(
     async (

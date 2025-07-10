@@ -33,6 +33,10 @@ export class LoginController {
     const result = await loginProvider(body);
     if (!result.success) return res.status(result.status!).json(result);
     const { data, ...responseData } = result;
+    if (data.tempToken) {
+      this.generateCookies(res, data.tempToken);
+      return res.status(result.status!).json(responseData);
+    }
     return controllerResponse(res, {
       ...responseData,
       accessToken: data.accessToken,
@@ -73,11 +77,13 @@ export class LoginController {
 
   login2FA = async (req: Request, res: Response): Promise<Response> => {
     const result = await this.loginService.login2FA(
-      req?.curUser?.email as string,
+      String(req?.email),
       req.body.otp,
     );
     const { data, ...responseData } = result;
-    this.generateCookies(res, data);
+    if (!result.success) return res.status(result.status!).json(result);
+    this.generateCookies(res, data.accessToken);
+    res.clearCookie('tempToken');
     return controllerResponse(res, {
       ...responseData,
       accessToken: data.accessToken,
