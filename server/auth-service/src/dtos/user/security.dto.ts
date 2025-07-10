@@ -31,7 +31,6 @@ export const SecurityAddEmailDto = SecurityAdminDto.pick({
   terms: true,
 }).extend({
   email: z.string().email().optional(),
-  phoneNumber: z.string().optional(),
 });
 
 export const SecurityAddPhoneDto = z.object({

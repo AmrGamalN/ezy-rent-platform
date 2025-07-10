@@ -28,7 +28,11 @@ export const validateRegisterEmail = (): ValidationChain[] => [
     field: 'username',
     isOptional: false,
     options: { min: 3, max: 20 },
-  }),
+  })
+    .isString()
+    .withMessage('Username must be a string')
+    .matches(/^[A-Za-z ]{2,20}$/)
+    .withMessage(`Username must contain only letters and spaces`),
   validateBoolean({
     field: 'terms',
     isOptional: false,
@@ -57,6 +61,16 @@ export const validateRegisterPhone = (): ValidationChain[] => [
   validateBoolean({
     field: 'terms',
     isOptional: false,
+  }).custom((value) => {
+    if (value === false || value === 'fasle') {
+      throw new CustomError(
+        'BadRequest',
+        400,
+        'You must accept the terms and conditions',
+        false,
+      );
+    }
+    return true;
   }),
   validateString({
     field: 'password',
