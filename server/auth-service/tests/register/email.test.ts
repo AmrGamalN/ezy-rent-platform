@@ -55,6 +55,18 @@ describe('POST /api/v1/auth/register/email', () => {
       .send({ ...vaildData, terms: true });
     expect(res.status).toBe(200);
   });
+
+  it('should return 409 if email already exists', async () => {
+    const res = await request(app)
+      .post('/api/v1/auth/register/email')
+      .send({ ...vaildData, terms: true, email: 'amr5189520@gmail.com' });
+    expect(res.status).toBe(409);
+  });
+
+  it('should return 400 if payload is empty', async () => {
+    const res = await request(app).post('/api/v1/auth/register/email').send({});
+    expect(res.status).toBe(400);
+  });
 });
 
 describe('POST /api/v1/auth/register/email', () => {
