@@ -37,6 +37,24 @@ export class AuthMiddleware {
     };
   };
 
+  checkStatus = handleError(
+    (req: Request, res: Response, next: NextFunction): void => {
+      const user = req.curUser;
+      const status =
+        (user?.isAccountBlocked && 'Account is blocked') ||
+        (user?.isAccountDeleted && 'Account is deleted') ||
+        (!user?.isEmailVerified &&
+          user?.sign_up_provider === 'email' &&
+          'Account is not verified') ||
+        (!user?.isPhoneVerified &&
+          user?.sign_up_provider === 'phone' &&
+          'Account is not verified');
+      if (status)
+        throw new CustomError('Unauthorized', 401, 'Unauthorized', false);
+      return next();
+    },
+  );
+
   verify2FATempToken = handleError(
     (req: Request, res: Response, next: NextFunction): void => {
       const token = req.cookies?.tempToken;
@@ -85,18 +103,24 @@ export class AuthMiddleware {
       res: Response,
       next: NextFunction,
     ): Promise<Response | void> => {
-      const authHeader = req.headers.authorization;
-      const token = authHeader?.split(' ')[1];
-      if (!token)
+      try {
+        const authHeader = req.headers.authorization;
+        const token = authHeader?.split(' ')[1];
+        if (!token)
+          throw new CustomError('Unauthorized', 401, 'Unauthorized', false);
+        const decoded = await auth.verifyIdToken(token);
+        if (!decoded)
+          throw new CustomError('Unauthorized', 401, 'Unauthorized', false);
+        req.curUser = {
+          ...decoded,
+          role: decoded.role,
+          userId: decoded.userId,
+          lastLogin: new Date().toISOString(),
+        } as UserToken;
+        return next();
+      } catch {
         throw new CustomError('Unauthorized', 401, 'Unauthorized', false);
-      const decoded = await auth.verifyIdToken(token);
-      req.curUser = {
-        ...decoded,
-        role: decoded.role,
-        userId: decoded.userId,
-        lastLogin: new Date().toISOString(),
-      } as UserToken;
-      return next();
+      }
     },
   );
 }

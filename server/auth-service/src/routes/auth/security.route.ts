@@ -104,7 +104,7 @@ router.post(
 
 /**
  *  @swagger
- *  /auth/security/update-password/{token}:
+ *  /auth/security/update-password:
  *    post:
  *      summary: Update password
  *      tags: [Auth]
@@ -125,7 +125,7 @@ router.post(
  *          description: Internal Server Error
  */
 router.post(
-  '/security/update-password/:token',
+  '/security/update-password',
   userAuthorization,
   expressValidator(validateResetPassword()),
   handleError(controller.updatePassword.bind(controller)),

@@ -2,7 +2,10 @@ import mongoose from 'mongoose';
 import { Db } from 'mongodb';
 import dotenv from 'dotenv';
 import { logger } from '@amrogamal/shared-code';
-dotenv.config();
+import path from 'path';
+dotenv.config({
+  path: path.resolve(__dirname, '../../.env'),
+});
 
 export const mongodbConnect = async (): Promise<Db | void> => {
   try {

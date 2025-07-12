@@ -2,7 +2,10 @@ import admin from 'firebase-admin';
 import { initializeApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
 import dotenv from 'dotenv';
-dotenv.config();
+import path from 'path';
+dotenv.config({
+  path: path.resolve(__dirname, '../../.env'),
+});
 
 const serviceAccount = JSON.parse(process.env.FIREBASE_CONFIG_ADMIN as string);
 

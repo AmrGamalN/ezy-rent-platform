@@ -19,7 +19,12 @@ export const SecurityAdminDto = z.object({
   sign_up_provider: z.string().optional(),
   sign_in_provider: z.string().optional(),
   status: z.enum(['online', 'offline']).optional(),
-  terms: z.boolean().optional(),
+  terms: z.preprocess(
+    (val) => (val === 'true' || val === true ? true : false),
+    z.literal(true),
+  ),
+  createdAt: z.date().optional(),
+  updatedAt: z.date().optional(),
 });
 
 export const SecurityUserDto = SecurityAdminDto.pick({
@@ -36,7 +41,10 @@ export const SecurityAddEmailDto = SecurityAdminDto.pick({
 export const SecurityAddPhoneDto = z.object({
   phoneNumber: z.string(),
   password: z.string(),
-  terms: z.boolean(),
+  terms: z.preprocess(
+    (val) => (val === 'true' || val === true ? true : false),
+    z.literal(true),
+  ),
 });
 
 export const SecurityUpdatePasswordDto = SecurityAdminDto.pick({

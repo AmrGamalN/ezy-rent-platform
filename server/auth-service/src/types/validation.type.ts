@@ -1,4 +1,4 @@
-export const phonePattern = /^\+[1-9]\d{10,15}$/;
+export const phonePattern = /^\+[1-9]\d{10,13}$/;
 
 export const emailPattern =
   /^[a-zA-Z0-9._-]+@(gmail|yahoo|outlook|hotmail|icloud)\.com$/;

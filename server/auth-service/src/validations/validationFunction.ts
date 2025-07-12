@@ -67,12 +67,48 @@ export const validateString = ({
     validator = validator
       .customSanitizer((val) => val.replace(/[\s\-()]/g, ''))
       .matches(phonePattern)
-      .withMessage('Invalid format')
+      .custom((value) => {
+        if (
+          value === null ||
+          value === undefined ||
+          value === false ||
+          Array.isArray(value) ||
+          typeof value !== 'string' ||
+          value.trim() === '' ||
+          value.includes(' ') ||
+          value.length !== 13
+        ) {
+          throw new CustomError(
+            'BadRequest',
+            400,
+            'Invalid phone number',
+            false,
+          );
+        }
+        return true;
+      })
       .bail();
   }
-
   if (options?.isPassword) {
     validator = validator
+      .notEmpty()
+      .withMessage('Password is required')
+      .bail()
+      .custom((value) => {
+        if (
+          value === null ||
+          value === undefined ||
+          value === false ||
+          Array.isArray(value) ||
+          typeof value !== 'string' ||
+          value.trim() === '' ||
+          value.includes(' ')
+        ) {
+          throw new Error('Invalid password value');
+        }
+        return true;
+      })
+      .bail()
       .isStrongPassword({
         minLength: 10,
         minLowercase: 1,
@@ -81,10 +117,14 @@ export const validateString = ({
         minSymbols: 1,
       })
       .withMessage(
-        'Password must be contains at least 1 lowercase, 1 uppercase, 1 number, 1 symbol and at least 10 characters',
+        'Password must contain at least 1 lowercase, 1 uppercase, 1 number, 1 symbol, and be at least 10 characters',
       )
+      .bail()
+      .isLength({ min: 10, max: 30 })
+      .withMessage('Password must be between 10 and 30 characters')
       .bail();
   }
+
   return validator;
 };
 
@@ -98,8 +138,7 @@ export const validateBoolean = ({
     .trim()
     .isBoolean()
     .withMessage(`${field} must be string`)
-    .bail()
-    .toBoolean();
+    .bail();
   return validator;
 };
 

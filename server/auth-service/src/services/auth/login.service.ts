@@ -130,9 +130,13 @@ export class LoginEmailService {
       lastLogin: profile?.lastLogin
         ? new Date(profile.lastLogin).toString()
         : '',
+      isEmailVerified: security.isEmailVerified,
+      isPhoneVerified: security.isPhoneVerified,
+      isPasswordReset: security.isPasswordReset,
+      isAccountBlocked: security.isAccountBlocked,
+      isAccountDeleted: security.isAccountDeleted,
       sign_up_provider: security.sign_up_provider,
       sign_in_provider: security.sign_in_provider,
-      isEmailVerified: security.isEmailVerified,
     };
     return payload;
   };
