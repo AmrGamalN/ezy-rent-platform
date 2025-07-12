@@ -16,6 +16,7 @@
   },
   "scripts": {
     "prepare": "husky install",
+    "lint-staged": "lint-staged",
     "lint": "eslint \"server/**/src/**/*.{ts,js}\"",
     "lint:fix": "eslint \"server/**/src/**/*.{ts,js}\" --fix",
     "format": "prettier --write \"**/*.{ts,js,json,md}\"",
@@ -50,8 +51,5 @@
     "ts-jest": "^29.4.0",
     "ts-node": "^10.9.2",
     "typescript-eslint": "^8.35.1"
-  },
-  "dependencies": {
-    "dotenv": "^17.2.0"
   }
 }

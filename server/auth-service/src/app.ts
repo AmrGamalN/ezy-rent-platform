@@ -24,7 +24,7 @@ const corsOption = {
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true,
 };
-console.log('amrooooo');
+
 app.use(cors(corsOption));
 app.use(
   helmet.contentSecurityPolicy({
