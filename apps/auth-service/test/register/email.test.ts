@@ -71,10 +71,9 @@ describe('POST /api/v1/auth/register/email', () => {
 
   describe('Verify Email', () => {
     it('should return 400 if expired or the link has already been used', async () => {
-      const res = await request(app)
-        .post(
-          `/api/v1/auth/verify-email/eyJhbGciOiJSUzI1NiIsImtpZCI6ImE4ZGY2MmQzYTBhNDRlM2RmY2RjYWZjNmRhMTM4Mzc3NDU5ZjliMDEiLCJ0eXAiOiJKV1QifQ`,
-        )
+      const res = await request(app).post(
+        `/api/v1/auth/verify-email/eyJhbGciOiJSUzI1NiIsImtpZCI6ImE4ZGY2MmQzYTBhNDRlM2RmY2RjYWZjNmRhMTM4Mzc3NDU5ZjliMDEiLCJ0eXAiOiJKV1QifQ`,
+      );
       expect(res.status).toBe(404);
     });
   });
