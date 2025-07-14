@@ -1,0 +1,41 @@
+# compiled output
+dist
+
+# dependencies
+node_modules
+**/node_modules
+node_modules/
+
+# tests
+coverage
+
+# git, vs config
+.git
+.husky
+.vscode
+**/.vscode
+
+# docs
+CHANGELOG.md
+README.md
+
+# deploy
+deploy
+
+# lint
+commitlint.config.ts
+.gitignore
+**/.gitignore
+
+shared/
+tsconfig.json
+jest.config.ts
+eslint.config.js
+docker-compose.yml
+docker-compose.dev.yml
+docker-compose.prod.yml
+init-replica.js
+mongo-keyfile
+nginx/
+README.md
+README.Docker.md

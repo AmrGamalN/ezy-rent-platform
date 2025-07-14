@@ -30,9 +30,7 @@
   },
   "lint-staged": {
     "*.{ts,js}": [
-      "eslint --fix",
-      "jest --bail --findRelatedTests",
-      "git add"
+      "eslint --fix"
     ]
   },
   "devDependencies": {

@@ -1,4 +1,11 @@
 #!/usr/bin/env sh
-. "$(dirname -- "$0")/_/husky.sh"
+. "$(dirname "$0")/_/husky.sh"
 
-npm run lint-staged
+npx lint-staged
+
+# تحقق من التنسيق والصحة
+npm run lint
+npm run check-format
+
+# تحقق من عدم وجود أخطاء TypeScript
+npx tsc --noEmit
