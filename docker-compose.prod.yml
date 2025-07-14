@@ -1,0 +1,87 @@
+services:
+  auth-service:
+    image: amrgamaleid/auth-service
+    container_name: auth-service
+    build:
+      context: .
+      dockerfile: apps/auth-service/Dockerfile
+      args:
+        - NODE_ENV=production
+      target: prod
+    restart: always
+    env_file:
+      - ./apps/auth-service/.env
+    ports:
+      - '3000:3000'
+    depends_on:
+      - mongo1
+      - mongo2
+      - mongo3
+      - redis
+    networks:
+      - mongo-network
+
+  car-service:
+    image: amrgamaleid/car-service
+    container_name: car-service
+    build:
+      context: .
+      dockerfile: apps/auth-service/Dockerfile
+      args:
+        - NODE_ENV=production
+      target: prod
+    restart: always
+    env_file:
+      - ./apps/car-service/.env
+    ports:
+      - '4000:4000'
+    depends_on:
+      - mongo1
+      - mongo2
+      - mongo3
+      - kafka
+      - zookeeper
+    networks:
+      - mongo-network
+      - kafka-network
+
+  elastic-service:
+    image: amrgamaleid/elastic-service
+    container_name: elastic-service
+    build:
+      context: .
+      dockerfile: apps/auth-service/Dockerfile
+      args:
+        - NODE_ENV=production
+      target: prod
+    restart: always
+    env_file:
+      - ./apps/elastic-service/.env
+    ports:
+      - '5000:5000'
+    depends_on:
+      - elasticsearch
+      - kafka
+      - zookeeper
+    networks:
+      - mongo-network
+      - kafka-network
+
+  # payment-service:
+  #   image: amrgamaleid/payment-service
+  #   container_name: payment-service
+  #   build:
+  #     context: .
+  #     dockerfile: apps/payment-service/dockerfile
+  #     args:
+  #       - NODE_ENV=production
+  #   env_file:
+  #     - ./apps/payment-service/.env
+  #   ports:
+  #     - '6000:6000'
+  #   depends_on:
+  #     - kafka
+  #     - zookeeper
+  #   networks:
+  #     - mongo-network
+  #     - kafka-network

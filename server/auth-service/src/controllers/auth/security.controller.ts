@@ -48,7 +48,7 @@ export class SecurityController {
 
   updatePassword = async (req: Request, res: Response): Promise<Response> => {
     const result = await this.securityService.updatePassword(
-      String(req.email),
+      String(req.curUser?.email),
       req.body.password,
     );
     return controllerResponse(res, result);

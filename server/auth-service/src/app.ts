@@ -11,6 +11,11 @@ import cors from 'cors';
 import routes from './router';
 const { errorMiddleware } = HandleError.getInstance();
 const app = express();
+import dotenv from 'dotenv';
+import path from 'path';
+dotenv.config({
+  path: path.resolve(__dirname, '../../.env'),
+});
 const PORT = process.env.PORT || 3000;
 
 const corsOption = {

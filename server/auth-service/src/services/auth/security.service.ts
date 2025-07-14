@@ -10,15 +10,18 @@ import {
   ResponseOptions,
   serviceResponse,
 } from '@amrogamal/shared-code';
+import { AuthLoginService } from './auth.login.service';
 
 import { auth } from '../../configs/firebase.config';
 const { warpError } = HandleError.getInstance();
 
 export class SecurityService {
   private static instanceService: SecurityService;
+  private authLoginService: AuthLoginService;
   private tokenService: TokenService;
   constructor() {
     this.tokenService = TokenService.getInstance();
+    this.authLoginService = AuthLoginService.getInstance();
   }
   public static getInstance(): SecurityService {
     if (!SecurityService.instanceService) {
@@ -92,12 +95,15 @@ export class SecurityService {
 
   sendResetpasswordLink = warpError(
     async (email: string): Promise<ResponseOptions> => {
-      const user = await Security.findOne({ email });
+      const user = await Security.findOne({ email }).lean();
       if (!user)
         return serviceResponse({
           statusText: 'NotFound',
           message: 'User not found',
         });
+
+      const status = this.authLoginService.checkStatusAccount(user, 'email');
+      if (!status.success) return status;
 
       const resetLink = await auth.generatePasswordResetLink(email);
       const resultSendEmail = await sendEmail(

@@ -8,9 +8,13 @@ export type UserToken = {
     imageUrl: string;
     key: string;
   };
+  isEmailVerified?: boolean;
+  isPhoneVerified?: boolean;
+  isPasswordReset?: boolean;
+  isAccountBlocked?: boolean;
+  isAccountDeleted?: boolean;
   dateToJoin?: string;
   lastLogin: string;
   sign_up_provider?: string;
   sign_in_provider?: string;
-  isEmailVerified?: boolean;
 };

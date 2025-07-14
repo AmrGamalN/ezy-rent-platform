@@ -1,0 +1,17 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "outDir": "./dist",
+    "rootDir": "./server",
+    "types": [
+      "node",
+      "jest"
+    ]
+  },
+  "include": [
+    "server/auth-service/src",
+    "server/car-service/src",
+    "server/elastic-service/src",
+    "server/**/src/types"
+  ]
+}
