@@ -126,7 +126,7 @@ export class CarService {
       } else if (key === 'color') {
         mustQueries.push({
           term: {
-            color: value,
+            color: value as string,
           },
         });
       } else {

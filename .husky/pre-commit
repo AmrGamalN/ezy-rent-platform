@@ -2,10 +2,8 @@
 . "$(dirname "$0")/_/husky.sh"
 
 npx lint-staged
-
-# تحقق من التنسيق والصحة
 npm run lint
+npm run format
 npm run check-format
-
-# تحقق من عدم وجود أخطاء TypeScript
-npx tsc --noEmit
+npm run type-check
+# npm run test
