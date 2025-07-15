@@ -13,42 +13,36 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Checkout the code from the repository
+      # 1. Checkout the code
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      # Set up Node.js with caching
-      - name: Set up Node.js and enable pnpm caching
+      # 2. Setup Node.js
+      - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: 20
-          cache: 'pnpm'
+          cache: npm
 
-      # Setup pnpm
-      - name: Set up pnpm
-        uses: pnpm/action-setup@v2
-        with:
-          version: 8
-
-      # Install dependencies using pnpm
+      # 3. Install dependencies using npm
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        run: npm install
 
-      # Run ESLint to check code style and issues
+      # 4. Run ESLint to check code style and issues
       - name: Lint
-        run: pnpm lint
+        run: npm run lint
 
-      # Format code using Prettier
+      # 5. Format code using Prettier
       - name: Format
-        run: pnpm format
+        run: npm run format
 
-      # Run TypeScript type checking
+      # 6. Run TypeScript type checking
       - name: Type check
-        run: pnpm type-check
+        run: npm run type-check
 
-      # Run all unit and integration tests
+      # 7. Run all unit and integration tests
       - name: Test
-        run: pnpm test
+        run: npm test
 
   auto-merge:
     needs: build-and-test
@@ -59,7 +53,7 @@ jobs:
       # Get the name of the current feature branch
       - name: Get current branch name
         id: vars
-        run: echo "branch_name=${GITHUB_REF#refs/heads/}" >> $GITHUB_OUTPUT
+        run: echo "branch_name=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_OUTPUT
 
       # Merge the current branch into main
       - name: Merge current branch into main
@@ -78,25 +72,41 @@ jobs:
     steps:
       # Send a Slack notification on success
       - name: Send Slack message on success
-        if: success()
+        if: needs.build-and-test.result == 'success' && needs.auto-merge.result == 'success'
         uses: rtCamp/action-slack-notify@v2
         env:
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
           SLACK_MESSAGE: |
-              Build and tests passed on branch ${{ github.ref_name }}
+            Build and tests passed on branch ${{ github.ref_name }}
+            # Send an Email if build failed
+
+      - name: Send Email if successful
+        if: needs.build-and-test.result == 'success' && needs.auto-merge.result == 'success'
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.gmail.com
+          server_port: 465
+          username: ${{ secrets.EMAIL_USERNAME }}
+          password: ${{ secrets.EMAIL_PASSWORD }}
+          subject: 'GitHub CI successful on ${{ github.repository }}'
+          body: |
+            The workflow was successful on branch ${{ github.ref_name }}.
+            Commit: ${{ github.event.head_commit.message }}
+          to: ${{ secrets.EMAIL_RECIPIENT }}
+          from: ${{ secrets.EMAIL_USERNAME }}
 
       # Send a Slack notification on failure
       - name: Send Slack message on failure
-        if: failure()
+        if: needs.build-and-test.result != 'success' || needs.auto-merge.result != 'success'
         uses: rtCamp/action-slack-notify@v2
         env:
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
           SLACK_MESSAGE: |
-              Build or tests failed on branch ${{ github.ref_name }}
+            Build or tests failed on branch ${{ github.ref_name }}
 
       # Send an Email if build failed
       - name: Send Email if failed
-        if: failure()
+        if: needs.build-and-test.result != 'success' || needs.auto-merge.result != 'success'
         uses: dawidd6/action-send-mail@v3
         with:
           server_address: smtp.gmail.com
