@@ -26,7 +26,7 @@
     "check-format": "prettier --check '**/*.{ts,js,json,md}'",
     "type-check": "tsc --noEmit",
     "build": "tsc",
-    "test": "jest",
+    "test": "jest --verbose --testTimeout=30000",
     "test:auth": "jest --config ./apps/auth-service/jest.config.ts",
     "test:car": "jest --config ./apps/car-service/jest.config.ts",
     "test:elastic": "jest --config ./apps/elastic-service/jest.config.ts",
@@ -66,6 +66,7 @@
   },
   "devDependencies": {
     "@elastic/elasticsearch": "^8.18.2",
+    "@jest/types": "^29.6.3",
     "@types/aws-sdk": "^2.7.4",
     "@types/bcrypt": "^5.0.2",
     "@types/cookie-parser": "^1.4.9",

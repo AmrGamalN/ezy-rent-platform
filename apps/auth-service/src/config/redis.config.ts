@@ -11,7 +11,7 @@ dotenv.config({
 
 export const redis = createClient({
   username: 'default',
-  password: String(process.env.PASSWORD),
+  password: String(process.env.REDI_PASSWORD),
   socket: {
     port: Number(process.env.REDIS_PORT),
     host: String(process.env.REDIS_HOST),
