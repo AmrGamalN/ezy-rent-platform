@@ -1,3 +1,6 @@
+![CI Status](https://github.com/AmrGamalN/paymob/actions/workflows/ci.yml/badge.svg)
+[![codecov](https://codecov.io/gh/AmrGamalN/paymob/branch/main/graph/badge.svg)](https://codecov.io/gh/AmrGamalN/paymob)
+
 # Ezy Rent
 
 ## Project Overview
