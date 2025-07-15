@@ -1,0 +1,111 @@
+name: CI + Auto Merge
+
+on:
+  push:
+    branches:
+      - feature/*
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout the code from the repository
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # Set up Node.js with caching
+      - name: Set up Node.js and enable pnpm caching
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+          cache: 'pnpm'
+
+      # Setup pnpm
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
+      # Install dependencies using pnpm
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      # Run ESLint to check code style and issues
+      - name: Lint
+        run: pnpm lint
+
+      # Format code using Prettier
+      - name: Format
+        run: pnpm format
+
+      # Run TypeScript type checking
+      - name: Type check
+        run: pnpm type-check
+
+      # Run all unit and integration tests
+      - name: Test
+        run: pnpm test
+
+  auto-merge:
+    needs: build-and-test
+    runs-on: ubuntu-latest
+    if: success()
+
+    steps:
+      # Get the name of the current feature branch
+      - name: Get current branch name
+        id: vars
+        run: echo "branch_name=${GITHUB_REF#refs/heads/}" >> $GITHUB_OUTPUT
+
+      # Merge the current branch into main
+      - name: Merge current branch into main
+        uses: devmasx/merge-branch@v1.4.0
+        with:
+          type: now
+          from_branch: ${{ steps.vars.outputs.branch_name }}
+          target_branch: main
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+
+  notifications:
+    needs: [build-and-test, auto-merge]
+    runs-on: ubuntu-latest
+    if: always()
+
+    steps:
+      # Send a Slack notification on success
+      - name: Send Slack message on success
+        if: success()
+        uses: rtCamp/action-slack-notify@v2
+        env:
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
+          SLACK_MESSAGE: |
+              Build and tests passed on branch ${{ github.ref_name }}
+
+      # Send a Slack notification on failure
+      - name: Send Slack message on failure
+        if: failure()
+        uses: rtCamp/action-slack-notify@v2
+        env:
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
+          SLACK_MESSAGE: |
+              Build or tests failed on branch ${{ github.ref_name }}
+
+      # Send an Email if build failed
+      - name: Send Email if failed
+        if: failure()
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.gmail.com
+          server_port: 465
+          username: ${{ secrets.EMAIL_USERNAME }}
+          password: ${{ secrets.EMAIL_PASSWORD }}
+          subject: 'GitHub CI failed on ${{ github.repository }}'
+          body: |
+            The workflow failed on branch ${{ github.ref_name }}.
+            Commit: ${{ github.event.head_commit.message }}
+          to: ${{ secrets.EMAIL_RECIPIENT }}
+          from: ${{ secrets.EMAIL_USERNAME }}

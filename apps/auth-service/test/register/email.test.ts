@@ -1,6 +1,6 @@
 import request from 'supertest';
 import { Application } from 'express';
-import { setupTestContext, TestContext } from '../helpers/setup';
+import { setupTestContext, TestContext } from '../helper/server';
 import { RegisterEmailDto } from '../../src/dto/auth/register.dto';
 import { OtpEmail } from '../../src/model/mongodb/auth/otp.model';
 import {
