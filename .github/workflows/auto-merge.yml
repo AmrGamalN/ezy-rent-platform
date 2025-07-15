@@ -60,6 +60,9 @@ jobs:
           FIREBASE_API_KEY: ${{ secrets.FIREBASE_API_KEY }}
           ENCRYPTION_KEY: ${{ secrets.ENCRYPTION_KEY }}
           BACKEND_URL: ${{ secrets.BACKEND_URL }}
+          HOST_NODE_MAILER: ${{ secrets.HOST_NODE_MAILER }}
+          USER_NODE_MAILER: ${{ secrets.USER_NODE_MAILER }}
+          PASS_NODE_MAILER: ${{ secrets.PASS_NODE_MAILER }}
 
       - name: Detect failure
         if: failure()
