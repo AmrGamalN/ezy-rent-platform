@@ -11,6 +11,8 @@ on:
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
+    outputs:
+      failed_step: ${{ steps.detect-failure.outputs.failed_step }}
 
     steps:
       # 1. Checkout the code
@@ -26,23 +28,43 @@ jobs:
 
       # 3. Install dependencies using npm
       - name: Install dependencies
+        id: install
         run: npm install
 
       # 4. Run ESLint to check code style and issues
       - name: Lint
+        id: lint
         run: npm run lint
 
       # 5. Format code using Prettier
       - name: Format
+        id: format
         run: npm run format
 
       # 6. Run TypeScript type checking
       - name: Type check
+        id: type-check
         run: npm run type-check
 
       # 7. Run all unit and integration tests
       - name: Test
+        id: test
         run: npm test
+        env:
+          FIREBASE_CONFIG_ADMIN: ${{ secrets.FIREBASE_CONFIG_ADMIN }}
+          FIREBASE_CONFIG_CLIENT: ${{ secrets.FIREBASE_CONFIG_CLIENT }}
+          MONGODB_URI: ${{ secrets.MONGODB_URI }}
+          REDI_PASSWORD: ${{ secrets.REDI_PASSWORD }}
+          REDIS_PORT: ${{ secrets.REDIS_PORT }}
+          REDIS_HOST: ${{ secrets.REDIS_HOST }}
+          FIREBASE_API_KEY: ${{ secrets.FIREBASE_API_KEY }}
+          ENCRYPTION_KEY: ${{ secrets.ENCRYPTION_KEY }}
+
+      - name: Detect failure
+        if: failure()
+        id: detect-failure
+        run: |
+          echo "FAILED_STEP=$(echo '${{ toJson(steps) }}' | jq -r 'to_entries[] | select(.value.outcome == "failure") | .key')" >> $GITHUB_OUTPUT
 
   auto-merge:
     needs: build-and-test
@@ -103,6 +125,7 @@ jobs:
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
           SLACK_MESSAGE: |
             Build or tests failed on branch ${{ github.ref_name }}
+            Failed step: `${{ needs.build-and-test.outputs.failed_step || 'Unknown' }}`
 
       # Send an Email if build failed
       - name: Send Email if failed
@@ -117,5 +140,6 @@ jobs:
           body: |
             The workflow failed on branch ${{ github.ref_name }}.
             Commit: ${{ github.event.head_commit.message }}
+            failed step: `${{ needs.build-and-test.outputs.failed_step || 'Unknown' }}`
           to: ${{ secrets.EMAIL_RECIPIENT }}
           from: ${{ secrets.EMAIL_USERNAME }}
