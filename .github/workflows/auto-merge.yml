@@ -59,6 +59,7 @@ jobs:
           REDIS_HOST: ${{ secrets.REDIS_HOST }}
           FIREBASE_API_KEY: ${{ secrets.FIREBASE_API_KEY }}
           ENCRYPTION_KEY: ${{ secrets.ENCRYPTION_KEY }}
+          BACKEND_URL: ${{ secrets.BACKEND_URL }}
 
       - name: Detect failure
         if: failure()
