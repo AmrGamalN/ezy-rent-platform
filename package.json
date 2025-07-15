@@ -26,7 +26,7 @@
     "check-format": "prettier --check '**/*.{ts,js,json,md}'",
     "type-check": "tsc --noEmit",
     "build": "tsc",
-    "test": "jest --verbose --testTimeout=30000",
+    "test": "jest --coverage --detectOpenHandles",
     "test:auth": "jest --config ./apps/auth-service/jest.config.ts",
     "test:car": "jest --config ./apps/car-service/jest.config.ts",
     "test:elastic": "jest --config ./apps/elastic-service/jest.config.ts",

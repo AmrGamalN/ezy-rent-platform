@@ -1,5 +1,6 @@
 import { mongodbConnect } from '../src/config/mongodb.config';
 import { redis } from '../src/config/redis.config';
+import mongoose from "mongoose"
 
 let mongoConnected = false;
 let redisConnected = false;
@@ -29,4 +30,5 @@ beforeAll(async () => {
 
 afterAll(async () => {
   await disconnectTestServices();
+  await mongoose.disconnect();
 });
