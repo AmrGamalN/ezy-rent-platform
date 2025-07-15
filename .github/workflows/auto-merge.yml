@@ -1,0 +1,107 @@
+name: CI + Auto Merge
+
+# Trigger the workflow on push to any feature/* branch or on pull request to main
+on:
+  push:
+    branches:
+      - feature/*
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout the code from the repository
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # Set up Node.js version 20
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+
+      # Install all dependencies
+      - name: Install dependencies
+        run: npm install
+
+      # Run ESLint to check code style and issues
+      - name: Lint
+        run: npm run lint
+
+      # Format code using Prettier
+      - name: Format
+        run: npm run format
+
+      # Run TypeScript type checking
+      - name: Type check
+        run: npm run type-check
+
+      # Run all unit and integration tests
+      - name: Test
+        run: npm run test
+
+  auto-merge:
+    # This job depends on the build-and-test job
+    needs: build-and-test
+    runs-on: ubuntu-latest
+    if: success()
+
+    steps:
+      # Get the name of the current feature branch
+      - name: Get current branch name
+        id: vars
+        run: echo "branch_name=${GITHUB_REF#refs/heads/}" >> $GITHUB_OUTPUT
+
+      # Merge the current branch into main if all checks passed and no conflicts
+      - name: Merge current branch into main
+        uses: devmasx/merge-branch@v1.4.0
+        with:
+          type: now
+          from_branch: ${{ steps.vars.outputs.branch_name }}
+          target_branch: main
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+
+  notifications:
+    # This job runs after build-and-test regardless of success or failure
+    needs: [build-and-test, auto-merge]
+    runs-on: ubuntu-latest
+    if: always()
+
+    steps:
+      # Send a Slack notification if the build succeeded
+      - name: Send Slack message on success
+        if: success()
+        uses: rtCamp/action-slack-notify@v2
+        env:
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
+          SLACK_MESSAGE: |
+            Build and tests passed on branch ${{ github.ref_name }}
+
+      # Send a Slack notification if the build failed
+      - name: Send Slack message on failure
+        if: failure()
+        uses: rtCamp/action-slack-notify@v2
+        env:
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
+          SLACK_MESSAGE: |
+            Build or tests failed on branch ${{ github.ref_name }}
+
+      # Send an email notification if the build failed
+      - name: Send Email if failed
+        if: failure()
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.gmail.com
+          server_port: 465
+          username: ${{ secrets.EMAIL_USERNAME }}
+          password: ${{ secrets.EMAIL_PASSWORD }}
+          subject: 'GitHub CI failed on ${{ github.repository }}'
+          body: |
+            The workflow failed on branch ${{ github.ref_name }}.
+            Commit: ${{ github.event.head_commit.message }}
+          to: ${{ secrets.EMAIL_RECIPIENT }}
+          from: ${{ secrets.EMAIL_USERNAME }}
