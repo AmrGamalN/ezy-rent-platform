@@ -14,7 +14,11 @@ import {
   ElasticCarMappings,
 } from '../types/elastic.type';
 import { CreateCar } from '../types/car.type';
-import { QueryDslQueryContainer } from '@elastic/elasticsearch/lib/api/types';
+import {
+  QueryDslQueryContainer,
+  SearchResponse,
+} from '@elastic/elasticsearch/lib/api/types';
+
 const { warpError } = HandleError.getInstance();
 
 export class CarService {
@@ -29,16 +33,20 @@ export class CarService {
 
   createMapping = async (): Promise<ResponseOptions> => {
     const exists = await elasticClient.indices.exists({ index: 'cars' });
-    if (exists)
+
+    if (exists) {
       return serviceResponse({
         statusText: 'Conflict',
         message: 'Index already exists',
       });
+    }
 
     await elasticClient.indices.create({
       index: 'cars',
-      settings: ElasticMappingCar.settings as ElaticCarSettings,
-      mappings: ElasticMappingCar.mappings as ElasticCarMappings,
+      body: {
+        settings: ElasticMappingCar.settings as ElaticCarSettings,
+        mappings: ElasticMappingCar.mappings as ElasticCarMappings,
+      },
     });
 
     return serviceResponse({
@@ -57,30 +65,31 @@ export class CarService {
   });
 
   get = warpError(async (id: string): Promise<ResponseOptions> => {
-    const { _source } = await elasticClient.get({
+    const response = await elasticClient.get<{ [key: string]: string }>({
       index: 'cars',
       id,
     });
-    return serviceResponse({ data: _source });
+    return serviceResponse({ data: response._source });
   });
 
-  searchCar = warpError(
+  search = warpError(
     async (
       query: ElasticSearchType,
       page: number = 1,
       limit: number = 10,
     ): Promise<ResponseOptions> => {
       const { esQuery, from } = await this.helperSearch(query, page, limit);
-      const { hits } = await elasticClient.search({
+
+      const response: SearchResponse<CreateCar> = await elasticClient.search({
         index: 'cars',
         query: esQuery,
         size: limit,
         from,
-        // sort,
       });
-      const results = hits.hits.map((hit) => ({
-        id: hit._id ?? '',
-        ...(hit._source as CreateCar),
+
+      const results = response.hits.hits.map((hit) => ({
+        id: hit._id,
+        ...hit._source,
       }));
 
       return serviceResponse({
@@ -114,6 +123,7 @@ export class CarService {
 
     for (const [key, value] of Object.entries(query)) {
       if (skipKeys.includes(key)) continue;
+
       if (['brand', 'model', 'name'].includes(key)) {
         mustQueries.push({
           match: {
@@ -131,7 +141,9 @@ export class CarService {
         });
       } else {
         mustQueries.push({
-          [key]: value instanceof Date ? value.toISOString() : value,
+          match: {
+            [key]: value instanceof Date ? value.toISOString() : value,
+          },
         });
       }
     }
@@ -155,18 +167,22 @@ export class CarService {
     return { esQuery, from };
   };
 
-  update = async ({ data, index, id }: ElasticUpdateType): Promise<void> => {
-    await elasticClient.update({
-      index,
-      id,
-      doc: data,
-    });
-  };
+  update = warpError(
+    async ({ data, index, id }: ElasticUpdateType): Promise<void> => {
+      await elasticClient.update({
+        index,
+        id,
+        doc: data,
+      });
+    },
+  );
 
-  delete = async ({ index, id }: ElasticDeleteType): Promise<void> => {
-    await elasticClient.delete({
-      index,
-      id,
-    });
-  };
+  delete = warpError(
+    async ({ index, id }: ElasticDeleteType): Promise<void> => {
+      await elasticClient.delete({
+        index,
+        id,
+      });
+    },
+  );
 }

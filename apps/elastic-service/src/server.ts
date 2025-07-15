@@ -2,11 +2,9 @@ import { Request, Response } from 'express';
 import app from './app';
 import { logger } from '@amrogamal/shared-code';
 import { HandleError } from '@amrogamal/shared-code';
-import {kafkaStart} from "./kafka/consumer.init"
+import { kafkaStart } from './kafka/consumer.init';
 const { errorMiddleware } = HandleError.getInstance();
 const PORT = process.env.PORT || 5000;
-
-
 
 Promise.all([kafkaStart()])
   .then(async () => {

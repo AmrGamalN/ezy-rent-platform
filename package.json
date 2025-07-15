@@ -65,7 +65,7 @@
     "xss-clean": "^0.1.4"
   },
   "devDependencies": {
-    "@elastic/elasticsearch": "^7.17.0",
+    "@elastic/elasticsearch": "^8.18.2",
     "@types/aws-sdk": "^2.7.4",
     "@types/bcrypt": "^5.0.2",
     "@types/cookie-parser": "^1.4.9",
@@ -80,8 +80,8 @@
     "@types/supertest": "^6.0.3",
     "@types/swagger-jsdoc": "^6.0.4",
     "@types/swagger-ui-express": "^4.1.8",
-    "@typescript-eslint/eslint-plugin": "^8.36.0",
-    "@typescript-eslint/parser": "^8.36.0",
+    "@typescript-eslint/eslint-plugin": "^8.37.0",
+    "@typescript-eslint/parser": "^8.37.0",
     "axios": "^1.10.0",
     "eslint": "^9.31.0",
     "eslint-config-prettier": "^10.1.5",
@@ -99,6 +99,6 @@
     "ts-node": "^10.9.2",
     "ts-node-dev": "^2.0.0",
     "typescript": "^5.8.3",
-    "typescript-eslint": "^8.36.0"
+    "typescript-eslint": "^8.37.0"
   }
 }

@@ -9,21 +9,8 @@
     "strict": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "typeRoots": [
-      "./src/types",
-      "./node_modules/@types"
-    ]
+    "typeRoots": ["./src/types", "./node_modules/@types"]
   },
-  "include": [
-    "src",
-    "src/types",
-    "src/**/*"
-  ],
-  "exclude": [
-    "node_modules",
-    "dist",
-    "coverage",
-    "test",
-    "swagger"
-  ]
+  "include": ["src", "src/types", "src/**/*"],
+  "exclude": ["node_modules", "dist", "coverage", "test", "swagger"]
 }

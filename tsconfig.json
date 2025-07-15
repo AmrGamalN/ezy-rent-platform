@@ -2,13 +2,13 @@
   "extends": "./tsconfig.base.json",
   "compilerOptions": {
     "outDir": "./dist",
-    "rootDir": "./server",
+    "rootDir": "./apps",
     "types": ["node", "jest"]
   },
   "include": [
-    "server/auth-service/src",
-    "server/car-service/src",
-    "server/elastic-service/src",
-    "server/**/src/types"
+    "apps/auth-service/src",
+    "apps/car-service/src",
+    "apps/elastic-service/src",
+    "apps/**/src/types"
   ]
 }

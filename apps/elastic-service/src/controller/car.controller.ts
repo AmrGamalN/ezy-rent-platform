@@ -26,7 +26,7 @@ export class CarController {
     return controllerResponse(res, result);
   };
 
-  searchCar = async (req: Request, res: Response): Promise<Response> => {
+  search = async (req: Request, res: Response): Promise<Response> => {
     const { page, limit, ...query } = req.query;
     const Queries = {
       name: query.name,
@@ -47,7 +47,7 @@ export class CarController {
         ? new Date(query.availableTo.toString())
         : undefined,
     };
-    const result = await this.carService.searchCar(
+    const result = await this.carService.search(
       Queries as SearchCar,
       Number(page),
       Number(limit),

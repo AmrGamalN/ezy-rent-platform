@@ -8,7 +8,7 @@
     "build": "tsc -p tsconfig.build.json",
     "test": "jest",
     "dev": "nodemon --legacy-watch --watch src --ext ts,json --exec ts-node --project tsconfig.build.json src/server.ts",
-    "prod": "node dist/server.js",
+    "prod": "node dist/apps.js",
     "pm2": "pm2-runtime ecosystem.config.js",
     "stop": "pkill -f node",
     "restart": "npm run stop && npm run start"
