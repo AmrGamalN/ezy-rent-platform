@@ -14,6 +14,7 @@ const createTestApp = (): Application => {
   app.use(express.json());
   app.use(cookieParser());
   app.use('/api/v1/auth', routes);
+  logger.info('Test app created with auth routes');
   return app;
 };
 
@@ -43,7 +44,6 @@ export const setupTestContext = async (): Promise<void> => {
       const app = createTestApp();
       TestContext.apps.push(app);
       const token = await loginEmail(users[i], app);
-      TestContext.apps.push(app);
       TestContext.tokens.push(token);
     }
     TestContext.login2FA = await login2FA();

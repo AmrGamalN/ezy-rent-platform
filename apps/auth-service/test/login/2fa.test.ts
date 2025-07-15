@@ -1,5 +1,5 @@
 import request from 'supertest';
-import { setupTestContext, TestContext } from '../helpers/setup';
+import { setupTestContext, TestContext } from '../helper/server';
 import { Application } from 'express';
 import { otpCases } from '../__fixtures__/login.fixture';
 

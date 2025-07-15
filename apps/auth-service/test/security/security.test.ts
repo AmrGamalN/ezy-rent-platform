@@ -1,5 +1,5 @@
 import request from 'supertest';
-import { setupTestContext, TestContext } from '../helpers/setup';
+import { setupTestContext, TestContext } from '../helper/server';
 import { invalidEmails, passwordCases } from '../__fixtures__/login.fixture';
 
 describe('Security API', () => {
