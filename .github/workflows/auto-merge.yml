@@ -1,6 +1,5 @@
 name: CI + Auto Merge
 
-# Trigger the workflow on push to any feature/* branch or on pull request to main
 on:
   push:
     branches:
@@ -18,34 +17,40 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      # Set up Node.js version 20
-      - name: Set up Node.js
+      # Set up Node.js with caching
+      - name: Set up Node.js and enable pnpm caching
         uses: actions/setup-node@v3
         with:
           node-version: 20
+          cache: 'pnpm'
 
-      # Install all dependencies
+      # Setup pnpm
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
+      # Install dependencies using pnpm
       - name: Install dependencies
-        run: npm install
+        run: pnpm install --frozen-lockfile
 
       # Run ESLint to check code style and issues
       - name: Lint
-        run: npm run lint
+        run: pnpm lint
 
       # Format code using Prettier
       - name: Format
-        run: npm run format
+        run: pnpm format
 
       # Run TypeScript type checking
       - name: Type check
-        run: npm run type-check
+        run: pnpm type-check
 
       # Run all unit and integration tests
       - name: Test
-        run: npm run test
+        run: pnpm test
 
   auto-merge:
-    # This job depends on the build-and-test job
     needs: build-and-test
     runs-on: ubuntu-latest
     if: success()
@@ -56,7 +61,7 @@ jobs:
         id: vars
         run: echo "branch_name=${GITHUB_REF#refs/heads/}" >> $GITHUB_OUTPUT
 
-      # Merge the current branch into main if all checks passed and no conflicts
+      # Merge the current branch into main
       - name: Merge current branch into main
         uses: devmasx/merge-branch@v1.4.0
         with:
@@ -66,31 +71,30 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
 
   notifications:
-    # This job runs after build-and-test regardless of success or failure
     needs: [build-and-test, auto-merge]
     runs-on: ubuntu-latest
     if: always()
 
     steps:
-      # Send a Slack notification if the build succeeded
+      # Send a Slack notification on success
       - name: Send Slack message on success
         if: success()
         uses: rtCamp/action-slack-notify@v2
         env:
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
           SLACK_MESSAGE: |
-            Build and tests passed on branch ${{ github.ref_name }}
+              Build and tests passed on branch ${{ github.ref_name }}
 
-      # Send a Slack notification if the build failed
+      # Send a Slack notification on failure
       - name: Send Slack message on failure
         if: failure()
         uses: rtCamp/action-slack-notify@v2
         env:
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
           SLACK_MESSAGE: |
-            Build or tests failed on branch ${{ github.ref_name }}
+              Build or tests failed on branch ${{ github.ref_name }}
 
-      # Send an email notification if the build failed
+      # Send an Email if build failed
       - name: Send Email if failed
         if: failure()
         uses: dawidd6/action-send-mail@v3
