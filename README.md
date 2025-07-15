@@ -1,4 +1,4 @@
-# Ezy Rent
+<img width="1484" height="3445" alt="localhost_car_api-docs_car_" src="https://github.com/user-attachments/assets/2bd09100-eeaa-4791-9fc7-b8def7768a99" /># Ezy Rent
 
 ## Project Overview
 
@@ -92,12 +92,18 @@ The project follows a **Monorepo Architecture** with the following structure:
 
 ## API Documentation
 
-You can preview and test each service's API using Swagger:
+You can preview and test each service's API using Swagger: in docker
 
-- Auth Service: `http://localhost:<auth-port>/api-docs`
-- Car Service: `http://localhost:<car-port>/api-docs`
-- Elastic Service: `http://localhost:<elastic-port>/api-docs`
-- Payment Service: `http://localhost:<payment-port>/api-docs`
+- Auth Service: `http://localhost:80/auth/api-docs/auth`
+- <img width="1306" height="3255" alt="localhost_auth_api-docs_auth_" src="https://github.com/user-attachments/assets/3a9cfb48-b97b-4813-816f-b6c7fca1dcee" />
+
+- Car Service: `http://localhost:80/car/api-docs/car`
+- <img width="1484" height="3445" alt="localhost_car_api-docs_car_" src="https://github.com/user-attachments/assets/65d84fd4-2af1-48bc-8926-39db9431d34b" />
+
+- Elastic Service: `http://localhost:80/elastic/api-docs/car`
+- <img width="1306" height="797" alt="localhost_elastic_api-docs_car_" src="https://github.com/user-attachments/assets/424b02c2-fe97-4e34-9894-d018232296d0" />
+
+
 
 ---
 
