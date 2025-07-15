@@ -49,7 +49,7 @@ jobs:
       # 7. Run all unit and integration tests
       - name: Test
         id: test
-        run: npm test
+        run: npm test --detectOpenHandles
         env:
           FIREBASE_CONFIG_ADMIN: ${{ secrets.FIREBASE_CONFIG_ADMIN }}
           FIREBASE_CONFIG_CLIENT: ${{ secrets.FIREBASE_CONFIG_CLIENT }}
