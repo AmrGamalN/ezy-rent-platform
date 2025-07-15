@@ -1,9 +1,0 @@
-node_modules
-dist
-.env
-.git
-*.log
-Dockerfile
-docker-compose*.yml
-README.md
-*.md

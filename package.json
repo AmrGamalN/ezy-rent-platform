@@ -65,6 +65,7 @@
     "xss-clean": "^0.1.4"
   },
   "devDependencies": {
+    "@elastic/elasticsearch": "^7.17.0",
     "@types/aws-sdk": "^2.7.4",
     "@types/bcrypt": "^5.0.2",
     "@types/cookie-parser": "^1.4.9",
