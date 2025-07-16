@@ -1,5 +1,5 @@
-![CI Status](https://github.com/AmrGamalN/paymob/actions/workflows/ci.yml/badge.svg)
-[![codecov](https://codecov.io/gh/AmrGamalN/paymob/branch/main/graph/badge.svg)](https://codecov.io/gh/AmrGamalN/paymob)
+![CI Status](https://github.com/AmrGamalN/ezy-rent-platform/actions/workflows/ci.yml/badge.svg)
+[![codecov](https://codecov.io/gh/AmrGamalN/ezy-rent-platform/branch/main/graph/badge.svg)](https://codecov.io/gh/AmrGamalN/ezy-rent-platform)
 
 # Ezy Rent
 
