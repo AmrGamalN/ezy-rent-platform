@@ -5,16 +5,17 @@ const config: Config = {
   testEnvironment: 'node',
   testMatch: ['**/*.test.ts'],
   coverageDirectory: 'coverage',
+  // verbose: true,
   setupFilesAfterEnv: ['<rootDir>/test/jest.setup.ts'],
   moduleFileExtensions: ['ts', 'js', 'json'],
-  transform: {
-    '^.+\\.ts$': [
-      'ts-jest',
-      {
-        isolatedModules: true,
-      },
-    ],
-  },
+  // transform: {
+  //   '^.+\\.ts$': [
+  //     'ts-jest',
+  //     // {
+  //     //   isolatedModules: true,
+  //     // },
+  //   ],
+  // },
 };
 
 export default config;

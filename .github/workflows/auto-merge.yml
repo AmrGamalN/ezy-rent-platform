@@ -49,7 +49,7 @@ jobs:
       # 7. Run all unit and integration tests
       - name: Test
         id: test
-        run: npm test --detectOpenHandles
+        run: npm test --coverage --detectOpenHandles
         env:
           FIREBASE_CONFIG_ADMIN: ${{ secrets.FIREBASE_CONFIG_ADMIN }}
           FIREBASE_CONFIG_CLIENT: ${{ secrets.FIREBASE_CONFIG_CLIENT }}
@@ -63,6 +63,12 @@ jobs:
           HOST_NODE_MAILER: ${{ secrets.HOST_NODE_MAILER }}
           USER_NODE_MAILER: ${{ secrets.USER_NODE_MAILER }}
           PASS_NODE_MAILER: ${{ secrets.PASS_NODE_MAILER }}
+
+      - name: Upload coverage reports to Codecov
+        id: codecov
+        uses: codecov/codecov-action@v5
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
 
       - name: Detect failure
         if: failure()
