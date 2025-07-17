@@ -1,4 +1,4 @@
-import { validateString } from '../validationFunction';
+import { validateString } from '@amrogamal/shared-code';
 import { ValidationChain } from 'express-validator';
 
 const validateCategory = (isOptional: boolean = false): ValidationChain[] => [

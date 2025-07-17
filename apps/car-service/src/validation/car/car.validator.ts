@@ -5,7 +5,7 @@ import {
   validateBoolean,
   validateObject,
   validateArray,
-} from '../validationFunction';
+} from '@amrogamal/shared-code';
 import { ValidationChain } from 'express-validator';
 
 const validateCar = (isOptional: boolean = false): ValidationChain[] => [

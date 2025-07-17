@@ -1,6 +1,6 @@
 import { body, ValidationChain } from 'express-validator';
 import { CustomError } from '@amrogamal/shared-code';
-import { validateBoolean, validateString } from '../validationFunction';
+import { validateString, validateBoolean } from '@amrogamal/shared-code';
 const invalidTerms = [false, 'false', 0, '0', null, undefined, '', ' '];
 
 export const validateRegisterEmail = (): ValidationChain[] => [

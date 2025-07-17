@@ -37,7 +37,7 @@ export class LoginEmailService {
 
   loginEmail = warpError(
     async (credential: LoginEmailDtoType): Promise<ResponseOptions> => {
-      const error = safeParser({
+      const error = safeParser<LoginEmailDtoType>({
         data: credential,
         userDto: LoginEmailDto,
       });
@@ -54,7 +54,7 @@ export class LoginEmailService {
 
   loginPhone = warpError(
     async (credential: LoginPhoneDtoType): Promise<ResponseOptions> => {
-      const error = safeParser({
+      const error = safeParser<LoginPhoneDtoType>({
         data: credential,
         userDto: LoginPhoneDto,
       });

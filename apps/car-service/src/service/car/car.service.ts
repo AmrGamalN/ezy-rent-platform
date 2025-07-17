@@ -9,6 +9,7 @@ import {
   AddCarDto,
   AddCarDtoType,
   CarDto,
+  CarDtoType,
   UpdateCarDto,
   UpdateCarDtoType,
 } from '../../dto/car/car.dto';
@@ -47,7 +48,7 @@ export class CarService {
 
   create = warpError(
     async (data: AddCarDtoType, userId: string): Promise<ResponseOptions> => {
-      const error = safeParser({
+      const error = safeParser<AddCarDtoType>({
         data,
         userDto: AddCarDto,
       });
@@ -64,7 +65,7 @@ export class CarService {
   );
 
   get = warpError(async (_id: string): Promise<ResponseOptions> => {
-    return safeParser({
+    return safeParser<CarDtoType>({
       data: await Car.findById({ _id }),
       userDto: CarDto,
     });
@@ -84,7 +85,7 @@ export class CarService {
       keys: string[],
     ): Promise<ResponseOptions> => {
       const prefix = `cars/${keys[0].split('/')[1]}/`;
-      const result = safeParser({
+      const result = safeParser<UpdateCarDtoType> ({
         data,
         userDto: UpdateCarDto,
         actionType: 'update',

@@ -42,7 +42,7 @@ export class RegisterService {
   registerEmail = warpError(
     async (data: RegisterEmailDtoType): Promise<ResponseOptions> => {
       const { email } = data;
-      const error = safeParser({
+      const error = safeParser<RegisterEmailDtoType>({
         data,
         userDto: RegisterEmailDto,
       });
@@ -99,7 +99,7 @@ export class RegisterService {
 
   registerPhone = warpError(
     async (data: RegisterPhoneDtoType): Promise<ResponseOptions> => {
-      const error = safeParser({
+      const error = safeParser<RegisterPhoneDtoType>({
         data,
         userDto: RegisterEmailDto,
       });

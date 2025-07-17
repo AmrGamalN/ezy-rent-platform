@@ -3,6 +3,7 @@ import {
   CreateWishlistDto,
   CreateWishlistDtoType,
   WishlistDto,
+  WishlistDtoType,
 } from '../../dto/car/wishlist.dto';
 import {
   serviceResponse,
@@ -28,7 +29,7 @@ export class WishlistService {
       data: CreateWishlistDtoType,
       userId: string,
     ): Promise<ResponseOptions> => {
-      const result = safeParser({
+      const result = safeParser<CreateWishlistDtoType>({
         data,
         userDto: CreateWishlistDto,
       });
@@ -57,7 +58,7 @@ export class WishlistService {
 
   get = warpError(
     async (_id: string, userId: string): Promise<ResponseOptions> => {
-      return safeParser({
+      return safeParser<WishlistDtoType>({
         data: await Wishlist.findById({ _id, userId }).lean(),
         userDto: WishlistDto,
       });
@@ -73,7 +74,7 @@ export class WishlistService {
       const page = Number(pageNum) || 1;
       const limit = Number(limitNum) || 10;
       const skip = (page - 1) * limit;
-      return safeParser({
+      return safeParser<WishlistDtoType>({
         data: await Wishlist.find({ userId }).lean().skip(skip).limit(limit),
         userDto: WishlistDto,
         actionType: 'getAll',

@@ -1,6 +1,6 @@
 {
   "name": "@amrogamal/shared-code",
-  "version": "2.2.3",
+  "version": "3.0.3",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "description": "Common folder for shared code",
@@ -10,7 +10,7 @@
     "dist"
   ],
   "scripts": {
-    "build": "tsc",
+    "build": "tsc -p tsconfig.json",
     "prepare": "npm run build"
   },
   "publishConfig": {
@@ -25,7 +25,8 @@
     "express": "^5.1.0",
     "winston": "^3.17.0",
     "winston-daily-rotate-file": "^5.0.0",
-    "zod": "^3.25.67"
+    "zod": "^3.25.67",
+    "express-validator": "^7.2.0"
   },
   "devDependencies": {
     "@types/express": "^5.0.3",
