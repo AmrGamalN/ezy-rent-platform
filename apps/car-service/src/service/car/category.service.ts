@@ -29,7 +29,7 @@ export class CategoryService {
       data: CreateCategoryDtoType,
       file: Express.Multer.File,
     ): Promise<ResponseOptions> => {
-      const result = safeParser({
+      const result = safeParser<CreateCategoryDtoType>({
         data,
         userDto: CreateCategoryDto,
       });
@@ -55,7 +55,7 @@ export class CategoryService {
   );
 
   getAll = warpError(async (): Promise<ResponseOptions> => {
-    return safeParser({
+    return safeParser<CreateCategoryDtoType>({
       data: await Category.find().lean(),
       userDto: CreateCategoryDto,
       actionType: 'getAll',
@@ -63,7 +63,7 @@ export class CategoryService {
   });
 
   getById = warpError(async (_id: string): Promise<ResponseOptions> => {
-    return safeParser({
+    return safeParser<CreateCategoryDtoType>({
       data: await Category.findById({ _id }).lean(),
       userDto: CreateCategoryDto,
     });
@@ -75,7 +75,7 @@ export class CategoryService {
       data: UpdateCategoryDtoType,
       file?: Express.Multer.File,
     ): Promise<ResponseOptions> => {
-      const result = safeParser({
+      const result = safeParser<UpdateCategoryDtoType>    ({
         data,
         userDto: UpdateCategoryDto,
       });

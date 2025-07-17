@@ -1,7 +1,9 @@
-import { ZodObject, ZodRawShape } from 'zod';
+import { ZodObject } from 'zod';
+import type { ZodRawShape } from 'zod';
 import { serviceResponse } from './response.util';
 import { UserRole } from '../types/role.type';
 import { ValidateZodType } from '../types/validation.type';
+import { ResponseOptions } from '../types/response.type';
 
 export const safeParser = <T>({
   data,
@@ -10,7 +12,7 @@ export const safeParser = <T>({
   managerDto,
   viewerRole,
   actionType,
-}: ValidateZodType) => {
+}: ValidateZodType): ResponseOptions => {
   if (!data)
     return serviceResponse({
       statusText: 'NotFound',
@@ -25,12 +27,15 @@ export const safeParser = <T>({
 
   const dto = getDataBasedOnRole(viewerRole!, userDto, adminDto, managerDto);
   if (actionType === 'getAll') {
-    return safeParserMultiList(data, dto);
+    return safeParserMultiList<T>(data as T[], dto);
   }
-  return safeParserSingleList(data, dto);
+  return safeParserSingleList<T>(data as T, dto);
 };
 
-const safeParserSingleList = (data: any, dto: any) => {
+const safeParserSingleList = <T>(
+  data: T,
+  dto: ZodObject<ZodRawShape>,
+): ResponseOptions => {
   const parsed = dto.safeParse(data);
   if (!parsed.success)
     return serviceResponse({
@@ -43,8 +48,11 @@ const safeParserSingleList = (data: any, dto: any) => {
   });
 };
 
-const safeParserMultiList = (data: any, dto: any) => {
-  const parsed = data?.map((item: any) => {
+const safeParserMultiList = <T>(
+  data: T[],
+  dto: ZodObject<ZodRawShape>,
+): ResponseOptions => {
+  const parsed = data?.map((item: T) => {
     const parsedItem = dto.safeParse(item);
     if (!parsedItem.success)
       return serviceResponse({

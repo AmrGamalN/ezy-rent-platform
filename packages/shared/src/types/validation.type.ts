@@ -1,10 +1,21 @@
+import type { ZodObject, ZodRawShape } from 'zod';
+import { UserRole } from './role.type';
 export const phonePattern = /^\+[1-9]\d{10,13}$/;
+export type ActionType = 'getAll' | 'update' | 'getOne' | 'delete';
 export type LocationType = 'body' | 'query' | 'check' | 'param';
 export const emailPattern =
   /^[a-zA-Z0-9._-]+@(gmail|yahoo|outlook|hotmail|icloud)\.com$/;
 
+export type ValidateZodType = {
+  data: unknown;
+  userDto: ZodObject<ZodRawShape>;
+  adminDto?: ZodObject<ZodRawShape>;
+  managerDto?: ZodObject<ZodRawShape>;
+  viewerRole?: UserRole;
+  actionType?: ActionType;
+};
 
-export type DateFieldType =
+export type DateType =
   | 'startDate'
   | 'endDate'
   | 'issuedAt'
@@ -13,13 +24,13 @@ export type DateFieldType =
   | 'start'
   | 'end';
 
-export type MainValidationType = {
+export type MainType = {
   field?: string;
   isOptional?: boolean;
   location?: LocationType;
 };
 
-export type ValidationStringType = MainValidationType & {
+export type StringType = MainType & {
   options?: {
     location?: LocationType;
     min?: number;
@@ -34,7 +45,7 @@ export type ValidationStringType = MainValidationType & {
   };
 };
 
-export type ValidationArrayType = MainValidationType & {
+export type ArrayType = MainType & {
   options?: {
     location?: LocationType;
     minLength?: number;
@@ -45,11 +56,12 @@ export type ValidationArrayType = MainValidationType & {
   };
 };
 
-export type ValidationNumberType = MainValidationType & {
+export type NumberType = MainType & {
   options?: {
     location?: LocationType;
     isIn?: number[] | readonly number[];
     min?: number;
     max?: number;
+    isYear?: boolean;
   };
 };

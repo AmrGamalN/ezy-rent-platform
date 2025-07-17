@@ -1,4 +1,4 @@
-import { validateDate, validateString } from '../validationFunction';
+import { validateDate, validateString } from '@amrogamal/shared-code';
 import { ValidationChain } from 'express-validator';
 
 const validateBooking = (isOptional: boolean = false): ValidationChain[] => [

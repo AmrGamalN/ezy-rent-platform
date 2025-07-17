@@ -1,5 +1,4 @@
-// validators/validateOrder.ts
-import { validateString, validateBoolean } from '../validationFunction';
+import { validateString, validateBoolean } from '@amrogamal/shared-code';
 import { ValidationChain } from 'express-validator';
 
 export const validateCreateOrder = (): ValidationChain[] => [

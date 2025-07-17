@@ -30,7 +30,10 @@ export class OrderService {
       data: CreateOrderStatusDtoType,
       user: UserToken,
     ): Promise<ResponseOptions> => {
-      const result = safeParser({ data, userDto: CreateOrderDto });
+      const result = safeParser<CreateOrderStatusDtoType>({
+        data,
+        userDto: CreateOrderDto,
+      });
       if (!result.success) throw result.error;
 
       const car = await Car.findById(data.carId);
@@ -86,7 +89,7 @@ export class OrderService {
 
   getAll = warpError(
     async (userId: string, page = 1, limit = 10): Promise<ResponseOptions> => {
-      const result = safeParser({
+      const result = safeParser<CreateOrderStatusDtoType>({
         data: await Order.find({ userId })
           .skip((page - 1) * limit)
           .limit(limit)
@@ -110,7 +113,7 @@ export class OrderService {
   );
 
   getById = warpError(async (_id: string, userId: string) => {
-    return safeParser({
+    return safeParser<CreateOrderStatusDtoType>({
       data: await Order.findById({ _id, userId }).lean(),
       userDto: CreateOrderDto,
     });
@@ -122,7 +125,7 @@ export class OrderService {
       data: UpdateOrderStatusDtoType,
       userId: string,
     ): Promise<ResponseOptions> => {
-      const result = safeParser({
+      const result = safeParser<UpdateOrderStatusDtoType>   ({
         data,
         userDto: UpdateOrderStatusDto,
       });

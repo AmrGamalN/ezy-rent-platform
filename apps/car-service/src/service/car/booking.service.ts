@@ -8,11 +8,13 @@ import {
 } from '@amrogamal/shared-code';
 import {
   BookingDto,
+  BookingDtoType,
   CreateBookingDto,
   CreateBookingDtoType,
   UpdateBookingByRenterDto,
   UpdateBookingByRenterDtoType,
   UpdateBookingByOwnerDto,
+  UpdateBookingByOwnerDtoType,
 } from '../../dto/car/booking.dto';
 const { warpError } = HandleError.getInstance();
 
@@ -30,7 +32,10 @@ export class BookingService {
       data: CreateBookingDtoType,
       userId: string,
     ): Promise<ResponseOptions> => {
-      const result = safeParser({ data, userDto: CreateBookingDto });
+      const result = safeParser<CreateBookingDtoType>({
+        data,
+        userDto: CreateBookingDto,
+      });
       if (!result.success) throw result.error;
 
       const car = await Car.findById(data.carId);
@@ -80,7 +85,7 @@ export class BookingService {
       limit: number = 10,
     ): Promise<ResponseOptions> => {
       const skip = (page - 1) * limit;
-      return safeParser({
+      return safeParser<BookingDtoType>({
         data: await Booking.find({
           $or: [{ ownerId: userId }, { renterId: userId }],
         })
@@ -95,7 +100,7 @@ export class BookingService {
 
   get = warpError(
     async (_id: string, userId: string): Promise<ResponseOptions> => {
-      return safeParser({
+      return safeParser<BookingDtoType>({
         data: await Booking.findOne({
           _id,
           $or: [{ ownerId: userId }, { renterId: userId }],
@@ -111,7 +116,7 @@ export class BookingService {
       renterId: string,
       updateData: UpdateBookingByRenterDtoType,
     ): Promise<ResponseOptions> => {
-      const result = safeParser({
+      const result = safeParser<UpdateBookingByRenterDtoType>({
         data: updateData,
         userDto: UpdateBookingByRenterDto,
       });
@@ -173,7 +178,7 @@ export class BookingService {
       ownerId: string,
       status: 'pending' | 'confirmed' | 'cancelled' | 'completed',
     ): Promise<ResponseOptions> => {
-      const result = safeParser({
+      const result = safeParser<UpdateBookingByOwnerDtoType>({
         data: { status },
         userDto: UpdateBookingByOwnerDto,
       });

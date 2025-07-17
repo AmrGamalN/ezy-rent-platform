@@ -17,5 +17,6 @@ export const RemoveWishlistDto = z.object({
   carId: z.string(),
 });
 
+export type WishlistDtoType = z.infer<typeof WishlistDto>;
 export type CreateWishlistDtoType = z.infer<typeof CreateWishlistDto>;
 export type RemoveWishlistDtoType = z.infer<typeof RemoveWishlistDto>;

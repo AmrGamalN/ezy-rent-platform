@@ -4,7 +4,7 @@ import { ResponseOptions } from '../types/response.type';
 export const controllerResponse = (
   res: Response,
   response: ResponseOptions,
-) => {
+): Response => {
   if (!response.success) return res.status(response.status!).json(response);
   return res.status(response.status!).json(response);
 };
@@ -31,7 +31,7 @@ export const serviceResponse = ({
 
     case 'OK':
     default:
-      if (statusText == 'OK' || data || count || deletedCount || updatedCount)
+      if (statusText === 'OK' || data || count || deletedCount || updatedCount)
         return response({
           statusText: 'OK',
           message,

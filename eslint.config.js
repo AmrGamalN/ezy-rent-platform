@@ -6,7 +6,7 @@ import importPlugin from 'eslint-plugin-import';
 /** @type {import("eslint").Linter.FlatConfig[]} */
 export default [
   {
-    ignores: ['dist/', 'node_modules/', 'apps/_shared/'],
+    ignores: ['dist/', 'node_modules/', 'coverage/', 'packages/'],
   },
 
   js.configs.recommended,

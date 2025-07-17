@@ -1,5 +1,5 @@
 import { body, ValidationChain } from 'express-validator';
-import { validateString } from '../validationFunction';
+import { validateString } from '@amrogamal/shared-code';
 
 export const validateLoginEmail = (): ValidationChain[] => [
   validateString({

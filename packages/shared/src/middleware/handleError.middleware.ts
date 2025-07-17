@@ -8,11 +8,11 @@ type funcExpress = (
   res: Response,
   next: NextFunction,
 ) => Promise<Response | void> | void;
+
 type func = (...args: any[]) => Promise<ResponseOptions | void>;
 
 export class HandleError {
   private static instance: HandleError;
-
   static getInstance(): HandleError {
     if (!HandleError.instance) {
       HandleError.instance = new HandleError();
