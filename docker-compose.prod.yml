@@ -4,7 +4,7 @@ services:
     container_name: auth-service
     build:
       context: .
-      dockerfile: apps/auth-service/Dockerfile
+      dockerfile: ./apps/auth-service/Dockerfile
       args:
         - NODE_ENV=production
       target: prod
@@ -32,7 +32,7 @@ services:
     container_name: car-service
     build:
       context: .
-      dockerfile: apps/auth-service/Dockerfile
+      dockerfile: ./apps/car-service/Dockerfile
       args:
         - NODE_ENV=production
       target: prod
@@ -62,7 +62,7 @@ services:
     container_name: elastic-service
     build:
       context: .
-      dockerfile: apps/auth-service/Dockerfile
+      dockerfile: ./apps/elastic-service/Dockerfile
       args:
         - NODE_ENV=production
       target: prod
