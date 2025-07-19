@@ -125,7 +125,7 @@ export class OrderService {
       data: UpdateOrderStatusDtoType,
       userId: string,
     ): Promise<ResponseOptions> => {
-      const result = safeParser<UpdateOrderStatusDtoType>   ({
+      const result = safeParser<UpdateOrderStatusDtoType>({
         data,
         userDto: UpdateOrderStatusDto,
       });

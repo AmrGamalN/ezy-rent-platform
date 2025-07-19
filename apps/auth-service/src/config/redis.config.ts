@@ -5,15 +5,15 @@ dotenv.config({
   path: path.resolve(__dirname, '../../.env'),
 });
 
-// export const redis = createClient({
-//   url: String(process.env.REDIS_URL),
-// });
-
 export const redis = createClient({
-  username: 'default',
-  password: String(process.env.REDI_PASSWORD),
-  socket: {
-    port: Number(process.env.REDIS_PORT),
-    host: String(process.env.REDIS_HOST),
-  },
+  url: String(process.env.REDIS_URL),
 });
+
+// export const redis = createClient({
+//   username: 'default',
+//   password: String(process.env.REDI_PASSWORD),
+//   socket: {
+//     port: Number(process.env.REDIS_PORT),
+//     host: String(process.env.REDIS_HOST),
+//   },
+// });

@@ -3,7 +3,6 @@ export type LocationType = 'body' | 'query' | 'check' | 'param';
 export const emailPattern =
   /^[a-zA-Z0-9._-]+@(gmail|yahoo|outlook|hotmail|icloud)\.com$/;
 
-
 export type DateFieldType =
   | 'startDate'
   | 'endDate'

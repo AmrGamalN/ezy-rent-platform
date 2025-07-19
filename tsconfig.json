@@ -3,10 +3,7 @@
   "compilerOptions": {
     "outDir": "./dist",
     "rootDir": "./apps",
-    "types": [
-      "node",
-      "jest"
-    ],
+    "types": ["node", "jest"],
     "isolatedModules": true
   },
   "include": [

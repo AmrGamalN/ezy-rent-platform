@@ -1,6 +1,6 @@
 import { mongodbConnect } from '../src/config/mongodb.config';
 import { redis } from '../src/config/redis.config';
-import mongoose from "mongoose"
+import mongoose from 'mongoose';
 
 let mongoConnected = false;
 let redisConnected = false;

@@ -75,7 +75,7 @@ export class CategoryService {
       data: UpdateCategoryDtoType,
       file?: Express.Multer.File,
     ): Promise<ResponseOptions> => {
-      const result = safeParser<UpdateCategoryDtoType>    ({
+      const result = safeParser<UpdateCategoryDtoType>({
         data,
         userDto: UpdateCategoryDto,
       });

@@ -85,7 +85,7 @@ export class CarService {
       keys: string[],
     ): Promise<ResponseOptions> => {
       const prefix = `cars/${keys[0].split('/')[1]}/`;
-      const result = safeParser<UpdateCarDtoType> ({
+      const result = safeParser<UpdateCarDtoType>({
         data,
         userDto: UpdateCarDto,
         actionType: 'update',
