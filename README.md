@@ -100,14 +100,10 @@ You can preview and test each service's API using Swagger: in docker
 - Auth Service: `http://localhost:80/auth/api-docs/auth`
 - Car Service: `http://localhost:80/car/api-docs/car`
 - Elastic Service: `http://localhost:80/elastic/api-docs/car`
-  
 - <img width="1306" height="3255" alt="localhost_auth_api-docs_auth_" src="https://github.com/user-attachments/assets/3a9cfb48-b97b-4813-816f-b6c7fca1dcee" />
 
 - <img width="1484" height="3445" alt="localhost_car_api-docs_car_" src="https://github.com/user-attachments/assets/65d84fd4-2af1-48bc-8926-39db9431d34b" />
-  
 - <img width="1306" height="797" alt="localhost_elastic_api-docs_car_" src="https://github.com/user-attachments/assets/424b02c2-fe97-4e34-9894-d018232296d0" />
-
-
 
 ---
 
@@ -183,4 +179,3 @@ Deployment is automated using GitHub Actions:
 ---
 
 > This README is a comprehensive overview of the Ezy Rent system and its components. The structure ensures scalability, testability, and maintainability across all services.
-
