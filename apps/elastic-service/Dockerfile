@@ -1,10 +1,13 @@
 # ===== Build Stage =====
 FROM node:20-alpine AS builder
 WORKDIR /app
-COPY ./apps/elastic-service/package.json ./app/package.json
-COPY ./apps/elastic-service/package-lock.json ./app/package-lock.json
+COPY ./apps/elastic-service/package.json ./package.json
+COPY ./apps/elastic-service/package-lock.json ./package-lock.json
 RUN npm install
-COPY ./docker-entrypoint.sh ./app/docker-entrypoint.sh
+COPY ./docker-entrypoint.sh ./docker-entrypoint.sh
+COPY ./apps/elastic-service/tsconfig.build.json ./tsconfig.build.json
+COPY ./apps/elastic-service/ecosystem.config.js ./ecosystem.config.js
+COPY ./apps/elastic-service/.env ./.env
 COPY ./apps/elastic-service/src ./src
 RUN npm run build
 RUN rm -rf src tsconfig.build.json
@@ -17,7 +20,7 @@ COPY ./apps/elastic-service/package.json ./package.json
 COPY ./apps/elastic-service/package-lock.json ./package-lock.json
 RUN apk add --no-cache curl
 RUN npm install
-COPY ./apps/elastic-service/.env ./env
+COPY ./apps/elastic-service/.env ./.env
 COPY apps/elastic-service/ecosystem.config.js ./ecosystem.config.js
 COPY apps/elastic-service/tsconfig.build.json ./tsconfig.build.json
 COPY apps/elastic-service/src ./src

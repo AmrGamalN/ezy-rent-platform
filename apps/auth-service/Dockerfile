@@ -1,10 +1,13 @@
 # ===== Build Stage =====
 FROM node:20-alpine AS builder
 WORKDIR /app
-COPY ./apps/auth-service/package.json ./app/package.json
-COPY ./apps/auth-service/package-lock.json ./app/package-lock.json
+COPY ./apps/auth-service/package.json ./package.json
+COPY ./apps/auth-service/package-lock.json ./package-lock.json
 RUN npm install
-COPY ./docker-entrypoint.sh ./app/docker-entrypoint.sh
+COPY ./docker-entrypoint.sh ./docker-entrypoint.sh
+COPY ./apps/auth-service/tsconfig.build.json ./tsconfig.build.json
+COPY ./apps/auth-service/ecosystem.config.js ./ecosystem.config.js
+COPY ./apps/auth-service/.env ./.env
 COPY ./apps/auth-service/src ./src
 RUN npm run build
 RUN rm -rf src tsconfig.build.json
@@ -18,7 +21,7 @@ COPY ./apps/auth-service/package.json ./package.json
 COPY ./apps/auth-service/package-lock.json ./package-lock.json
 RUN apk add --no-cache curl
 RUN npm install
-COPY ./apps/auth-service/.env ./env
+COPY ./apps/auth-service/.env ./.env
 COPY apps/auth-service/ecosystem.config.js ./ecosystem.config.js
 COPY apps/auth-service/tsconfig.build.json ./tsconfig.build.json
 COPY ./apps/auth-service/src ./src
