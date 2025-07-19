@@ -6,13 +6,13 @@ on:
     types:
       - completed
 
-  push:
-    branches:
-      - feature/*
+  # push:
+  #   branches:
+  #     - feature/*
 
-  pull_request:
-    branches:
-      - main
+  # pull_request:
+  #   branches:
+  #     - main
 
 
 jobs:
