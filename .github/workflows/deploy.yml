@@ -68,6 +68,7 @@ jobs:
     needs: build-and-push
     # if: github.ref == 'refs/heads/main'
 
+
     steps:
       - name: SSH to EC2 & Deploy
         uses: appleboy/ssh-action@master
