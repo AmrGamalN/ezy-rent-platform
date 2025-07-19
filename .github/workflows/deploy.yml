@@ -5,6 +5,15 @@ on:
     workflows: ['CI + Auto Merge']
     types:
       - completed
+      
+  push:
+    branches:
+      - feature/*
+
+  pull_request:
+    branches:
+      - main
+
 
 jobs:
   lint-and-format:
