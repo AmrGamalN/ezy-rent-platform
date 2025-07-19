@@ -44,21 +44,21 @@ jobs:
       - name: Build & Push Docker Images
         uses: docker/build-push-action@v5
         with:
-          context: ./apps/auth-service
+          context: .
           push: true
           tags: amrgamaleid/auth-service:latest
 
       - name: Build & Push Car Service
         uses: docker/build-push-action@v5
         with:
-          context: ./apps/car-service
+          context: .
           push: true
           tags: amrgamaleid/car-service:latest
 
       - name: Build & Push Elastic Service
         uses: docker/build-push-action@v5
         with:
-          context: ./apps/elastic-service
+          context: .
           push: true
           tags: amrgamaleid/elastic-service:latest
 
@@ -67,7 +67,6 @@ jobs:
     runs-on: ubuntu-latest
     needs: build-and-push
     # if: github.ref == 'refs/heads/main'
-
 
     steps:
       - name: SSH to EC2 & Deploy
