@@ -52,7 +52,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: ./apps/auth-service
-          file: ./apps/auth-service/Dockerfile
+          file: Dockerfile
           push: true
           tags: amrgamaleid/auth-service:latest
 
@@ -60,7 +60,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: ./apps/car-service
-          file: ./apps/car-service/Dockerfile
+          file: Dockerfile
           push: true
           tags: amrgamaleid/car-service:latest
 
@@ -68,7 +68,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: ./apps/elastic-service
-          file: ./apps/elastic-service/Dockerfile
+          file: Dockerfile
           push: true
           tags: amrgamaleid/elastic-service:latest
 
