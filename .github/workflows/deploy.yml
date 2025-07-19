@@ -1,171 +1,98 @@
-name: CI + Auto Merge
+name: CI/CD Pipeline
 
 on:
-  push:
-    branches:
-      - feature/*
-  pull_request:
-    branches:
-      - main
+  workflow_run:
+    workflows: ['CI + Auto Merge']
+    types:
+      - completed
 
+permissions:
+  contents: write
+  id-token: write
+  actions: write
 
 jobs:
-  build-and-test:
+  lint-and-format:
+    name: Lint & Format
     runs-on: ubuntu-latest
-    outputs:
-      failed_step: ${{ steps.detect-failure.outputs.failed_step }}
+    if: ${{ github.event.workflow_run.conclusion == 'success' && github.ref == 'refs/heads/main' }}
 
     steps:
-      # 1. Checkout the code
-      - name: Checkout repository
+      - name: Checkout Repository
         uses: actions/checkout@v3
 
-      # 2. Setup Node.js
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: 20
-          cache: npm
-
-      # 3. Install dependencies using npm
       - name: Install dependencies
-        id: install
         run: npm install
 
-      # 4. Run ESLint to check code style and issues
-      - name: Lint
-        id: lint
+      - name: Run ESLint
         run: npm run lint
 
-      # 5. Format code using Prettier
-      - name: Format
-        id: format
+      - name: Run Prettier
         run: npm run format
 
-      # 6. Run TypeScript type checking
-      - name: Type check
-        id: type-check
-        run: npm run type-check
-
-      # 7. Run all unit and integration tests
-      - name: Test
-        id: test
-        run: npm test --coverage --detectOpenHandles
-        env:
-          FIREBASE_CONFIG_ADMIN: ${{ secrets.FIREBASE_CONFIG_ADMIN }}
-          FIREBASE_CONFIG_CLIENT: ${{ secrets.FIREBASE_CONFIG_CLIENT }}
-          MONGODB_URI: ${{ secrets.MONGODB_URI }}
-          REDI_PASSWORD: ${{ secrets.REDI_PASSWORD }}
-          REDIS_PORT: ${{ secrets.REDIS_PORT }}
-          REDIS_HOST: ${{ secrets.REDIS_HOST }}
-          FIREBASE_API_KEY: ${{ secrets.FIREBASE_API_KEY }}
-          ENCRYPTION_KEY: ${{ secrets.ENCRYPTION_KEY }}
-          BACKEND_URL: ${{ secrets.BACKEND_URL }}
-          HOST_NODE_MAILER: ${{ secrets.HOST_NODE_MAILER }}
-          USER_NODE_MAILER: ${{ secrets.USER_NODE_MAILER }}
-          PASS_NODE_MAILER: ${{ secrets.PASS_NODE_MAILER }}
-
-      - name: Upload coverage reports to Codecov
-        id: codecov
-        uses: codecov/codecov-action@v5
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-
-      - name: Detect failure
-        if: failure()
-        id: detect-failure
-        run: |
-          echo "FAILED_STEP=$(echo '${{ toJson(steps) }}' | jq -r 'to_entries[] | select(.value.outcome == "failure") | .key')" >> $GITHUB_OUTPUT
-
-  auto-merge:
-    needs: build-and-test
+  build-and-push:
+    name: Build & Push Docker Images
     runs-on: ubuntu-latest
-    if: success()
+    needs: lint-and-format
+    if: ${{ github.event.workflow_run.conclusion == 'success' && github.ref == 'refs/heads/main' }}
 
     steps:
-      - name: Checkout repository
+      - name: Checkout Repository
         uses: actions/checkout@v3
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          fetch-depth: 0
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Setup Git
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
+      - name: Build & Push Auth Service
+        uses: docker/build-push-action@v5
+        with:
+          context: ./apps/auth-service
+          file: ./apps/auth-service/Dockerfile
+          push: true
+          tags: amrgamaleid/auth-service:latest
 
-      - name: Get current branch name
-        id: vars
-        run: echo "branch_name=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_OUTPUT
+      - name: Build & Push Car Service
+        uses: docker/build-push-action@v5
+        with:
+          context: ./apps/car-service
+          file: ./apps/car-service/Dockerfile
+          push: true
+          tags: amrgamaleid/car-service:latest
 
-      - name: Fetch all branches
-        run: |
-          git fetch origin main
-          git fetch origin ${{ steps.vars.outputs.branch_name }}
+      - name: Build & Push Elastic Service
+        uses: docker/build-push-action@v5
+        with:
+          context: ./apps/elastic-service
+          file: ./apps/elastic-service/Dockerfile
+          push: true
+          tags: amrgamaleid/elastic-service:latest
 
-      - name: Merge feature into main
-        run: |
-          git checkout main
-          git merge --no-ff origin/${{ steps.vars.outputs.branch_name }} -m "Auto-merge ${{ steps.vars.outputs.branch_name }} into main"
-
-      - name: Push merged changes
-        run: |
-          git push origin HEAD:main
-
-  notifications:
-    needs: [build-and-test, auto-merge]
+  deploy-to-ec2:
+    name: Deploy to EC2
     runs-on: ubuntu-latest
-    if: always()
+    needs: build-and-push
+    if: ${{ github.event.workflow_run.conclusion == 'success' && github.ref == 'refs/heads/main' }}
 
     steps:
-      # Send a Slack notification on success
-      - name: Send Slack message on success
-        if: needs.build-and-test.result == 'success' && needs.auto-merge.result == 'success'
-        uses: rtCamp/action-slack-notify@v2
-        env:
-          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
-          SLACK_MESSAGE: |
-            Build and tests passed on branch ${{ github.ref_name }}
-            # Send an Email if build failed
-
-      - name: Send Email if successful
-        if: needs.build-and-test.result == 'success' && needs.auto-merge.result == 'success'
-        uses: dawidd6/action-send-mail@v3
+      - name: SSH to EC2 & Deploy
+        uses: appleboy/ssh-action@master
         with:
-          server_address: smtp.gmail.com
-          server_port: 465
-          username: ${{ secrets.EMAIL_USERNAME }}
-          password: ${{ secrets.EMAIL_PASSWORD }}
-          subject: 'GitHub CI successful on ${{ github.repository }}'
-          body: |
-            The workflow was successful on branch ${{ github.ref_name }}.
-            Commit: ${{ github.event.head_commit.message }}
-          to: ${{ secrets.EMAIL_RECIPIENT }}
-          from: ${{ secrets.EMAIL_USERNAME }}
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_KEY }}
+          script: |
+            cd /home/ubuntu/paymob/apps
+            git pull origin main
 
-      # Send a Slack notification on failure
-      - name: Send Slack message on failure
-        if: needs.build-and-test.result != 'success' || needs.auto-merge.result != 'success'
-        uses: rtCamp/action-slack-notify@v2
-        env:
-          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
-          SLACK_MESSAGE: |
-            Build or tests failed on branch ${{ github.ref_name }}
-            Failed step: `${{ needs.build-and-test.outputs.failed_step || 'Unknown' }}`
+            docker pull amrgamaleid/auth-service:latest
+            docker pull amrgamaleid/car-service:latest
+            docker pull amrgamaleid/elastic-service:latest
 
-      # Send an Email if build failed
-      - name: Send Email if failed
-        if: needs.build-and-test.result != 'success' || needs.auto-merge.result != 'success'
-        uses: dawidd6/action-send-mail@v3
-        with:
-          server_address: smtp.gmail.com
-          server_port: 465
-          username: ${{ secrets.EMAIL_USERNAME }}
-          password: ${{ secrets.EMAIL_PASSWORD }}
-          subject: 'GitHub CI failed on ${{ github.repository }}'
-          body: |
-            The workflow failed on branch ${{ github.ref_name }}.
-            Commit: ${{ github.event.head_commit.message }}
-            failed step: `${{ needs.build-and-test.outputs.failed_step || 'Unknown' }}`
-          to: ${{ secrets.EMAIL_RECIPIENT }}
-          from: ${{ secrets.EMAIL_USERNAME }}
+            docker stop auth-service || true && docker rm auth-service || true
+            docker stop car-service || true && docker rm car-service || true
+            docker stop elastic-service || true && docker rm elastic-service || true
+
+            docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d
