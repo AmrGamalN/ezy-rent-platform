@@ -20,7 +20,7 @@ COPY ./apps/elastic-service/package.json ./package.json
 COPY ./apps/elastic-service/package-lock.json ./package-lock.json
 RUN apk add --no-cache curl
 RUN npm install
-COPY ./apps/elastic-service/.env ./.env
+# COPY ./apps/elastic-service/.env ./.env
 COPY apps/elastic-service/ecosystem.config.js ./ecosystem.config.js
 COPY apps/elastic-service/tsconfig.build.json ./tsconfig.build.json
 COPY apps/elastic-service/src ./src

@@ -20,7 +20,7 @@ COPY ./apps/car-service/package.json ./package.json
 COPY ./apps/car-service/package-lock.json ./package-lock.json
 RUN apk add --no-cache curl
 RUN npm install
-COPY ./apps/car-service/.env ./.env
+# COPY ./apps/car-service/.env ./.env
 COPY apps/car-service/ecosystem.config.js ./ecosystem.config.js
 COPY apps/car-service/tsconfig.build.json ./tsconfig.build.json
 COPY apps/car-service/src ./src
