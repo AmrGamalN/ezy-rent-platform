@@ -21,7 +21,7 @@ COPY ./apps/auth-service/package.json ./package.json
 COPY ./apps/auth-service/package-lock.json ./package-lock.json
 RUN apk add --no-cache curl
 RUN npm install
-COPY ./apps/auth-service/.env ./.env
+# COPY ./apps/auth-service/.env ./.env
 COPY apps/auth-service/ecosystem.config.js ./ecosystem.config.js
 COPY apps/auth-service/tsconfig.build.json ./tsconfig.build.json
 COPY ./apps/auth-service/src ./src
