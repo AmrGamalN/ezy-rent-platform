@@ -7,7 +7,7 @@ RUN npm install
 COPY ./docker-entrypoint.sh ./docker-entrypoint.sh
 COPY ./apps/car-service/tsconfig.build.json ./tsconfig.build.json
 COPY ./apps/car-service/ecosystem.config.js ./ecosystem.config.js
-COPY ./apps/car-service/.env ./.env
+# COPY ./apps/car-service/.env ./.env
 COPY ./apps/car-service/src ./src
 RUN npm run build
 RUN rm -rf src tsconfig.build.json

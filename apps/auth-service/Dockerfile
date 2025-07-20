@@ -7,7 +7,7 @@ RUN npm install
 COPY ./docker-entrypoint.sh ./docker-entrypoint.sh
 COPY ./apps/auth-service/tsconfig.build.json ./tsconfig.build.json
 COPY ./apps/auth-service/ecosystem.config.js ./ecosystem.config.js
-COPY ./apps/auth-service/.env ./.env
+# COPY ./apps/auth-service/.env ./.env
 COPY ./apps/auth-service/src ./src
 RUN npm run build
 RUN rm -rf src tsconfig.build.json
