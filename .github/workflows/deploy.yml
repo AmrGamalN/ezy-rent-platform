@@ -51,7 +51,7 @@ jobs:
       - name: Build & Push Auth Service
         uses: docker/build-push-action@v5
         with:
-          context: ./apps/auth-service
+          context: .
           file: ./apps/auth-service/Dockerfile
           push: true
           tags: amrgamaleid/auth-service:latest
@@ -59,7 +59,7 @@ jobs:
       - name: Build & Push Car Service
         uses: docker/build-push-action@v5
         with:
-          context: ./apps/car-service
+          context: .
           file: ./apps/car-service/Dockerfile
           push: true
           tags: amrgamaleid/car-service:latest
@@ -67,7 +67,7 @@ jobs:
       - name: Build & Push Elastic Service
         uses: docker/build-push-action@v5
         with:
-          context: ./apps/elastic-service
+          context: .
           file: ./apps/elastic-service/Dockerfile
           push: true
           tags: amrgamaleid/elastic-service:latest
