@@ -86,7 +86,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
           fetch-depth: 0
 
       - name: Setup Git
@@ -109,8 +109,12 @@ jobs:
           git merge --no-ff origin/${{ steps.vars.outputs.branch_name }} -m "Auto-merge ${{ steps.vars.outputs.branch_name }} into main"
 
       - name: Push merged changes
+        env:
+          TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
         run: |
-          git push origin HEAD:main
+          git remote set-url origin https://x-access-token:${TOKEN}@github.com/${{ github.repository }}
+          git push origin main
+
 
   notifications:
     needs: [build-and-test, auto-merge]
