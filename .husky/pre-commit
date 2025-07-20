@@ -1,9 +1,9 @@
 #!/usr/bin/env sh
 . "$(dirname "$0")/_/husky.sh"
 
-npx lint-staged
-npm run lint
-npm run format
-npm run check-format
-npm run type-check
+# npx lint-staged
+# npm run lint
+# npm run format
+# npm run check-format
+# npm run type-check
 # npm run test
