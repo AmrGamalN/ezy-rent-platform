@@ -7,7 +7,7 @@ RUN npm install
 COPY ./docker-entrypoint.sh ./docker-entrypoint.sh
 COPY ./apps/elastic-service/tsconfig.build.json ./tsconfig.build.json
 COPY ./apps/elastic-service/ecosystem.config.js ./ecosystem.config.js
-COPY ./apps/elastic-service/.env ./.env
+# COPY ./apps/elastic-service/.env ./.env
 COPY ./apps/elastic-service/src ./src
 RUN npm run build
 RUN rm -rf src tsconfig.build.json
