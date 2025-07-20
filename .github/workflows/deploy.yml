@@ -17,7 +17,9 @@ jobs:
   lint-and-format:
     name: Lint & Format
     runs-on: ubuntu-latest
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    if: >
+      (github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_branch == 'main') ||
+      (github.event_name == 'push' && github.ref == 'refs/heads/main')
 
     steps:
       - name: Checkout Repository
@@ -36,7 +38,9 @@ jobs:
     name: Build & Push Docker Images
     runs-on: ubuntu-latest
     needs: lint-and-format
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    if: >
+      (github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_branch == 'main') ||
+      (github.event_name == 'push' && github.ref == 'refs/heads/main')
 
     steps:
       - name: Checkout Repository
@@ -51,7 +55,7 @@ jobs:
       - name: Build & Push Auth Service
         uses: docker/build-push-action@v5
         with:
-          context: ./apps/auth-service
+          context: .
           file: ./apps/auth-service/Dockerfile
           push: true
           tags: amrgamaleid/auth-service:latest
@@ -59,7 +63,7 @@ jobs:
       - name: Build & Push Car Service
         uses: docker/build-push-action@v5
         with:
-          context: ./apps/car-service
+          context: .
           file: ./apps/car-service/Dockerfile
           push: true
           tags: amrgamaleid/car-service:latest
@@ -67,7 +71,7 @@ jobs:
       - name: Build & Push Elastic Service
         uses: docker/build-push-action@v5
         with:
-          context: ./apps/elastic-service
+          context: .
           file: ./apps/elastic-service/Dockerfile
           push: true
           tags: amrgamaleid/elastic-service:latest
@@ -76,7 +80,9 @@ jobs:
     name: Deploy to EC2
     runs-on: ubuntu-latest
     needs: build-and-push
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    if: >
+      (github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_branch == 'main') ||
+      (github.event_name == 'push' && github.ref == 'refs/heads/main')
 
     steps:
       - name: SSH to EC2 & Deploy
@@ -98,3 +104,4 @@ jobs:
             docker stop elastic-service || true && docker rm elastic-service || true
 
             docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d
+
