@@ -88,6 +88,8 @@ jobs:
           script: |
             cd /home/ubuntu/paymob
             git pull origin main
+            
+            ls -la
 
             docker pull amrgamaleid/auth-service:latest
             docker pull amrgamaleid/car-service:latest
