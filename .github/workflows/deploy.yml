@@ -86,7 +86,7 @@ jobs:
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_KEY }}
           script: |
-            cd /home/ubuntu/paymob/apps
+            cd /home/ubuntu/paymob
             git pull origin main
 
             docker pull amrgamaleid/auth-service:latest
