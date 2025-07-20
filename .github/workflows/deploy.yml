@@ -1,10 +1,10 @@
 name: CI/CD Pipeline
 
 on:
-  workflow_run:
-    workflows: ['CI + Auto Merge']
-    types:
-      - completed
+  # workflow_run:
+  #   workflows: ['CI + Auto Merge']
+  #   types:
+  #     - completed
   push:
     branches: [main]
 
@@ -17,9 +17,9 @@ jobs:
   lint-and-format:
     name: Lint & Format
     runs-on: ubuntu-latest
-    if: >
-      (github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_branch == 'main') ||
-      (github.event_name == 'push' && github.ref == 'refs/heads/main')
+    # if: >
+    #   (github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_branch == 'main') ||
+    #   (github.event_name == 'push' && github.ref == 'refs/heads/main')
 
     steps:
       - name: Checkout Repository
@@ -38,9 +38,9 @@ jobs:
     name: Build & Push Docker Images
     runs-on: ubuntu-latest
     needs: lint-and-format
-    if: >
-      (github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_branch == 'main') ||
-      (github.event_name == 'push' && github.ref == 'refs/heads/main')
+    # if: >
+    #   (github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_branch == 'main') ||
+    #   (github.event_name == 'push' && github.ref == 'refs/heads/main')
 
     steps:
       - name: Checkout Repository
@@ -80,9 +80,9 @@ jobs:
     name: Deploy to EC2
     runs-on: ubuntu-latest
     needs: build-and-push
-    if: >
-      (github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_branch == 'main') ||
-      (github.event_name == 'push' && github.ref == 'refs/heads/main')
+    # if: >
+    #   (github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_branch == 'main') ||
+    #   (github.event_name == 'push' && github.ref == 'refs/heads/main')
 
     steps:
       - name: SSH to EC2 & Deploy
