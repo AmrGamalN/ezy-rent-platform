@@ -59,13 +59,13 @@ services:
     depends_on:
        auth-service:
          condition: service_healthy
-       car-service:
-        condition: service_healthy
-       elastic-service:
-        condition: service_healthy
+      #  car-service:
+      #   condition: service_healthy
+      #  elastic-service:
+      #   condition: service_healthy
     networks:
       - mongo-network
-      - kafka-network
+      # - kafka-network
     restart: always
 
   mongo-express:
@@ -77,7 +77,9 @@ services:
     environment:
       ME_CONFIG_MONGODB_ADMINUSERNAME: root
       ME_CONFIG_MONGODB_ADMINPASSWORD: example
-      ME_CONFIG_MONGODB_URL: mongodb://root:example@mongo1:27017,mongo2:27017,mongo3:27017/?replicaSet=rs0
+      # ME_CONFIG_MONGODB_URL: mongodb://root:example@mongo1:27017,mongo2:27017,mongo3:27017/test?authSource=admin&replicaSet=rs0&readPreference=secondaryPreferred&directConnection=false
+      ME_CONFIG_MONGODB_URL: mongodb://root:example@mongo1:27017,mongo2:27017,mongo3:27017/test?authSource=admin&replicaSet=rs0&readPreference=primaryPreferred&directConnection=false
+      # ME_CONFIG_MONGODB_URL: mongodb://root:example@mongo1:27017
       ME_CONFIG_BASICAUTH: false
     depends_on:
       - mongo1
@@ -86,103 +88,103 @@ services:
     networks:
       - mongo-network
 
-  elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch:8.13.4
-    container_name: elasticsearch
-    environment:
-      - discovery.type=single-node
-      - ES_JAVA_OPTS=-Xms512m -Xmx512m
-      - xpack.security.enabled=false
-      - xpack.security.transport.ssl.enabled=false
-      - ELASTIC_CLIENT_APIVERSIONING=true
-    ports:
-      - '9200:9200'
-    volumes:
-      - elasticsearch-data:/usr/share/elasticsearch/data
-    depends_on:
-      - kafka
-      - zookeeper
-    networks:
-      - mongo-network
+  # elasticsearch:
+  #   image: docker.elastic.co/elasticsearch/elasticsearch:8.13.4
+  #   container_name: elasticsearch
+  #   environment:
+  #     - discovery.type=single-node
+  #     - ES_JAVA_OPTS=-Xms512m -Xmx512m
+  #     - xpack.security.enabled=false
+  #     - xpack.security.transport.ssl.enabled=false
+  #     - ELASTIC_CLIENT_APIVERSIONING=true
+  #   ports:
+  #     - '9200:9200'
+  #   volumes:
+  #     - elasticsearch-data:/usr/share/elasticsearch/data
+  #   depends_on:
+  #     - kafka
+  #     - zookeeper
+  #   networks:
+  #     - mongo-network
 
-  kibana:
-    image: docker.elastic.co/kibana/kibana:8.13.4
-    container_name: kibana
-    ports:
-      - '5601:5601'
-    environment:
-      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
-    depends_on:
-      - elasticsearch
-    networks:
-      - mongo-network
+  # kibana:
+  #   image: docker.elastic.co/kibana/kibana:8.13.4
+  #   container_name: kibana
+  #   ports:
+  #     - '5601:5601'
+  #   environment:
+  #     - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+  #   depends_on:
+  #     - elasticsearch
+  #   networks:
+  #     - mongo-network
 
-  zookeeper:
-    image: confluentinc/cp-zookeeper
-    container_name: zookeeper
-    ports:
-      - '2181:2181'
-    environment:
-      ZOOKEEPER_CLIENT_PORT: 2181
-    networks:
-      - kafka-network
-      - mongo-network
+  # zookeeper:
+  #   image: confluentinc/cp-zookeeper
+  #   container_name: zookeeper
+  #   ports:
+  #     - '2181:2181'
+  #   environment:
+  #     ZOOKEEPER_CLIENT_PORT: 2181
+  #   networks:
+  #     - kafka-network
+  #     - mongo-network
 
-  kafka:
-    image: confluentinc/cp-kafka:7.6.0
-    container_name: kafka
-    ports:
-      - '9092:9092'
-    environment:
-      KAFKA_BROKER_ID: 1
-      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
-      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-    depends_on:
-      - zookeeper
-    networks:
-      - kafka-network
-      - mongo-network
+  # kafka:
+  #   image: confluentinc/cp-kafka:7.6.0
+  #   container_name: kafka
+  #   ports:
+  #     - '9092:9092'
+  #   environment:
+  #     KAFKA_BROKER_ID: 1
+  #     KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+  #     KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
+  #     KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+  #     KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+  #   depends_on:
+  #     - zookeeper
+  #   networks:
+  #     - kafka-network
+  #     - mongo-network
 
-  kafka-ui:
-    image: provectuslabs/kafka-ui
-    container_name: kafka-ui
-    ports:
-      - '8080:8080'
-    environment:
-      KAFKA_CLUSTERS_0_NAME: local
-      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:9092
-    depends_on:
-      - kafka
-      - zookeeper
-    networks:
-      - kafka-network
+  # kafka-ui:
+  #   image: provectuslabs/kafka-ui
+  #   container_name: kafka-ui
+  #   ports:
+  #     - '8080:8080'
+  #   environment:
+  #     KAFKA_CLUSTERS_0_NAME: local
+  #     KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:9092
+  #   depends_on:
+  #     - kafka
+  #     - zookeeper
+  #   networks:
+  #     - kafka-network
 
-  jenkins:
-    image: jenkins/jenkins:lts
-    container_name: jenkins
-    restart: unless-stopped
-    user: root
-    ports:
-      - "8082:8080"
-      - "50000:50000"
-    volumes:
-      - jenkins_home:/var/jenkins_home
-      - /var/run/docker.sock:/var/run/docker.sock
-    environment:
-      - JAVA_OPTS=-Djenkins.install.runSetupWizard=false
+  # jenkins:
+  #   image: jenkins/jenkins:lts
+  #   container_name: jenkins
+  #   restart: unless-stopped
+  #   user: root
+  #   ports:
+  #     - "8082:8080"
+  #     - "50000:50000"
+  #   volumes:
+  #     - jenkins_home:/var/jenkins_home
+  #     - /var/run/docker.sock:/var/run/docker.sock
+  #   environment:
+  #     - JAVA_OPTS=-Djenkins.install.runSetupWizard=false
 
 
 volumes:
   mongo1-data:
   mongo2-data:
   mongo3-data:
-  elasticsearch-data:
-  jenkins_home:
+  # elasticsearch-data:
+  # jenkins_home:
 
 networks:
   mongo-network:
     driver: bridge
-  kafka-network:
-    driver: bridge
+  # kafka-network:
+    # driver: bridge

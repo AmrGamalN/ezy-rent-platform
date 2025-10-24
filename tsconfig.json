@@ -3,13 +3,22 @@
   "compilerOptions": {
     "outDir": "./dist",
     "rootDir": "./apps",
-    "types": ["node", "jest"],
-    "isolatedModules": true
+    "types": [
+      "node",
+      "jest",
+      "express"
+    ],
+    "isolatedModules": true,
+    "typeRoots": [
+      "../../node_modules/@types",
+      "./node_modules/@types"
+    ],
   },
   "include": [
     "apps/auth-service/src",
     "apps/car-service/src",
     "apps/elastic-service/src",
-    "apps/**/src/types"
+    "apps/**/src/types",
+    "src"
   ]
 }

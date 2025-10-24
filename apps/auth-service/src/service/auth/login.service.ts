@@ -16,9 +16,11 @@ import {
 const { warpError } = HandleError.getInstance();
 import speakeasy from 'speakeasy';
 import { FirebaseOAuthUser } from '../../types/firebase.type';
+// import { SecurityDtoType } from '../../dto/user/security.dto';
+// import jwt from 'jsonwebtoken';
 import { Profile } from '../../model/mongodb/user/profile.model';
-import { SecurityDtoType } from '../../dto/user/security.dto';
-import { UserToken } from '../../types/request.type';
+import { redis } from '../../config/redis.config';
+// import config from '../../config/env.config';
 
 export class LoginEmailService {
   private static instanceService: LoginEmailService;
@@ -42,7 +44,6 @@ export class LoginEmailService {
         userDto: LoginEmailDto,
       });
       if (!error.success) return error;
-
       return this.authLoginService.handleLogin(
         credential.email,
         credential.password,
@@ -92,7 +93,7 @@ export class LoginEmailService {
       });
 
     const token = await this.tokenService.generateToken(
-      await this.createPayload(security),
+      await this.tokenService.createPayload(security),
     );
     return serviceResponse({
       statusText: 'OK',
@@ -113,31 +114,42 @@ export class LoginEmailService {
     },
   );
 
-  private createPayload = async (
-    security: SecurityDtoType,
-  ): Promise<UserToken> => {
-    const profile = await Profile.findOne({ userId: security.userId }).lean();
-    const payload: UserToken = {
-      userId: security.userId,
-      email: security.email as string,
-      phoneNumber: security.phoneNumber as string,
-      role: security.role as 'user' | 'admin' | 'manager',
-      userName: profile?.username,
-      avatar: profile?.avatar as { imageUrl: string; key: string },
-      dateToJoin: profile?.dateJoined
-        ? new Date(profile.dateJoined).toString()
-        : '',
-      lastLogin: profile?.lastLogin
-        ? new Date(profile.lastLogin).toString()
-        : '',
-      isEmailVerified: security.isEmailVerified,
-      isPhoneVerified: security.isPhoneVerified,
-      isPasswordReset: security.isPasswordReset,
-      isAccountBlocked: security.isAccountBlocked,
-      isAccountDeleted: security.isAccountDeleted,
-      sign_up_provider: security.sign_up_provider,
-      sign_in_provider: security.sign_in_provider,
-    };
-    return payload;
-  };
+  // switchAccount = warpError(
+  //   async (newSessionId: string): Promise<ResponseOptions> => {
+  //     const session = await redis.get(newSessionId);
+  //     if (!session)
+  //       return serviceResponse({
+  //         statusText: 'Unauthorized',
+  //         message: 'Unauthorized',
+  //       });
+  //     const { userId } = JSON.parse(session);
+
+  //     return serviceResponse({
+  //       statusText: 'OK',
+  //       message: 'Login successful',
+  //       data: token,
+  //     });
+  //   },
+  // );
+
+  getMe = warpError(async (sessionId: string) => {
+    const session = await redis.get(sessionId);
+    if (!session)
+      return serviceResponse({
+        statusText: 'Unauthorized',
+        message: 'Unauthorized',
+      });
+
+    const { userId, email } = JSON.parse(session);
+    const profile = await Profile.findOne({ userId })
+      .select('_id userId username avatar')
+      .lean();
+
+    if (!profile) return serviceResponse({ statusText: 'NotFound' });
+
+    return serviceResponse({
+      statusText: 'Ok',
+      data: { ...profile, email },
+    });
+  });
 }

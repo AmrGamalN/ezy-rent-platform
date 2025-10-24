@@ -40,7 +40,10 @@ export class RegisterService {
   }
 
   registerEmail = warpError(
-    async (data: RegisterEmailDtoType): Promise<ResponseOptions> => {
+    async (
+      data: RegisterEmailDtoType,
+      file: Express.Multer.File,
+    ): Promise<ResponseOptions> => {
       const { email } = data;
       const error = safeParser<RegisterEmailDtoType>({
         data,
@@ -51,8 +54,18 @@ export class RegisterService {
       const checkEmail = await this.authRegisterService.checkEmail(email!);
       if (!checkEmail.success) return checkEmail;
 
+      const userCacheData = {
+        ...data,
+        file: file
+          ? {
+              ...file,
+              buffer: file.buffer.toString('base64'),
+            }
+          : null,
+      };
+
       const sendEmail = await this.authRegisterService.sendEmailVerification(
-        data,
+        userCacheData,
         email!,
       );
       if (!sendEmail.success) return sendEmail;
@@ -70,8 +83,9 @@ export class RegisterService {
     if (!checkToken.deletedCount) {
       return serviceResponse({
         statusText: 'BadRequest',
+        key: 'already_used',
         message:
-          'Try verifying your email again. Your request to verify your email has expired or the link has already been used.',
+          'This link has already been used to verify your account. Please log in or request a new verification email if needed.',
       });
     }
     return await this.createUser(token, 'email');
@@ -128,10 +142,29 @@ export class RegisterService {
     if (!getDataCaching)
       return serviceResponse({
         statusText: 'BadRequest',
+        key: 'expired_link',
         message:
-          'Your verification code has expired. Please request a new code and try again.',
+          'Your verification link has expired. Please request a new verification email to continue.',
       });
-    const data = JSON.parse(getDataCaching);
+
+    // restore data from cache
+    const { username, phone, email, password, terms, file } =
+      JSON.parse(getDataCaching);
+    const restoredFile = file
+      ? {
+          ...file,
+          buffer: Buffer.from(file.buffer, 'base64'),
+        }
+      : null;
+
+    const key = 'profile/' + uuidv4() + '-' + restoredFile.originalname;
+    const { url } = (await this.authRegisterService.uploadImage(
+      restoredFile,
+      key,
+    )) as {
+      url: string;
+    };
+
     const session = await mongoose.startSession();
     try {
       await session.withTransaction(async () => {
@@ -140,13 +173,13 @@ export class RegisterService {
           [
             {
               userId,
-              password: await hashPassword(data.password),
-              phone: data?.phone,
-              email: data?.email,
+              password: await hashPassword(password),
+              phone: phone,
+              email: email,
               prefixS3: uuidv4(),
               sign_up_provider: provider,
               isEmailVerified: true,
-              terms: data.terms,
+              terms: terms,
             },
           ],
           { session },
@@ -156,7 +189,11 @@ export class RegisterService {
           [
             {
               userId,
-              username: data.username,
+              username: username,
+              avatar: {
+                url: url,
+                key: key,
+              },
             },
           ],
           { session },
@@ -168,6 +205,8 @@ export class RegisterService {
         message: `Awesome! Your ${provider} has been verified successfully. Let’s get started!`,
       });
     } catch (err: unknown) {
+      if (key) await this.authRegisterService.deleteImage(key);
+      await redis.del(`token:${token}`);
       if (err instanceof Error) {
         throw new CustomError('InternalServerError', 500, err.message, false);
       } else {

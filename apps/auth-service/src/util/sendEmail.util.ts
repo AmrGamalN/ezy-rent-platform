@@ -4,15 +4,14 @@ import {
   serviceResponse,
 } from '@amrogamal/shared-code';
 import nodemailer from 'nodemailer';
-import dotenv from 'dotenv';
-dotenv.config();
+import config from '../config/env.config';
 
 const transporter = nodemailer.createTransport({
   service: 'gmail',
-  host: process.env.HOST_NODE_MAILER,
+  host: config.mailer.host,
   auth: {
-    user: process.env.USER_NODE_MAILER,
-    pass: process.env.PASS_NODE_MAILER,
+    user: config.mailer.user,
+    pass: config.mailer.pass,
   },
   port: 587,
   secure: false,
@@ -25,7 +24,7 @@ export const sendEmail = async (
 ): Promise<ResponseOptions> => {
   try {
     const sendMail = await transporter.sendMail({
-      from: process.env.USER_NODE_MAILER,
+      from: config.mailer.user,
       to: email,
       subject: subject,
       html: content,

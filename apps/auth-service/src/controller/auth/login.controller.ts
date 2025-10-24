@@ -2,10 +2,9 @@ import { Request, Response } from 'express';
 import { LoginEmailService } from '../../service/auth/login.service';
 import { controllerResponse, ResponseOptions } from '@amrogamal/shared-code';
 import { Security } from '../../model/mongodb/user/security.model';
-import { encrypt } from '../../util/encrypt.util';
-import { auth } from '../../config/firebase.config';
 import { LoginEmailDtoType, LoginPhoneDtoType } from '../../dto/auth/login.dto';
 import { FirebaseOAuthUser } from '../../types/firebase.type';
+import config from '../../config/env.config';
 
 export class LoginController {
   static instance: LoginController;
@@ -34,15 +33,16 @@ export class LoginController {
       this.generateCookies(res, data.tempToken);
       return res.status(result.status!).json(responseData);
     }
+    this.generateCookies(res, {
+      SID: data,
+    });
     return controllerResponse(res, {
       ...responseData,
-      // accessToken: encrypt(data.accessToken),
-      accessToken: data.accessToken,
     });
   };
 
   loginEmail = async (req: Request, res: Response): Promise<Response> => {
-    return this.loginProvider<LoginEmailDtoType>(
+    return await this.loginProvider<LoginEmailDtoType>(
       res,
       req.body,
       this.loginService.loginEmail,
@@ -80,7 +80,7 @@ export class LoginController {
     );
     const { data, ...responseData } = result;
     if (!result.success) return res.status(result.status!).json(result);
-    this.generateCookies(res, data.accessToken);
+    this.generateCookies(res, { accessToken: data.accessToken });
     res.clearCookie('tempToken');
     return controllerResponse(res, {
       ...responseData,
@@ -90,23 +90,59 @@ export class LoginController {
 
   logout = async (req: Request, res: Response): Promise<Response> => {
     const userId = String(req?.curUser?.userId);
-    await auth.revokeRefreshTokens(userId);
+    res.clearCookie('accessToken');
+    res.clearCookie('refreshToken');
     await Security.updateOne({ userId }, { $set: { status: 'offline' } });
     return res.status(200).json({
       message: 'Logged out successfully',
     });
   };
 
-  private generateCookies(res: Response, tempToken: string): void {
-    const isProduction = process.env.NODE_ENV === 'production';
+  getMe = async (req: Request, res: Response): Promise<Response> => {
+    const sessionId = req.cookies.sessionId;
+    if (!sessionId) return res.status(401).json({ message: 'No session' });
+    const result = await this.loginService.getMe(sessionId);
+    return controllerResponse(res, result);
+  };
+
+
+  private generateCookies(
+    res: Response,
+    data: { SID?: string; accessToken?: string; tempToken?: string },
+  ): void {
+    const isProduction = config.app.nodeEnv === 'production';
     const options = {
       httpOnly: true,
       sameSite: isProduction ? ('none' as const) : ('lax' as const),
       secure: isProduction,
     };
-    res.cookie('tempToken', encrypt(tempToken), {
-      ...options,
-      expires: new Date(Date.now() + 1000 * 60 * 5),
+
+    const tokens = [
+      {
+        name: 'SID',
+        value: data.SID,
+        expires: 60 * 24 * 14,
+      },
+      {
+        name: 'accessToken',
+        value: data.accessToken,
+        expires: 60,
+      },
+      {
+        name: 'tempToken',
+        value: data.tempToken,
+        expires: 15,
+      },
+    ];
+
+    tokens.forEach((token) => {
+      if (token.value !== undefined) {
+        // res.cookie(token.name, encrypt(token.value), {
+        res.cookie(token.name, token.value, {
+          ...options,
+          expires: new Date(Date.now() + 1000 * 60 * token.expires),
+        });
+      }
     });
   }
 }

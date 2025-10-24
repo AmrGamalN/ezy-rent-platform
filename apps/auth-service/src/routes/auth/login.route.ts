@@ -4,7 +4,7 @@ import { expressValidator } from '../../middleware/express.middleware';
 import { AuthMiddleware } from '../../middleware/authentication.middleware';
 import {
   validateLoginPhone,
-  validateLoginEmail,
+  // validateLoginEmail,
   validateOtp,
 } from '../../validation/auth/login.validator';
 import { HandleError } from '@amrogamal/shared-code';
@@ -15,7 +15,7 @@ const router = express.Router();
 
 router.post(
   '/login/email',
-  expressValidator(validateLoginEmail()),
+  // expressValidator(validateLoginEmail()),
   handleError(controller.loginEmail.bind(controller)),
 );
 

@@ -17,10 +17,11 @@ export const serviceResponse = ({
   count,
   deletedCount,
   updatedCount,
+  key,
 }: ResponseOptions): ResponseOptions => {
   switch (statusText) {
     case 'BadRequest':
-      return response({ statusText, message, error });
+      return response({ statusText, message, error, key });
 
     case 'Conflict':
     case 'Created':
@@ -39,6 +40,7 @@ export const serviceResponse = ({
           count,
           deletedCount,
           updatedCount,
+          key,
         });
       return response({ statusText: 'NotFound', message });
   }
@@ -52,6 +54,7 @@ const response = ({
   count,
   deletedCount,
   updatedCount,
+  key,
 }: ResponseOptions): ResponseOptions => {
   const defaultMessages = {
     OK: 'Operation successfully',
@@ -92,6 +95,7 @@ const response = ({
         status: 400,
         message: message ?? defaultMessages.BadRequest,
         error,
+        key,
       };
 
     case 'NotFound':

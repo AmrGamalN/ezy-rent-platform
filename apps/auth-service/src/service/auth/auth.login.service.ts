@@ -8,6 +8,8 @@ import {
   serviceResponse,
 } from '@amrogamal/shared-code';
 import { FirebaseOAuthUser } from '../../types/firebase.type';
+import { v4 as uuidv4 } from 'uuid';
+import { redis } from '../../config/redis.config';
 const { warpError } = HandleError.getInstance();
 
 export class AuthLoginService {
@@ -144,7 +146,7 @@ export class AuthLoginService {
     if (!checkUser.success) return checkUser;
     const user = checkUser.data;
 
-    const checkStatusAccount = await this.checkStatusAccount(user, type);
+    const checkStatusAccount = this.checkStatusAccount(user, type);
     if (!checkStatusAccount.success) return checkStatusAccount;
 
     const provider: Record<string, string> =
@@ -161,14 +163,34 @@ export class AuthLoginService {
     );
     if (!checkPassword.success) return checkPassword;
 
-    const check2FA = await this.check2FA(user, provider);
+    const check2FA = this.check2FA(user, provider);
     if (check2FA.success) return check2FA;
 
-    const tokens = await this.tokenService.generateToken(user);
+    // generate token
+    const tokens = await this.tokenService.generateToken(
+      await this.tokenService.createPayload(user),
+    );
+
+    // create session
+    const sessionId = `session:${uuidv4()}`;
+    const sessionData = {
+      sessionId,
+      userId: user.id,
+      accessToken: tokens.accessToken,
+      refreshToken: tokens.refreshToken,
+      expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 24 * 14).toISOString(),
+      createdAt: new Date().toISOString(),
+    };
+    await redis.setEx(
+      sessionId,
+      60 * 60 * 24 * 14,
+      JSON.stringify(sessionData),
+    );
+
     return serviceResponse({
       statusText: 'OK',
       message: 'Login successful',
-      data: tokens,
+      data: sessionId,
     });
   };
 

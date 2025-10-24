@@ -17,6 +17,27 @@ export class SecurityController {
     return SecurityController.instance;
   }
 
+  sendOtp = async (req: Request, res: Response): Promise<Response> => {
+    const result = await this.securityService.sendOtp(req.body.email);
+    return controllerResponse(res, result);
+  };
+
+  verifyOtp = async (req: Request, res: Response): Promise<Response> => {
+    const result = await this.securityService.verifyOtp(
+      req.body.email,
+      req.body.otp,
+    );
+    return controllerResponse(res, result);
+  };
+
+  resetPassword = async (req: Request, res: Response): Promise<Response> => {
+    const result = await this.securityService.resetPawword(
+      req.body.email,
+      req.body.password,
+    );
+    return controllerResponse(res, result);
+  };
+
   generate2FA = async (req: Request, res: Response): Promise<Response> => {
     const result = await this.securityService.generate2FA(
       req?.curUser?.email as string,

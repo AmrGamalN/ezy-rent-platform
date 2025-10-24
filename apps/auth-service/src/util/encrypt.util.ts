@@ -1,10 +1,10 @@
 import crypto from 'crypto';
 import bcrypt from 'bcryptjs';
-import dotenv from 'dotenv';
+import config from '../config/env.config';
 import { CustomError } from '@amrogamal/shared-code';
-dotenv.config();
 
-const ENCRYPTION_KEY = process.env.ENCRYPTION_KEY;
+
+const ENCRYPTION_KEY = config.encryption.key;
 const IV_LENGTH = 16;
 const key = crypto.createHash('sha256').update(ENCRYPTION_KEY!).digest();
 

@@ -66,32 +66,36 @@ export const sendVerifyEmail = (link: string, userName: string): string => `
 `;
 
 export const sendResetPasswordEmail = (
-  link: string,
+  otp: string,
   userName: string,
 ): string => `
   ${emailHeader()}
+
   <p style="margin-top: 30px;">Hello, ${userName}</p>
 
-  <p>We received a request to reset your password for your Eazy Rent account.</p>
-  <p>If you made this request, please click the button below to choose a new password:</p>
+  <p>We received a request to reset your password for your <strong>Eazy Rent</strong> account.</p>
+  <p>Please use the verification code below to reset your password:</p>
 
-  <div style="text-align: center;">
-    <a href="${link}" style="
-      display: inline-block;
-      background-color:rgb(5, 137, 3);
-      color: white;
-      padding: 10px 20px;
-      text-decoration: none;
-      margin: 20px auto;
-      border-radius: 4px;
-      font-weight: bold;
-    ">
-      Reset Password
-    </a>
+  <div style="
+    text-align: center;
+    background-color: #f5f5f5;
+    padding: 20px;
+    border-radius: 8px;
+    margin: 20px auto;
+    width: fit-content;
+    font-size: 28px;
+    font-weight: bold;
+    letter-spacing: 6px;
+    color: rgb(5, 137, 3);
+    border: 2px dashed rgb(5, 137, 3);
+  ">
+    ${otp}
   </div>
 
-  <p>If you didn't request a password reset, you can safely ignore this email — your password has not been changed.</p>
-  <p>For any questions or concerns, feel free to contact us anytime.</p>
+  <p>This code is valid for <strong>10 minutes</strong>. Please do not share it with anyone.</p>
+
+  <p>If you didn’t request a password reset, you can safely ignore this email — your password has not been changed.</p>
+
   <p>All the best,</p>
   ${emailFooter()}
 `;

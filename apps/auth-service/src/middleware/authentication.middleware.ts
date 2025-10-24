@@ -1,8 +1,10 @@
 import type { NextFunction, Request, Response } from 'express';
 import { CustomError, HandleError } from '@amrogamal/shared-code';
-import { auth } from '../config/firebase.config';
 import jwt from 'jsonwebtoken';
 import { decrypt } from '../util/encrypt.util';
+import { UserToken } from '../types/request.type';
+import { redis } from '../config/redis.config';
+import config from '../config/env.config';
 const { handleError } = HandleError.getInstance();
 
 export class AuthMiddleware {
@@ -25,19 +27,6 @@ export class AuthMiddleware {
     };
   };
 
-  checkStatus = handleError(
-    (req: Request, res: Response, next: NextFunction): void => {
-      const user = req.curUser;
-      const status =
-        !user?.isEmailVerified &&
-        user?.sign_up_provider === 'email' &&
-        'Account is not verified';
-      if (status)
-        throw new CustomError('Unauthorized', 401, 'Unauthorized', false);
-      return next();
-    },
-  );
-
   verify2FATempToken = handleError(
     (req: Request, res: Response, next: NextFunction): void => {
       const token = req.cookies?.tempToken;
@@ -50,7 +39,7 @@ export class AuthMiddleware {
         );
 
       const decrypted = decrypt(token) as string;
-      const decoded = jwt.verify(decrypted, String(process.env.JWT_SECRET), {
+      const decoded = jwt.verify(decrypted, config.jwt.secret, {
         algorithms: ['HS256'],
       });
       if (!decoded)
@@ -71,43 +60,69 @@ export class AuthMiddleware {
       const token = req.body.IdToken;
       if (!token)
         throw new CustomError('Unauthorized', 401, 'Unauthorized', false);
-      const decoded = await auth.verifyIdToken(token);
-      req.curUser = {
-        ...decoded,
-        email: decoded.email ?? '',
-        role: 'user',
-        userId: decoded.uid,
-        lastSeen: new Date(),
-      };
+      const decoded = await jwt.verify(token, config.jwt.secret);
+      req.curUser = decoded as UserToken;
       return next();
     },
   );
 
-  verifyFirebaseToken = handleError(
-    async (
-      req: Request,
-      res: Response,
-      next: NextFunction,
-    ): Promise<Response | void> => {
-      try {
-        const authHeader = req.headers.authorization;
-        const token = authHeader?.split(' ')[1];
-        if (!token)
-          throw new CustomError('Unauthorized', 401, 'Unauthorized', false);
-        // const decrypted = decrypt(token) as string;
-        const decoded = await auth.verifyIdToken(token);
-        if (!decoded)
-          throw new CustomError('Unauthorized', 401, 'Unauthorized', false);
-        req.curUser = {
-          ...decoded,
-          email: decoded.email ?? '',
-          role: decoded.role,
-          userId: decoded.userId,
-          lastSeen: new Date(),
-        };
-        return next();
-      } catch {
+  verifyToken = handleError(
+    async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+      const sessionId = req.cookies.SID;
+      if (!sessionId)
         throw new CustomError('Unauthorized', 401, 'Unauthorized', false);
+
+      const sessionData = await redis.get(`session:${sessionId}`);
+      if (!sessionData)
+        throw new CustomError('Unauthorized', 401, 'Session expired', false);
+
+      const session = JSON.parse(sessionData);
+      const { accessToken, refreshToken, userId } = session;
+
+      try {
+        const decoded = jwt.verify(accessToken, config.jwt.secret);
+        req.curUser = decoded as UserToken;
+        return next();
+        /* eslint-disable @typescript-eslint/no-explicit-any */
+      } catch (error: any) {
+        if (error.name === 'TokenExpiredError' && refreshToken) {
+          try {
+            const decoded = jwt.verify(
+              refreshToken,
+              config.jwt.secret,
+            ) as UserToken;
+
+            const newAccessToken = jwt.sign(
+              { userId, email: decoded.email, role: decoded.role },
+              config.jwt.secret,
+              { expiresIn: '1h' },
+            );
+
+            await redis.setEx(
+              `session:${sessionId}`,
+              60 * 60 * 24 * 14,
+              JSON.stringify({
+                ...session,
+                accessToken: newAccessToken,
+                updatedAt: new Date().toISOString(),
+              }),
+            );
+
+            req.curUser = jwt.decode(newAccessToken) as UserToken;
+            return next();
+            /* eslint-disable @typescript-eslint/no-explicit-any */
+          } catch (refreshError: any) {
+            if (refreshError.name === 'TokenExpiredError')
+              throw new CustomError(
+                'Unauthorized',
+                401,
+                'Refresh token expired',
+                false,
+              );
+            throw new CustomError('Unauthorized', 401, 'Invalid token', false);
+          }
+        }
+        throw new CustomError('Unauthorized', 401, 'Invalid token', false);
       }
     },
   );

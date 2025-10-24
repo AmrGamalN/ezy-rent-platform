@@ -32,7 +32,7 @@ export const validateRegisterEmail = (): ValidationChain[] => [
   })
     .isString()
     .withMessage('Username must be a string')
-    .matches(/^[A-Za-z ]{2,20}$/)
+    .matches(/^[a-zA-Z ]{3,20}$/)
     .withMessage(`Username must contain only letters and spaces`),
   validateBoolean({
     field: 'terms',

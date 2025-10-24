@@ -1,15 +1,12 @@
 import mongoose from 'mongoose';
 import { Db } from 'mongodb';
-import dotenv from 'dotenv';
 import { logger } from '@amrogamal/shared-code';
-import path from 'path';
-dotenv.config({
-  path: path.resolve(__dirname, '../../.env'),
-});
+import config from './env.config';
+
 
 export const mongodbConnect = async (): Promise<Db | void> => {
   try {
-    await mongoose.connect(String(process.env.MONGODB_URI), {
+    await mongoose.connect(config.db.mongoUri, {
       serverSelectionTimeoutMS: 5000,
       socketTimeoutMS: 45000,
     });

@@ -1,6 +1,6 @@
 {
   "name": "@amrogamal/shared-code",
-  "version": "3.0.3",
+  "version": "3.1.0",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "description": "Common folder for shared code",
