@@ -8,10 +8,10 @@ export const generateEmailOtp = async (): Promise<string> => {
   return token;
 };
 
-export const generatePhoneOtp = async (): Promise<string> => {
+export const generateOtp = async (): Promise<string> => {
   let token;
   do {
-    token = crypto.randomBytes(6).toString('hex');
+    token = Math.floor(1000 + Math.random() * 9000).toString();
   } while (await OtpEmail.exists({ token }));
   return token;
 };

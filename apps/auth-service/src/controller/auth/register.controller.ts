@@ -23,7 +23,10 @@ export class RegisterController {
   }
 
   registerEmail = async (req: Request, res: Response): Promise<Response> => {
-    const result = await this.registerService.registerEmail(req.body);
+    const result = await this.registerService.registerEmail(
+      req.body,
+      req.file as Express.Multer.File,
+    );
     return controllerResponse(res, result);
   };
 
@@ -41,9 +44,19 @@ export class RegisterController {
     return controllerResponse(res, result);
   };
 
-  verifyEmail = async (req: Request, res: Response): Promise<Response> => {
+  verifyEmail = async (
+    req: Request,
+    res: Response,
+  ): Promise<Response | void> => {
     const result = await this.registerService.verifyEmail(req.params.token);
-    return controllerResponse(res, result);
+    if (result.success) {
+      return res.redirect(
+        'http://localhost:5173/confirm-status?status=success&message=Email%20verified%20success',
+      );
+    }
+    return res.redirect(
+      `http://localhost:5173/confirm-status?status=failed&message=Verification%20link%20${result.key}`,
+    );
   };
 
   resendEmail = async (req: Request, res: Response): Promise<Response> => {

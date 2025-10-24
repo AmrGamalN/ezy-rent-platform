@@ -4,6 +4,7 @@ import { Security } from '../../model/mongodb/user/security.model';
 import { sendEmail } from '../../util/sendEmail.util';
 import { sendVerifyEmail } from '../../util/message.util';
 import { generateEmailOtp } from '../../util/generateCode.util';
+import { PutObjectCommand, DeleteObjectCommand } from '@aws-sdk/client-s3';
 import {
   HandleError,
   ResponseOptions,
@@ -19,6 +20,8 @@ import {
 import { Profile } from '../../model/mongodb/user/profile.model';
 import { v4 as uuidv4 } from 'uuid';
 import { FirebaseOAuthUser } from '../../types/firebase.type';
+import { bucketName, s3Client } from '../../config/s3.config';
+import config from '../../config/env.config';
 
 export class AuthRegisterService {
   private static instance: AuthRegisterService;
@@ -95,7 +98,7 @@ export class AuthRegisterService {
       expiresAt: new Date(Date.now() + 120_000),
     });
 
-    const link = `${process.env.BACKEND_URL}/auth/verify-email/${token}`;
+    const link = `${config.app.backendUrl}/auth/verify-email/${token}`;
     const resultSendEmail = await sendEmail(
       email,
       'Email Verification',
@@ -117,7 +120,7 @@ export class AuthRegisterService {
         message: 'Expired time, return to signup page and register again',
       });
 
-    const link = `${process.env.BACKEND_URL}/auth/verify-email/${checkEmail.token}`;
+    const link = `${config.app.backendUrl}/auth/verify-email/${checkEmail.token}`;
     const resultSendEmail = await sendEmail(
       email,
       'Email Verification',
@@ -187,4 +190,38 @@ export class AuthRegisterService {
       });
     },
   );
+
+  uploadImage = async (
+    file: Express.Multer.File,
+    key: string,
+  ): Promise<{ key: string; url: string } | null> => {
+    if (!file) return null;
+
+    // const buffer = Buffer.isBuffer(file.buffer)
+    //   ? file.buffer
+    //   : Buffer.from(file.buffer?.data as string);
+    const result = await s3Client.send(
+      new PutObjectCommand({
+        Bucket: bucketName,
+        Key: key,
+        Body: file.buffer,
+        ContentType: file.mimetype,
+        ACL: 'public-read',
+      }),
+    );
+    if (result.$metadata.httpStatusCode !== 200) return null;
+    return {
+      key,
+      url: `https://${bucketName}.s3.amazonaws.com/${key}`,
+    };
+  };
+
+  deleteImage = async (key: string): Promise<void> => {
+    await s3Client.send(
+      new DeleteObjectCommand({
+        Bucket: bucketName,
+        Key: key,
+      }),
+    );
+  };
 }

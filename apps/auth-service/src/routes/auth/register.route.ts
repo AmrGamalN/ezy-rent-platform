@@ -8,6 +8,7 @@ import {
   validateResendEmail,
 } from '../../validation/auth/register.validator';
 import { HandleError } from '@amrogamal/shared-code';
+import { uploadSingleFileMiddleware } from '../../middleware/uploadFile.middleware';
 
 const { handleError } = HandleError.getInstance();
 const authMiddleware = AuthMiddleware.getInstance();
@@ -16,6 +17,7 @@ const router = express.Router();
 
 router.post(
   '/register/email',
+  uploadSingleFileMiddleware,
   expressValidator(validateRegisterEmail()),
   handleError(controller.registerEmail.bind(controller)),
 );

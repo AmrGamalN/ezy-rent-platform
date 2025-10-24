@@ -1,21 +1,14 @@
 import admin from 'firebase-admin';
 import { initializeApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
-import dotenv from 'dotenv';
-import path from 'path';
-dotenv.config({
-  path: path.resolve(__dirname, '../../.env'),
-});
-
-const serviceAccount = JSON.parse(process.env.FIREBASE_CONFIG_ADMIN as string);
+import config from './env.config';
 
 admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount),
+  credential: admin.credential.cert(config.firebase.adminConfig),
 });
 const auth = admin.auth();
 
-const serviceClient = JSON.parse(process.env.FIREBASE_CONFIG_CLIENT as string);
-const app = initializeApp(serviceClient);
+const app = initializeApp(config.firebase.clientConfig);
 const authentication = getAuth(app);
 
 export { auth, authentication };

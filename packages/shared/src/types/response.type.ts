@@ -20,6 +20,7 @@ export type ResponseOptions<T = any> = {
     remainPages: number;
     itemsPerPage: number;
   };
+  key?: string;
 };
 
 export type ResponseType =

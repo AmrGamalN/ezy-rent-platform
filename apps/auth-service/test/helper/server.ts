@@ -5,9 +5,9 @@ import { Application } from 'express';
 import express from 'express';
 import cookieParser from 'cookie-parser';
 import routes from '../../src/routes/auth/auth.route';
-import dotenv from 'dotenv';
 import { logger } from '@amrogamal/shared-code';
-dotenv.config();
+import config from '../../src/config/env.config';
+
 
 const createTestApp = (): Application => {
   const app = express();
@@ -100,7 +100,7 @@ const extractCookie = (cookies: string[], key: string): string | undefined => {
 };
 
 const verifyCustomToken = async (token: string): Promise<string> => {
-  const url = `https://identitytoolkit.googleapis.com/v1/accounts:signInWithCustomToken?key=${process.env.FIREBASE_API_KEY}`;
+  const url = `https://identitytoolkit.googleapis.com/v1/accounts:signInWithCustomToken?key=${config.firebase.apiKey}`;
   const response = await axios.post(url, {
     token,
     returnSecureToken: true,

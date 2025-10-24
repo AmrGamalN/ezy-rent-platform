@@ -1,5 +1,7 @@
 import express from 'express';
 
+
+
 import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
 import helmet from 'helmet';
@@ -9,7 +11,7 @@ const app = express();
 
 // Cors
 const corsOption = {
-  origin: '*',
+  origin: 'http://localhost:5173',
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true,

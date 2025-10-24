@@ -1,6 +1,7 @@
 import { Application, NextFunction, Response, Request } from 'express';
 import swaggerJSDoc from 'swagger-jsdoc';
 import swaggerUi from 'swagger-ui-express';
+import config from './env.config';
 
 const swaggerOptions = (route: string): object => {
   return {
@@ -13,7 +14,7 @@ const swaggerOptions = (route: string): object => {
       },
       servers: [
         {
-          url: process.env.BACKEND_URL,
+          url: config.app.backendUrl,
           description: 'Local server for development',
         },
       ],

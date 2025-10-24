@@ -10,15 +10,19 @@ import {
   serviceResponse,
 } from '@amrogamal/shared-code';
 import { AuthLoginService } from './auth.login.service';
-
+import { TokenService } from './token.service';
 import { auth } from '../../config/firebase.config';
+import { generateOtp } from '../../util/generateCode.util';
+import { OtpEmail } from '../../model/mongodb/auth/otp.model';
 const { warpError } = HandleError.getInstance();
 
 export class SecurityService {
   private static instanceService: SecurityService;
   private authLoginService: AuthLoginService;
+  private tokenService: TokenService;
   constructor() {
     this.authLoginService = AuthLoginService.getInstance();
+    this.tokenService = TokenService.getInstance();
   }
   public static getInstance(): SecurityService {
     if (!SecurityService.instanceService) {
@@ -89,6 +93,92 @@ export class SecurityService {
     await Security.findOneAndUpdate({ email }, { $set: { is2FA: true } });
     return serviceResponse({ statusText: 'OK', message: '2FA verified' });
   });
+
+  sendOtp = warpError(async (email: string): Promise<ResponseOptions> => {
+    const user = await Security.findOne({ email }).lean();
+    const checkOtp = await OtpEmail.findOne({ email }).lean();
+
+    if (checkOtp)
+      return serviceResponse({
+        statusText: 'Conflict',
+        message: 'We have already sent a code to your email address.',
+      });
+
+    if (!user)
+      return serviceResponse({
+        statusText: 'NotFound',
+        message: 'This email is not registered with us.',
+      });
+
+    const status = this.authLoginService.checkStatusAccount(user, 'email');
+    if (!status.success) return status;
+
+    const otp = await generateOtp();
+    const resultSendEmail = await sendEmail(
+      email,
+      'Password Reset Code',
+      sendResetPasswordEmail(otp, email),
+    );
+    if (!resultSendEmail.success)
+      return serviceResponse({
+        statusText: 'Error',
+        message: 'Failed to send the reset code. Please try again later.',
+      });
+
+    await OtpEmail.create({
+      email,
+      token: otp,
+      expiresAt: new Date(Date.now() + 5 * 60 * 1000),
+    });
+
+    return serviceResponse({
+      statusText: 'OK',
+      message: 'We’ve sent a 6-digit code to your email address.',
+    });
+  });
+
+  verifyOtp = warpError(
+    async (email: string, otp: string): Promise<ResponseOptions> => {
+      const otpEmail = await OtpEmail.findOne({ email }).lean();
+      if (!otpEmail)
+        return serviceResponse({
+          statusText: 'NotFound',
+          message: 'Your code has expired. Please request a new one.',
+        });
+
+      if (otpEmail.token !== otp)
+        return serviceResponse({
+          statusText: 'BadRequest',
+          message: 'The code you entered is incorrect.',
+        });
+
+      await OtpEmail.deleteOne({ email });
+      return serviceResponse({
+        statusText: 'OK',
+        message: 'Code verified successfully.',
+      });
+    },
+  );
+
+  resetPawword = warpError(
+    async (email: string, password: string): Promise<ResponseOptions> => {
+      const resetPassword = await Security.findOneAndUpdate(
+        { email },
+        { $set: { password: await hashPassword(password) } },
+      );
+
+      if (!resetPassword)
+        return serviceResponse({
+          statusText: 'NotFound',
+          message: 'No account found with this email.',
+        });
+
+      return serviceResponse({
+        statusText: 'OK',
+        message: 'Your password has been reset successfully.',
+      });
+    },
+  );
 
   sendResetpasswordLink = warpError(
     async (email: string): Promise<ResponseOptions> => {
