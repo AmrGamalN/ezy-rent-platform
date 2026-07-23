@@ -157,13 +157,15 @@ export class RegisterService {
         }
       : null;
 
-    const key = 'profile/' + uuidv4() + '-' + restoredFile.originalname;
-    const { url } = (await this.authRegisterService.uploadImage(
-      restoredFile,
-      key,
-    )) as {
-      url: string;
-    };
+    const key = restoredFile
+      ? 'profile/' + uuidv4() + '-' + restoredFile.originalname
+      : '';
+
+    const uploadResult = restoredFile
+      ? await this.authRegisterService.uploadImage(restoredFile, key)
+      : null;
+
+const url = uploadResult?.url || '';
 
     const session = await mongoose.startSession();
     try {
