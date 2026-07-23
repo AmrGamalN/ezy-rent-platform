@@ -46,7 +46,7 @@ export const setupSwagger = (app: Application): void => {
   app.use(
     '/api-docs/:routeName',
     (req: Request, res: Response, next: NextFunction) => {
-      const routeName = req.params.routeName;
+      const routeName = req.params.routeName as string;
       const swaggerSpecs = swaggerJSDoc(swaggerOptions(routeName));
       return swaggerUi.setup(swaggerSpecs, { explorer: true })(req, res, next);
     },

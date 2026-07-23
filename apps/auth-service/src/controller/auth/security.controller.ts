@@ -42,7 +42,7 @@ export class SecurityController {
     const result = await this.securityService.generate2FA(
       req?.curUser?.email as string,
     );
-    if (result.statusText === 'Created' && result.data) {
+    if (result.statusText === 'CREATED' && result.data) {
       res.setHeader('Content-Type', 'image/png');
       return res.status(201).send(result.data);
     }

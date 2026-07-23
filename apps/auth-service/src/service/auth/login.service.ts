@@ -77,7 +77,7 @@ export class LoginEmailService {
     }).lean();
     if (!security)
       return serviceResponse({
-        statusText: 'Conflict',
+        statusText: 'CONFLICT',
         message: `2FA already enable`,
       });
     const isValid = speakeasy.totp.verify({
@@ -88,7 +88,7 @@ export class LoginEmailService {
     });
     if (!isValid)
       return serviceResponse({
-        statusText: 'BadRequest',
+        statusText: 'BAD_REQUEST',
         message: 'Invalid OTP code',
       });
 
@@ -136,7 +136,7 @@ export class LoginEmailService {
     const session = await redis.get(sessionId);
     if (!session)
       return serviceResponse({
-        statusText: 'Unauthorized',
+        statusText: 'UNAUTHORIZED',
         message: 'Unauthorized',
       });
 
@@ -145,10 +145,10 @@ export class LoginEmailService {
       .select('_id userId username avatar')
       .lean();
 
-    if (!profile) return serviceResponse({ statusText: 'NotFound' });
+    if (!profile) return serviceResponse({ statusText: 'NOT_FOUND' });
 
     return serviceResponse({
-      statusText: 'Ok',
+      statusText: 'OK',
       data: { ...profile, email },
     });
   });

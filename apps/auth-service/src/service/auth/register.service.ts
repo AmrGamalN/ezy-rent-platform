@@ -82,8 +82,8 @@ export class RegisterService {
     const checkToken = await OtpEmail.deleteOne({ token });
     if (!checkToken.deletedCount) {
       return serviceResponse({
-        statusText: 'BadRequest',
-        key: 'already_used',
+        statusText: 'BAD_REQUEST',
+        data: 'already_used',
         message:
           'This link has already been used to verify your account. Please log in or request a new verification email if needed.',
       });
@@ -141,8 +141,8 @@ export class RegisterService {
     const getDataCaching = await redis.get(`token:${token}`);
     if (!getDataCaching)
       return serviceResponse({
-        statusText: 'BadRequest',
-        key: 'expired_link',
+        statusText: 'BAD_REQUEST',
+        data: 'expired_link',
         message:
           'Your verification link has expired. Please request a new verification email to continue.',
       });
@@ -201,21 +201,16 @@ export class RegisterService {
         await redis.del(`token:${token}`);
       });
       return serviceResponse({
-        statusText: 'Created',
+        statusText: 'CREATED',
         message: `Awesome! Your ${provider} has been verified successfully. Let’s get started!`,
       });
     } catch (err: unknown) {
       if (key) await this.authRegisterService.deleteImage(key);
       await redis.del(`token:${token}`);
       if (err instanceof Error) {
-        throw new CustomError('InternalServerError', 500, err.message, false);
+        throw new CustomError('INTERNAL', 500, err.message, false);
       } else {
-        throw new CustomError(
-          'InternalServerError',
-          500,
-          'InternalServerError',
-          false,
-        );
+        throw new CustomError('INTERNAL', 500, 'INTERNAL', false);
       }
     } finally {
       await session.endSession();

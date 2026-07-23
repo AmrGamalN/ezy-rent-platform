@@ -48,14 +48,15 @@ export class RegisterController {
     req: Request,
     res: Response,
   ): Promise<Response | void> => {
-    const result = await this.registerService.verifyEmail(req.params.token);
+    const token = req.params.token as string;
+    const result = await this.registerService.verifyEmail(token);
     if (result.success) {
       return res.redirect(
         'http://localhost:5173/confirm-status?status=success&message=Email%20verified%20success',
       );
     }
     return res.redirect(
-      `http://localhost:5173/confirm-status?status=failed&message=Verification%20link%20${result.key}`,
+      `http://localhost:5173/confirm-status?status=failed&message=Verification%20link%20${result.data}`,
     );
   };
 

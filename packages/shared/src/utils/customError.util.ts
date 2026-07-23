@@ -3,12 +3,12 @@ import { ResponseType } from '../types/response.type';
 export class CustomError extends Error {
   statusCode: number;
   success: boolean;
-  statusText: string;
+  statusText: ResponseType;
   constructor(
     statusText: ResponseType,
-    statusCode: number = 500 | 404 | 400 | 409 | 403 | 401,
+    statusCode: number,
     message: string,
-    success: true | false,
+    success: boolean,
   ) {
     super(message);
     this.statusText = statusText;

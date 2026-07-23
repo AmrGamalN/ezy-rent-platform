@@ -32,7 +32,7 @@ export class AuthLoginService {
     const security = await Security.findOne({ email }).lean();
     if (!security)
       return serviceResponse({
-        statusText: 'NotFound',
+        statusText: 'NOT_FOUND',
         message: `This ${provider} account you provided does not match our records`,
       });
     return serviceResponse({
@@ -45,7 +45,7 @@ export class AuthLoginService {
     const security = await Security.findOne({ phoneNumber }).lean();
     if (!security)
       return serviceResponse({
-        statusText: 'NotFound',
+        statusText: 'NOT_FOUND',
         message: 'This phone number you provided does not match our records',
       });
     return serviceResponse({
@@ -63,7 +63,7 @@ export class AuthLoginService {
     if (!result) {
       await this.attemptLoginFailed(provider);
       return serviceResponse({
-        statusText: 'Unauthorized',
+        statusText: 'UNAUTHORIZED',
         message: 'Email or password is wrong, Please try again',
       });
     }
@@ -86,7 +86,7 @@ export class AuthLoginService {
         'Account is not verified');
     if (status)
       return serviceResponse({
-        statusText: 'Unauthorized',
+        statusText: 'UNAUTHORIZED',
         message: status,
       });
     return { success: true };
@@ -106,7 +106,7 @@ export class AuthLoginService {
       if (diffTime < 10) {
         const remainingTime = Math.ceil(10 - diffTime);
         return serviceResponse({
-          statusText: 'Unauthorized',
+          statusText: 'UNAUTHORIZED',
           message: `Account locked due to multiple failed logins. Try again in ${remainingTime} minutes.`,
         });
       }
@@ -176,8 +176,8 @@ export class AuthLoginService {
     const sessionData = {
       sessionId,
       userId: user.id,
-      accessToken: tokens.accessToken,
-      refreshToken: tokens.refreshToken,
+      accessToken: tokens.data.accessToken,
+      refreshToken: tokens.data.refreshToken,
       expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 24 * 14).toISOString(),
       createdAt: new Date().toISOString(),
     };

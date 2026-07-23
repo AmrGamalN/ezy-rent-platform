@@ -84,7 +84,9 @@ export class LoginController {
     res.clearCookie('tempToken');
     return controllerResponse(res, {
       ...responseData,
+      data: {
       accessToken: data.accessToken,
+      }
     });
   };
 
@@ -104,7 +106,6 @@ export class LoginController {
     const result = await this.loginService.getMe(sessionId);
     return controllerResponse(res, result);
   };
-
 
   private generateCookies(
     res: Response,

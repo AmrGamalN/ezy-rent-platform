@@ -35,7 +35,7 @@ export class SecurityService {
     const security = await Security.findOne({ email }).select('is2FA').lean();
     if (security && security.is2FA === true)
       return serviceResponse({
-        statusText: 'Conflict',
+        statusText: 'CONFLICT',
         message: `2FA already enable`,
       });
 
@@ -55,13 +55,13 @@ export class SecurityService {
 
     if (!secret.otpauth_url)
       return serviceResponse({
-        statusText: 'InternalServerError',
+        statusText: 'INTERNAL',
         message: 'Failed to generate 2FA secret',
       });
 
     const qrCode = await QRCode.toBuffer(secret?.otpauth_url);
     return serviceResponse({
-      statusText: 'Created',
+      statusText: 'CREATED',
       message:
         'Scan the QR code in app authenticator, Enter the 6-digit code to complete verification',
       data: qrCode,
@@ -74,7 +74,7 @@ export class SecurityService {
       .lean();
     if (security && security.is2FA === true)
       return serviceResponse({
-        statusText: 'Conflict',
+        statusText: 'CONFLICT',
         message: `2FA already enable`,
       });
 
@@ -86,7 +86,7 @@ export class SecurityService {
     });
     if (!isValid)
       return serviceResponse({
-        statusText: 'BadRequest',
+        statusText: 'BAD_REQUEST',
         message: 'Invalid or expired 2FA code',
       });
 
@@ -100,13 +100,13 @@ export class SecurityService {
 
     if (checkOtp)
       return serviceResponse({
-        statusText: 'Conflict',
+        statusText: 'CONFLICT',
         message: 'We have already sent a code to your email address.',
       });
 
     if (!user)
       return serviceResponse({
-        statusText: 'NotFound',
+        statusText: 'NOT_FOUND',
         message: 'This email is not registered with us.',
       });
 
@@ -121,7 +121,7 @@ export class SecurityService {
     );
     if (!resultSendEmail.success)
       return serviceResponse({
-        statusText: 'Error',
+        statusText: 'INTERNAL',
         message: 'Failed to send the reset code. Please try again later.',
       });
 
@@ -142,13 +142,13 @@ export class SecurityService {
       const otpEmail = await OtpEmail.findOne({ email }).lean();
       if (!otpEmail)
         return serviceResponse({
-          statusText: 'NotFound',
+          statusText: 'NOT_FOUND',
           message: 'Your code has expired. Please request a new one.',
         });
 
       if (otpEmail.token !== otp)
         return serviceResponse({
-          statusText: 'BadRequest',
+          statusText: 'BAD_REQUEST',
           message: 'The code you entered is incorrect.',
         });
 
@@ -169,7 +169,7 @@ export class SecurityService {
 
       if (!resetPassword)
         return serviceResponse({
-          statusText: 'NotFound',
+          statusText: 'NOT_FOUND',
           message: 'No account found with this email.',
         });
 
@@ -185,7 +185,7 @@ export class SecurityService {
       const user = await Security.findOne({ email }).lean();
       if (!user)
         return serviceResponse({
-          statusText: 'NotFound',
+          statusText: 'NOT_FOUND',
           message: 'User not found',
         });
 
@@ -215,7 +215,7 @@ export class SecurityService {
       );
       if (!updatePassword)
         return serviceResponse({
-          statusText: 'BadRequest',
+          statusText: 'BAD_REQUEST',
           error: 'Something went wrong, please try again',
         });
       return serviceResponse({

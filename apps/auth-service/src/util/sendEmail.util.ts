@@ -32,14 +32,14 @@ export const sendEmail = async (
 
     if (sendMail.rejected.length > 0)
       return serviceResponse({
-        statusText: 'BadRequest',
+        statusText: 'BAD_REQUEST',
         message: `Email rejected: ${sendMail.rejected.join(', ')}`,
       });
     return { success: true };
   } catch (error) {
     logger.error(error);
     return serviceResponse({
-      statusText: 'InternalServerError',
+      statusText: 'INTERNAL',
       message: 'Internal server error',
     });
   }

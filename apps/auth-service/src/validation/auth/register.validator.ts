@@ -17,7 +17,7 @@ export const validateRegisterEmail = (): ValidationChain[] => [
   body('confirmPassword').custom((value, { req }) => {
     if (value !== req.body.password) {
       throw new CustomError(
-        'BadRequest',
+        'BAD_REQUEST',
         400,
         'Password and confirm password not match',
         false,
@@ -72,7 +72,7 @@ export const validateRegisterPhone = (): ValidationChain[] => [
     .custom((value) => {
       if (invalidTerms.includes(value)) {
         throw new CustomError(
-          'BadRequest',
+          'BAD_REQUEST',
           400,
           'You must accept the terms and conditions',
           false,
@@ -91,7 +91,7 @@ export const validateRegisterPhone = (): ValidationChain[] => [
   body('confirmPassword').custom((value, { req }) => {
     if (value !== req.body.password) {
       throw new CustomError(
-        'BadRequest',
+        'BAD_REQUEST',
         400,
         'Password and confirm password not match',
         false,

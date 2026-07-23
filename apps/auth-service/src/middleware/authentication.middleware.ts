@@ -19,10 +19,10 @@ export class AuthMiddleware {
   authorization = (role: string[]) => {
     return (req: Request, res: Response, next: NextFunction): void => {
       if (!req.curUser?.role)
-        throw new CustomError('Forbidden', 403, 'Access denied', false);
+        throw new CustomError('FORBIDDEN', 403, 'Access denied', false);
 
       if (!role.includes(req.curUser?.role))
-        throw new CustomError('Forbidden', 403, 'Access denied', false);
+        throw new CustomError('FORBIDDEN', 403, 'Access denied', false);
       return next();
     };
   };
@@ -32,7 +32,7 @@ export class AuthMiddleware {
       const token = req.cookies?.tempToken;
       if (!token)
         throw new CustomError(
-          'Unauthorized',
+          'UNAUTHORIZED',
           401,
           'Invalid token expired, please try again',
           false,
@@ -43,7 +43,7 @@ export class AuthMiddleware {
         algorithms: ['HS256'],
       });
       if (!decoded)
-        throw new CustomError('Unauthorized', 401, 'Unauthorized', false);
+        throw new CustomError('UNAUTHORIZED', 401, 'UNAUTHORIZED', false);
       (req as Request & { email: string }).email = (
         decoded as { email: string }
       ).email;
@@ -59,7 +59,7 @@ export class AuthMiddleware {
     ): Promise<Response | void> => {
       const token = req.body.IdToken;
       if (!token)
-        throw new CustomError('Unauthorized', 401, 'Unauthorized', false);
+        throw new CustomError('UNAUTHORIZED', 401, 'UNAUTHORIZED', false);
       const decoded = await jwt.verify(token, config.jwt.secret);
       req.curUser = decoded as UserToken;
       return next();
@@ -70,11 +70,11 @@ export class AuthMiddleware {
     async (req: Request, res: Response, next: NextFunction): Promise<void> => {
       const sessionId = req.cookies.SID;
       if (!sessionId)
-        throw new CustomError('Unauthorized', 401, 'Unauthorized', false);
+        throw new CustomError('UNAUTHORIZED', 401, 'UNAUTHORIZED', false);
 
       const sessionData = await redis.get(`session:${sessionId}`);
       if (!sessionData)
-        throw new CustomError('Unauthorized', 401, 'Session expired', false);
+        throw new CustomError('UNAUTHORIZED', 401, 'Session expired', false);
 
       const session = JSON.parse(sessionData);
       const { accessToken, refreshToken, userId } = session;
@@ -114,15 +114,15 @@ export class AuthMiddleware {
           } catch (refreshError: any) {
             if (refreshError.name === 'TokenExpiredError')
               throw new CustomError(
-                'Unauthorized',
+                'UNAUTHORIZED',
                 401,
                 'Refresh token expired',
                 false,
               );
-            throw new CustomError('Unauthorized', 401, 'Invalid token', false);
+            throw new CustomError('UNAUTHORIZED', 401, 'Invalid token', false);
           }
         }
-        throw new CustomError('Unauthorized', 401, 'Invalid token', false);
+        throw new CustomError('UNAUTHORIZED', 401, 'Invalid token', false);
       }
     },
   );

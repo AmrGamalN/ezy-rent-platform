@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       '@amrogamal/shared-code':
-        specifier: ^3.1.0
-        version: 3.1.0
+        specifier: ^3.1.20
+        version: 3.1.20
       aws-sdk:
         specifier: ^2.1692.0
         version: 2.1692.0
@@ -202,11 +202,14 @@ importers:
   apps/auth-service:
     dependencies:
       '@amrogamal/shared-code':
-        specifier: ^3.1.0
-        version: 3.1.0
+        specifier: ^3.1.20
+        version: 3.1.20
       '@nestjs/common':
         specifier: ^11.1.6
         version: 11.1.6(reflect-metadata@0.2.2)(rxjs@7.8.2)
+      aws-sdk:
+        specifier: ^2.1692.0
+        version: 2.1692.0
       bcrypt:
         specifier: ^6.0.0
         version: 6.0.0
@@ -249,6 +252,12 @@ importers:
       mongoose:
         specifier: ^8.19.1
         version: 8.19.1(socks@2.8.7)
+      multer:
+        specifier: ^2.0.2
+        version: 2.0.2
+      multer-s3:
+        specifier: ^3.0.1
+        version: 3.0.1(@aws-sdk/client-s3@3.911.0)
       nodemailer:
         specifier: ^7.0.9
         version: 7.0.9
@@ -274,6 +283,9 @@ importers:
         specifier: ^13.0.0
         version: 13.0.0
     devDependencies:
+      '@types/aws-sdk':
+        specifier: ^2.7.4
+        version: 2.7.4
       '@types/bcrypt':
         specifier: ^6.0.0
         version: 6.0.0
@@ -292,6 +304,12 @@ importers:
       '@types/jsonwebtoken':
         specifier: ^9.0.10
         version: 9.0.10
+      '@types/multer':
+        specifier: ^2.0.0
+        version: 2.0.0
+      '@types/multer-s3':
+        specifier: ^3.0.3
+        version: 3.0.3
       '@types/nodemailer':
         specifier: ^7.0.2
         version: 7.0.2
@@ -594,8 +612,8 @@ packages:
   '@amrogamal/shared-code@3.0.3':
     resolution: {integrity: sha512-/071/DAq6kTJ5pMfSjnTuSH9/CYjGaDYk9UNwlNCjokf8kKXEzSsrmiCckrjCpS48wkE9BA2QF0Ww98pS18zzg==}
 
-  '@amrogamal/shared-code@3.1.0':
-    resolution: {integrity: sha512-/SPMj0MNNBtBaO1QC1eIRGWJuTxNJyajcnM7rquIemd7PmUoe8K+u4XAtBNh0YUCF/wa8f9++HTwhJuoEr165g==}
+  '@amrogamal/shared-code@3.1.20':
+    resolution: {integrity: sha512-zF6ulcm5+/4R68xSK8EYTo71A5xp6xqdNQX5Ray47oWQc59Yi0o0F77bvMvKD7d5tGSyLajmCuwMtx8hdLq/fg==}
 
   '@apidevtools/json-schema-ref-parser@9.1.2':
     resolution: {integrity: sha512-r1w81DpR+KyRWd3f+rk6TNqMgedmAxZP5v5KWlXQWlgMUUtyEJch0DKEci1SorPMiSeM8XPl7MZ3miJ60JIpQg==}
@@ -2513,6 +2531,7 @@ packages:
   aws-sdk@2.1692.0:
     resolution: {integrity: sha512-x511uiJ/57FIsbgUe5csJ13k3uzu25uWQE+XqfBis/sB0SFoiElJWXRkgEAUh0U6n40eT3ay5Ue4oPkRMu1LYw==}
     engines: {node: '>= 10.0.0'}
+    deprecated: The AWS SDK for JavaScript (v2) has reached end-of-support, and no longer receives updates. Please migrate your code to use AWS SDK for JavaScript (v3). More info https://a.co/cUPnyil
 
   axios@1.10.0:
     resolution: {integrity: sha512-/1xYAC4MP/HEG+3duIhFr4ZQXR4sQXOIe+o6sdqzeykGLx6Upp/1p8MHqhINOvGeP7xyNHe7tsiJByc4SSVUxw==}
@@ -5614,6 +5633,7 @@ packages:
 
   uuid@9.0.1:
     resolution: {integrity: sha512-b+1eJOlsR9K8HJpow9Ok3fiWOWSIcIzXodvv0rQjVoOVNpWMpxf1wZNpt4y9h10odCNrqnYp1OBzRktckBe3sA==}
+    deprecated: uuid@10 and below is no longer supported.  For ESM codebases, update to uuid@latest.  For CommonJS codebases, use uuid@11 (but be aware this version will likely be deprecated in 2028).
     hasBin: true
 
   v8-compile-cache-lib@3.0.1:
@@ -5854,7 +5874,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@amrogamal/shared-code@3.1.0':
+  '@amrogamal/shared-code@3.1.20':
     dependencies:
       dotenv: 17.2.3
       express: 5.1.0
@@ -9041,7 +9061,7 @@ snapshots:
   buffer@4.9.2:
     dependencies:
       base64-js: 1.5.1
-      ieee754: 1.1.13
+      ieee754: 1.2.1
       isarray: 1.0.0
 
   buffer@5.6.0:
@@ -12870,7 +12890,7 @@ snapshots:
 
   xml2js@0.6.2:
     dependencies:
-      sax: 1.2.1
+      sax: 1.4.1
       xmlbuilder: 11.0.1
 
   xmlbuilder@11.0.1: {}

@@ -28,7 +28,7 @@ export const decrypt = (encryptedText: string): string | void => {
     decrypted += decipher.final('utf8');
     return decrypted;
   } catch {
-    throw new CustomError('Unauthorized', 401, 'Invalid token', false);
+    throw new CustomError('UNAUTHORIZED', 401, 'Invalid token', false);
   }
 };
 

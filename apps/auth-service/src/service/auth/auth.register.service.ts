@@ -37,7 +37,7 @@ export class AuthRegisterService {
     const user = await Security.findOne({ email });
     if (user) {
       return serviceResponse({
-        statusText: 'Conflict',
+        statusText: 'CONFLICT',
         message:
           'Email address already exists, Please try again with a different email address',
       });
@@ -51,7 +51,7 @@ export class AuthRegisterService {
     const user = await Security.findOne({ phoneNumber });
     if (user) {
       return serviceResponse({
-        statusText: 'Conflict',
+        statusText: 'CONFLICT',
         message:
           'Phone number already exists, Please try again with a different phone number',
       });
@@ -72,7 +72,7 @@ export class AuthRegisterService {
     );
     if (resultCache !== 'OK')
       return serviceResponse({
-        statusText: 'InternalServerError',
+        statusText: 'INTERNAL',
         message: 'Error while register, try again later',
       });
     return serviceResponse({
@@ -87,7 +87,7 @@ export class AuthRegisterService {
     const checkEmail = await OtpEmail.findOne({ email });
     if (checkEmail)
       return serviceResponse({
-        statusText: 'Conflict',
+        statusText: 'CONFLICT',
         message:
           'verification link already exists or the email already register but not verify. Please check your email',
       });
@@ -116,7 +116,7 @@ export class AuthRegisterService {
     const checkEmail = await OtpEmail.findOne({ email });
     if (!checkEmail)
       return serviceResponse({
-        statusText: 'BadRequest',
+        statusText: 'BAD_REQUEST',
         message: 'Expired time, return to signup page and register again',
       });
 

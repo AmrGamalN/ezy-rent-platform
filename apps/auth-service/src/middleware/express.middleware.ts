@@ -43,8 +43,8 @@ export const expressValidator = (
 
 export const requiredId = () => {
   return (req: Request, res: Response, next: NextFunction): void => {
-    if (!req.params?.id || !/^[a-fA-F0-9]{24}$/.test(req.params?.id))
-      throw new CustomError('NotFound', 404, 'Not Found', false);
+    if (!req.params?.id || typeof req.params?.id !== 'string' || !/^[a-fA-F0-9]{24}$/.test(req.params?.id))
+      throw new CustomError('NOT_FOUND', 404, 'Not Found', false);
     return next();
   };
 };
@@ -53,10 +53,10 @@ export const requiredUserIdMiddleware = () => {
   return (req: Request, res: Response, next: NextFunction): void => {
     const userId = req.params.userId;
     if (
-      !userId ||
+      !userId || typeof userId !== 'string' ||
       !/^[a-fA-F0-9]{8}-([a-fA-F0-9]{4}-){3}[a-fA-F0-9]{12}$/.test(userId)
     )
-      throw new CustomError('NotFound', 404, 'Not Found', false);
+      throw new CustomError('NOT_FOUND', 404, 'Not Found', false);
     return next();
   };
 };

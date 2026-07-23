@@ -35,8 +35,10 @@ export class TokenService {
       const refreshToken = createToken('14d');
 
       return {
-        accessToken,
-        refreshToken,
+        data: {
+          accessToken,
+          refreshToken,
+        },
       };
     },
   );

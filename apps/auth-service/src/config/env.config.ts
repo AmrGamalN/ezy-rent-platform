@@ -15,7 +15,7 @@ const config = {
   redis: {
     url: process.env.REDIS_URL,
     secret: process.env.REDIS_SECRET,
-    password: process.env.REDI_PASSWORD,
+    password: process.env.REDIS_PASSWORD,
     port: Number(process.env.REDIS_PORT),
     host: process.env.REDIS_HOST,
     useRedisUrl: process.env.USE_REDIS_URL === 'true',
